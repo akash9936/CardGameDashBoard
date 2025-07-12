@@ -6,8 +6,13 @@ class Storage {
             lastTeamId: 0,
             lastMatchId: 0
         };
+        this.authState = {
+            isAuthenticated: false,
+            authKey: 'redtoto'
+        };
         console.log('Storage initialized with empty data');
         this.loadData();
+        this.loadAuthState();
     }
 
     // Load data from localStorage
@@ -59,6 +64,15 @@ class Storage {
         }
     }
 
+    // Load authentication state from localStorage
+    loadAuthState() {
+        const savedAuthState = localStorage.getItem('cardGameAuth');
+        if (savedAuthState) {
+            this.authState = JSON.parse(savedAuthState);
+            console.log('Loaded auth state:', this.authState);
+        }
+    }
+
     // Save data to localStorage
     saveData() {
         const dataToSave = {
@@ -69,6 +83,26 @@ class Storage {
         };
         console.log('Saving data to storage:', dataToSave);
         localStorage.setItem('cardGameData', JSON.stringify(dataToSave));
+    }
+
+    // Save authentication state to localStorage
+    saveAuthState() {
+        localStorage.setItem('cardGameAuth', JSON.stringify(this.authState));
+        console.log('Saved auth state:', this.authState);
+    }
+
+    // Authentication methods
+    isAuthenticated() {
+        return this.authState.isAuthenticated;
+    }
+
+    authenticate(authKey) {
+        if (authKey === this.authState.authKey) {
+            this.authState.isAuthenticated = true;
+            this.saveAuthState();
+            return true;
+        }
+        return false;
     }
 
     // Team operations
