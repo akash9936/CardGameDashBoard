@@ -1046,4 +1046,59 @@ nav {
 
 .status-draw {
     color: var(--warning-color);
+}
+
+/* Authentication Modal Styles */
+.auth-modal .modal-content {
+    max-width: 500px;
+}
+
+.auth-modal h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+}
+
+.auth-modal p {
+    line-height: 1.6;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.auth-modal input[type="password"] {
+    font-family: monospace;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.auth-modal .form-group {
+    margin-bottom: 25px;
+}
+
+.auth-modal .action-btn {
+    width: 100%;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* Context-specific authentication styles */
+.auth-modal[data-context="team"] h2 {
+    color: var(--accent-color);
+}
+
+.auth-modal[data-context="match"] h2 {
+    color: var(--primary-color);
+}
+
+.auth-modal[data-context="round"] h2 {
+    color: var(--warning-color);
+}
+
+.auth-modal[data-context="cancel"] h2 {
+    color: var(--danger-color);
+}
+
+.auth-modal[data-context="start"] h2 {
+    color: var(--accent-color);
 } 

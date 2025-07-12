@@ -49,6 +49,72 @@ window.addEventListener('click', (e) => {
 
 // Add Team Button
 elements.addTeamBtn.addEventListener('click', () => {
+    // Check if user is already authenticated
+    if (storage.isAuthenticated()) {
+        showAddTeamModal();
+    } else {
+        showAuthModal();
+    }
+});
+
+// Show authentication modal
+function showAuthModal(context = 'team') {
+    elements.modal.classList.add('auth-modal');
+    elements.modal.setAttribute('data-context', context);
+    
+    const contextMessages = {
+        'team': 'You need to enter the authentication key to add teams.',
+        'match': 'You need to enter the authentication key to create matches.',
+        'round': 'You need to enter the authentication key to submit rounds.',
+        'cancel': 'You need to enter the authentication key to cancel matches.',
+        'start': 'You need to enter the authentication key to start matches.'
+    };
+    
+    const contextActions = {
+        'team': () => showAddTeamModal(),
+        'match': () => showAddMatchModal(),
+        'round': () => window.pendingRoundAction && window.pendingRoundAction(),
+        'cancel': () => window.pendingCancelAction && window.pendingCancelAction(),
+        'start': () => window.pendingStartAction && window.pendingStartAction()
+    };
+    
+    showModal(`
+        <h2>🔐 Authentication Required</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">
+            ${contextMessages[context]}
+        </p>
+        <form id="authForm">
+            <div class="form-group">
+                <label for="authKey">Authentication Key</label>
+                <input type="password" id="authKey" required placeholder="Enter authentication key">
+            </div>
+            <button type="submit" class="action-btn">Authenticate</button>
+        </form>
+    `);
+
+    document.getElementById('authForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const authKey = document.getElementById('authKey').value;
+        
+        if (storage.authenticate(authKey)) {
+            closeModal();
+            showNotification('Authentication successful!', 'success');
+            const action = contextActions[context];
+            if (action) {
+                action();
+            }
+        } else {
+            showNotification('Invalid authentication key. Please try again.', 'error');
+            document.getElementById('authKey').value = '';
+            document.getElementById('authKey').focus();
+        }
+    });
+}
+
+// Show add team modal
+function showAddTeamModal() {
+    elements.modal.classList.remove('auth-modal');
+    elements.modal.removeAttribute('data-context');
     showModal(`
         <h2>Add New Team</h2>
         <form id="addTeamForm">
@@ -81,16 +147,28 @@ elements.addTeamBtn.addEventListener('click', () => {
             showNotification(error.message, 'error');
         }
     });
-});
+}
 
 // Add Match Button
 elements.addMatchBtn.addEventListener('click', async () => {
+    // Check if user is already authenticated
+    if (storage.isAuthenticated()) {
+        showAddMatchModal();
+    } else {
+        showAuthModal('match');
+    }
+});
+
+// Show add match modal
+async function showAddMatchModal() {
     const teams = await teamService.getAllTeams();
     if (teams.length < 2) {
         showNotification('Need at least 2 teams to create a match', 'error');
         return;
     }
 
+    elements.modal.classList.remove('auth-modal');
+    elements.modal.removeAttribute('data-context');
     showModal(`
         <h2>Create New Match</h2>
         <form id="addMatchForm">
@@ -180,7 +258,7 @@ elements.addMatchBtn.addEventListener('click', async () => {
             showNotification(error.message, 'error');
         }
     });
-});
+}
 
 // Show match round modal
 async function showMatchRoundModal(matchId) {
@@ -262,6 +340,41 @@ async function showMatchRoundModal(matchId) {
 
         document.getElementById('roundForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Check if user is authenticated
+            if (!storage.isAuthenticated()) {
+                // Store the action to execute after authentication
+                window.pendingRoundAction = () => {
+                    const team1Promise = parseInt(document.getElementById('team1Promise').value);
+                    const team1Actual = parseInt(document.getElementById('team1Actual').value);
+                    const team2Promise = parseInt(document.getElementById('team2Promise').value);
+                    const team2Actual = parseInt(document.getElementById('team2Actual').value);
+                    
+                    // Calculate scores based on promise vs actual
+                    const team1Score = Math.abs(team1Promise - team1Actual) * 10;
+                    const team2Score = Math.abs(team2Promise - team2Actual) * 10;
+                    
+                    matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score)
+                        .then(async () => {
+                            const updatedMatch = await matchService.getMatchDetails(matchId);
+                            
+                            if (updatedMatch.status === 'completed') {
+                                closeModal();
+                                await refreshMatchesList();
+                                await refreshStats();
+                                showNotification('Match completed!');
+                            } else {
+                                await showMatchRoundModal(matchId);
+                            }
+                        })
+                        .catch(error => {
+                            showNotification(error.message, 'error');
+                        });
+                };
+                showAuthModal('round');
+                return;
+            }
+            
             const team1Promise = parseInt(document.getElementById('team1Promise').value);
             const team1Actual = parseInt(document.getElementById('team1Actual').value);
             const team2Promise = parseInt(document.getElementById('team2Promise').value);
@@ -327,6 +440,8 @@ function showModal(content) {
 function closeModal() {
     elements.modal.style.display = 'none';
     elements.modalContent.innerHTML = '';
+    elements.modal.classList.remove('auth-modal');
+    elements.modal.removeAttribute('data-context');
 }
 
 function showNotification(message, type = 'success') {
@@ -634,9 +749,17 @@ async function formatActivity(activity) {
     }
 }
 
-// Update submitRound function to handle scores
+// Update submitRound function to handle scores with authentication
 async function submitRound(event, matchId) {
     event.preventDefault();
+    
+    // Check if user is authenticated
+    if (!storage.isAuthenticated()) {
+        // Store the action to execute after authentication
+        window.pendingRoundAction = () => submitRound(event, matchId);
+        showAuthModal('round');
+        return;
+    }
     
     // Get match details to access team information
     const matchDetails = await matchService.getMatchDetails(matchId);
@@ -677,8 +800,16 @@ async function submitRound(event, matchId) {
     }
 }
 
-// Update startMatch function to not show modal
+// Update startMatch function with authentication
 async function startMatch(matchId) {
+    // Check if user is authenticated
+    if (!storage.isAuthenticated()) {
+        // Store the action to execute after authentication
+        window.pendingStartAction = () => startMatch(matchId);
+        showAuthModal('start');
+        return;
+    }
+    
     try {
         await matchService.startMatch(matchId);
         await refreshMatchesList();
@@ -688,8 +819,16 @@ async function startMatch(matchId) {
     }
 }
 
-// Add cancelMatch function if not already present
+// Add cancelMatch function with authentication
 async function cancelMatch(matchId) {
+    // Check if user is authenticated
+    if (!storage.isAuthenticated()) {
+        // Store the action to execute after authentication
+        window.pendingCancelAction = () => cancelMatch(matchId);
+        showAuthModal('cancel');
+        return;
+    }
+    
     const reason = prompt('Please enter reason for cancellation:');
     if (reason === null) return; // User cancelled the prompt
     
