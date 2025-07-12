@@ -13,6 +13,8 @@ const elements = {
     // Buttons
     addTeamBtn: document.getElementById('addTeamBtn'),
     addMatchBtn: document.getElementById('addMatchBtn'),
+    recalculateStatsBtn: document.getElementById('recalculateStatsBtn'),
+    fixStatsBtn: document.getElementById('fixStatsBtn'),
     
     // Lists
     teamsList: document.getElementById('teamsList'),
@@ -30,6 +32,12 @@ const elements = {
 elements.viewTeams.addEventListener('click', () => showSection('teams'));
 elements.viewMatches.addEventListener('click', () => showSection('matches'));
 elements.viewStats.addEventListener('click', () => showSection('stats'));
+
+// Recalculate Stats Button
+elements.recalculateStatsBtn.addEventListener('click', recalculateStats);
+
+// Fix Stats Button
+elements.fixStatsBtn.addEventListener('click', recalculateStats);
 
 // Modal
 elements.closeBtn.addEventListener('click', closeModal);
@@ -56,7 +64,7 @@ elements.addTeamBtn.addEventListener('click', () => {
         </form>
     `);
 
-    document.getElementById('addTeamForm').addEventListener('submit', (e) => {
+    document.getElementById('addTeamForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('teamName').value;
         const members = document.getElementById('teamMembers').value
@@ -65,9 +73,9 @@ elements.addTeamBtn.addEventListener('click', () => {
             .filter(m => m.length > 0);
         
         try {
-            teamService.createTeam(name, members);
+            await teamService.createTeam(name, members);
             closeModal();
-            refreshTeamsList();
+            await refreshTeamsList();
             showNotification('Team created successfully!');
         } catch (error) {
             showNotification(error.message, 'error');
@@ -76,8 +84,8 @@ elements.addTeamBtn.addEventListener('click', () => {
 });
 
 // Add Match Button
-elements.addMatchBtn.addEventListener('click', () => {
-    const teams = teamService.getAllTeams();
+elements.addMatchBtn.addEventListener('click', async () => {
+    const teams = await teamService.getAllTeams();
     if (teams.length < 2) {
         showNotification('Need at least 2 teams to create a match', 'error');
         return;
@@ -116,10 +124,10 @@ elements.addMatchBtn.addEventListener('click', () => {
     const team1Members = document.getElementById('team1Members');
     const team2Members = document.getElementById('team2Members');
 
-    function updateTeamMembers(select, membersDiv) {
+    async function updateTeamMembers(select, membersDiv) {
         const teamId = select.value;
         if (teamId) {
-            const team = teamService.getTeamDetails(teamId);
+            const team = await teamService.getTeamDetails(teamId);
             membersDiv.innerHTML = `
                 <h4>Team Members:</h4>
                 <ul>
@@ -147,10 +155,10 @@ elements.addMatchBtn.addEventListener('click', () => {
         }
     });
 
-    document.getElementById('addMatchForm').addEventListener('submit', (e) => {
+    document.getElementById('addMatchForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const team1Id = parseInt(document.getElementById('team1').value);
-        const team2Id = parseInt(document.getElementById('team2').value);
+        const team1Id = document.getElementById('team1').value;
+        const team2Id = document.getElementById('team2').value;
         
         if (!team1Id || !team2Id) {
             showNotification('Please select both teams', 'error');
@@ -163,11 +171,10 @@ elements.addMatchBtn.addEventListener('click', () => {
         }
         
         try {
-            const match = matchService.createMatch(team1Id, team2Id);
-            matchService.startMatch(match.id);
+            const match = await matchService.createMatch(team1Id, team2Id);
+            await matchService.startMatch(match.id);
             closeModal();
-            showMatchRoundModal(match.id);
-            refreshMatchesList();
+            await refreshMatchesList();
             showNotification('Match started successfully!');
         } catch (error) {
             showNotification(error.message, 'error');
@@ -176,9 +183,9 @@ elements.addMatchBtn.addEventListener('click', () => {
 });
 
 // Show match round modal
-function showMatchRoundModal(matchId) {
+async function showMatchRoundModal(matchId) {
     try {
-        const matchDetails = matchService.getMatchDetails(matchId);
+        const matchDetails = await matchService.getMatchDetails(matchId);
         if (!matchDetails) {
             throw new Error('Match not found');
         }
@@ -253,7 +260,7 @@ function showMatchRoundModal(matchId) {
             ` : ''}
         `);
 
-        document.getElementById('roundForm').addEventListener('submit', (e) => {
+        document.getElementById('roundForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const team1Promise = parseInt(document.getElementById('team1Promise').value);
             const team1Actual = parseInt(document.getElementById('team1Actual').value);
@@ -261,16 +268,20 @@ function showMatchRoundModal(matchId) {
             const team2Actual = parseInt(document.getElementById('team2Actual').value);
 
             try {
-                matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual);
-                const updatedMatch = matchService.getMatchDetails(matchId);
+                // Calculate scores based on promise vs actual
+                const team1Score = Math.abs(team1Promise - team1Actual) * 10;
+                const team2Score = Math.abs(team2Promise - team2Actual) * 10;
+                
+                await matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
+                const updatedMatch = await matchService.getMatchDetails(matchId);
                 
                 if (updatedMatch.status === 'completed') {
                     closeModal();
-                    refreshMatchesList();
-                    refreshStats();
+                    await refreshMatchesList();
+                    await refreshStats();
                     showNotification('Match completed!');
                 } else {
-                    showMatchRoundModal(matchId);
+                    await showMatchRoundModal(matchId);
                 }
             } catch (error) {
                 showNotification(error.message, 'error');
@@ -330,34 +341,51 @@ function showNotification(message, type = 'success') {
 }
 
 // Refresh Functions
-function refreshTeamsList() {
-    const teams = teamService.getAllTeams();
-    elements.teamsList.innerHTML = teams.map(team => `
-        <div class="card team-card">
-            <h3>${team.name}</h3>
-            <div class="team-members">
-                ${team.members.map(member => `<span class="member">${member}</span>`).join('')}
+async function refreshTeamsList() {
+    const teams = await teamService.getAllTeams();
+    console.log('Teams retrieved:', teams);
+    
+    elements.teamsList.innerHTML = teams.map(team => {
+        // Ensure stats object exists and has default values
+        const stats = team.stats || {
+            matchesPlayed: 0,
+            wins: 0,
+            losses: 0,
+            draws: 0,
+            points: 0,
+            totalScore: 0,
+            roundsWon: 0,
+            roundsLost: 0
+        };
+        
+        console.log(`Team ${team.name} stats:`, stats);
+        
+        return `
+            <div class="card team-card">
+                <h3>${team.name}</h3>
+                <div class="team-members">
+                    ${team.members.map(member => `<span class="member">${member}</span>`).join('')}
+                </div>
+                <div class="team-stats">
+                    <p>Matches: ${stats.matchesPlayed}</p>
+                    <p>Wins: ${stats.wins}</p>
+                    <p>Losses: ${stats.losses}</p>
+                    <p>Draws: ${stats.draws}</p>
+                    <p>Points: ${stats.points}</p>
+                    <p>Total Score: ${stats.totalScore}</p>
+                    <p>Rounds Won: ${stats.roundsWon}</p>
+                    <p>Rounds Lost: ${stats.roundsLost}</p>
+                    <p>Win Rate: ${((stats.wins / stats.matchesPlayed) * 100 || 0).toFixed(1)}%</p>
+                </div>
+                <button onclick="viewTeamDetails('${team.id}')" class="action-btn">View Details</button>
             </div>
-            <div class="team-stats">
-                <p>Matches: ${team.stats.matchesPlayed}</p>
-                <p>Wins: ${team.stats.wins}</p>
-                <p>Losses: ${team.stats.losses}</p>
-                <p>Draws: ${team.stats.draws}</p>
-                <p>Points: ${team.stats.points}</p>
-                <p>Total Score: ${team.stats.totalScore}</p>
-                <p>Rounds Won: ${team.stats.roundsWon}</p>
-                <p>Rounds Lost: ${team.stats.roundsLost}</p>
-                <p>Win Rate: ${team.getWinRate().toFixed(1)}%</p>
-            </div>
-            <button onclick="viewTeamDetails(${team.id})" class="action-btn">View Details</button>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
-function refreshMatchesList() {
-    const matches = matchService.getAllMatches();
-    const teams = teamService.getAllTeams();
-    console.log('Available teams:', teams);
+async function refreshMatchesList() {
+    const matches = await matchService.getAllMatches();
+    const teams = await teamService.getAllTeams();
     
     if (teams.length === 0) {
         elements.matchesList.innerHTML = '<div class="notification error">No teams found. Please create teams first.</div>';
@@ -365,12 +393,10 @@ function refreshMatchesList() {
     }
 
     elements.matchesList.innerHTML = matches.map(match => {
-        console.log('Processing match:', match);
-        const team1 = storage.getTeam(match.team1Id);
-        const team2 = storage.getTeam(match.team2Id);
+        const team1 = teams.find(t => t.id === match.team1Id);
+        const team2 = teams.find(t => t.id === match.team2Id);
         
         if (!team1 || !team2) {
-            console.error(`Team not found for match ${match.id}: team1=${match.team1Id} (${team1 ? 'found' : 'not found'}), team2=${match.team2Id} (${team2 ? 'found' : 'not found'})`);
             return ''; // Skip this match if teams are not found
         }
 
@@ -383,7 +409,7 @@ function refreshMatchesList() {
         return `
             <div class="card match-card">
                 <div class="match-header">
-                    <span class="match-date">${new Date(match.date).toLocaleDateString()}</span>
+                    <span class="match-date">${DateUtils.formatDate(match.date)}</span>
                     <span class="match-status ${status}">${status}</span>
                 </div>
                 <div class="match-teams">
@@ -404,14 +430,14 @@ function refreshMatchesList() {
                 </div>
                 ${status === 'pending' ? `
                     <div class="match-actions">
-                        <button onclick="startMatch(${match.id})" class="action-btn">Start Match</button>
-                        <button onclick="cancelMatch(${match.id})" class="action-btn danger">Cancel</button>
+                        <button onclick="startMatch('${match.id}')" class="action-btn">Start Match</button>
+                        <button onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel</button>
                     </div>
                 ` : ''}
                 ${status === 'in_progress' ? `
                     <div class="match-round-input">
                         <h4>Round ${currentRound + 1}</h4>
-                        <form onsubmit="submitRound(event, ${match.id})" class="round-form">
+                        <form onsubmit="submitRound(event, '${match.id}')" class="round-form">
                             <div class="round-inputs">
                                 <div class="team-inputs">
                                     <h5>${team1.name}</h5>
@@ -445,7 +471,7 @@ function refreshMatchesList() {
                                 </div>
                             </div>
                             <button type="submit" class="action-btn">Submit Round</button>
-                            <button type="button" onclick="cancelMatch(${match.id})" class="action-btn danger">Cancel Match</button>
+                            <button type="button" onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel Match</button>
                         </form>
                     </div>
                 ` : ''}
@@ -488,31 +514,64 @@ function refreshMatchesList() {
     }).join('');
 }
 
-function refreshStats() {
+async function refreshStats() {
     // Update team rankings
-    const rankings = teamService.getTeamRankings();
+    const rankings = await teamService.getTeamRankings();
     elements.teamRankings.innerHTML = rankings.map((team, index) => `
         <div class="ranking-item">
             <span class="rank">#${index + 1}</span>
             <span class="team-name">${team.name}</span>
-            <span class="points">${team.points} pts</span>
-            <span class="win-rate">${team.winRate.toFixed(1)}%</span>
+            <span class="points">${team.stats.points} pts</span>
+            <span class="win-rate">${((team.stats.wins / team.stats.matchesPlayed) * 100 || 0).toFixed(1)}%</span>
         </div>
     `).join('');
-
+    
     // Update recent activity
-    const activities = storage.getRecentActivity();
-    elements.recentActivity.innerHTML = activities.map(activity => `
-        <div class="activity-item">
-            <span class="activity-time">${new Date(activity.timestamp).toLocaleString()}</span>
-            <span class="activity-action">${formatActivity(activity)}</span>
-        </div>
-    `).join('');
+    const recentMatches = await matchService.getRecentMatches();
+    const teams = await teamService.getAllTeams();
+    elements.recentActivity.innerHTML = recentMatches.map(match => {
+        const team1 = teams.find(t => t.id === match.team1Id);
+        const team2 = teams.find(t => t.id === match.team2Id);
+        if (!team1 || !team2) return '';
+        
+        let activity = '';
+        switch (match.status) {
+            case 'completed':
+                activity = `Match completed: ${team1.name} ${match.finalScore.team1} - ${match.finalScore.team2} ${team2.name}`;
+                break;
+            case 'cancelled':
+                activity = `Match cancelled: ${team1.name} vs ${team2.name}`;
+                break;
+            default:
+                activity = `Match started: ${team1.name} vs ${team2.name}`;
+        }
+        
+        return `
+            <div class="activity-item">
+                <span class="activity-time">${DateUtils.formatDateTime(match.date)}</span>
+                <span class="activity-action">${activity}</span>
+            </div>
+        `;
+    }).join('');
 }
 
-function viewTeamDetails(teamId) {
-    const team = teamService.getTeamDetails(teamId);
-    const headToHead = teamService.getHeadToHead(teamId, team.recentMatches[0]?.opponentId);
+async function viewTeamDetails(teamId) {
+    const team = await teamService.getTeamDetails(teamId);
+    const opponentId = team.recentMatches[0]?.opponentId;
+    let headToHeadHTML = '';
+    if (opponentId) {
+        const headToHead = await teamService.getHeadToHead(teamId, opponentId);
+        const opponent = await teamService.getTeamDetails(opponentId);
+        headToHeadHTML = `
+            <div class="stat-item">
+                <h4>Head-to-Head vs ${opponent.name}</h4>
+                <p>Matches: ${headToHead.totalMatches}</p>
+                <p>Wins: ${headToHead.team1.wins}</p>
+                <p>Losses: ${headToHead.team1.losses}</p>
+                <p>Draws: ${headToHead.team1.draws}</p>
+            </div>
+        `;
+    }
     
     showModal(`
         <h2>${team.name} Details</h2>
@@ -525,7 +584,7 @@ function viewTeamDetails(teamId) {
                     <p>Losses: ${team.stats.losses}</p>
                     <p>Draws: ${team.stats.draws}</p>
                     <p>Points: ${team.stats.points}</p>
-                    <p>Win Rate: ${team.getWinRate().toFixed(1)}%</p>
+                    <p>Win Rate: ${((team.stats.wins / team.stats.matchesPlayed) * 100 || 0).toFixed(1)}%</p>
                 </div>
                 <div class="stat-item">
                     <h4>Recent Form</h4>
@@ -535,14 +594,15 @@ function viewTeamDetails(teamId) {
                         `).join('')}
                     </div>
                 </div>
+                ${headToHeadHTML}
             </div>
             <div class="recent-matches">
                 <h4>Recent Matches</h4>
                 ${team.recentMatches.map(match => `
                     <div class="match-item">
-                        <span class="match-date">${new Date(match.date).toLocaleDateString()}</span>
+                        <span class="match-date">${DateUtils.formatDate(match.date)}</span>
                         <span class="match-result ${match.result}">${match.result.toUpperCase()}</span>
-                        <span class="match-score">${match.score.team1} - ${match.score.team2}</span>
+                        <span class="match-score">${match.finalScore.team1} - ${match.finalScore.team2}</span>
                     </div>
                 `).join('')}
             </div>
@@ -550,12 +610,12 @@ function viewTeamDetails(teamId) {
     `);
 }
 
-function formatActivity(activity) {
-    const match = storage.getMatch(activity.matchId);
+async function formatActivity(activity) {
+    const match = await matchService.getMatchDetails(activity.matchId);
     if (!match) return 'Unknown activity';
 
-    const team1 = storage.getTeam(match.team1Id);
-    const team2 = storage.getTeam(match.team2Id);
+    const team1 = await teamService.getTeamDetails(match.team1Id);
+    const team2 = await teamService.getTeamDetails(match.team2Id);
     if (!team1 || !team2) return 'Unknown activity';
 
     switch (activity.action) {
@@ -575,11 +635,11 @@ function formatActivity(activity) {
 }
 
 // Update submitRound function to handle scores
-function submitRound(event, matchId) {
+async function submitRound(event, matchId) {
     event.preventDefault();
     
     // Get match details to access team information
-    const matchDetails = matchService.getMatchDetails(matchId);
+    const matchDetails = await matchService.getMatchDetails(matchId);
     if (!matchDetails) {
         showNotification('Match not found', 'error');
         return;
@@ -600,7 +660,7 @@ function submitRound(event, matchId) {
     }
 
     try {
-        matchService.addRound(
+        await matchService.addRound(
             matchId,
             team1Promise,
             team1Actual,
@@ -609,8 +669,8 @@ function submitRound(event, matchId) {
             team1Score,  // Use the manually entered score
             team2Score   // Use the manually entered score
         );
-        refreshMatchesList();
-        refreshStats();
+        await refreshMatchesList();
+        await refreshStats();
         showNotification('Round added successfully!');
     } catch (error) {
         showNotification(error.message, 'error');
@@ -618,10 +678,10 @@ function submitRound(event, matchId) {
 }
 
 // Update startMatch function to not show modal
-function startMatch(matchId) {
+async function startMatch(matchId) {
     try {
-        matchService.startMatch(matchId);
-        refreshMatchesList();
+        await matchService.startMatch(matchId);
+        await refreshMatchesList();
         showNotification('Match started successfully!');
     } catch (error) {
         showNotification(error.message, 'error');
@@ -629,20 +689,114 @@ function startMatch(matchId) {
 }
 
 // Add cancelMatch function if not already present
-function cancelMatch(matchId) {
+async function cancelMatch(matchId) {
     const reason = prompt('Please enter reason for cancellation:');
     if (reason === null) return; // User cancelled the prompt
     
     try {
-        matchService.cancelMatch(matchId, reason);
-        refreshMatchesList();
+        await matchService.cancelMatch(matchId, reason);
+        await refreshMatchesList();
         showNotification('Match cancelled successfully');
     } catch (error) {
         showNotification(error.message, 'error');
     }
 }
 
+async function recalculateStats() {
+    try {
+        showNotification('Recalculating team statistics...', 'info');
+        console.log('Starting stats recalculation...');
+        
+        // Get current data for debugging
+        const teams = await teamService.getAllTeams();
+        const matches = await matchService.getAllMatches();
+        console.log(`Found ${teams.length} teams and ${matches.length} matches`);
+        
+        await matchService.recalculateAllTeamStats();
+        
+        // Refresh the UI
+        await refreshTeamsList();
+        await refreshStats();
+        
+        console.log('Stats recalculation completed');
+        showNotification('Team statistics recalculated successfully!');
+    } catch (error) {
+        console.error('Error recalculating statistics:', error);
+        showNotification('Error recalculating statistics: ' + error.message, 'error');
+    }
+}
+
+// Simple function to recalculate team stats from existing matches
+async function recalculateTeamStats() {
+    try {
+        console.log('Recalculating team statistics...');
+        
+        const allMatches = await matchService.getAllMatches();
+        const allTeams = await teamService.getAllTeams();
+        const completedMatches = allMatches.filter(match => match.status === 'completed');
+        
+        console.log(`Found ${allTeams.length} teams and ${completedMatches.length} completed matches`);
+        
+        // Reset all team statistics
+        for (const team of allTeams) {
+            const resetStats = {
+                'stats.matchesPlayed': 0,
+                'stats.wins': 0,
+                'stats.losses': 0,
+                'stats.draws': 0,
+                'stats.points': 0,
+                'stats.totalScore': 0,
+                'stats.roundsWon': 0,
+                'stats.roundsLost': 0
+            };
+            await teamService.firebaseService.updateTeam(team.id, resetStats);
+        }
+        
+        console.log('Reset all team statistics');
+        
+        // Process completed matches
+        for (const match of completedMatches) {
+            await matchService.updateTeamStats(match.team1Id, match.team2Id, match);
+        }
+        
+        console.log('Team statistics recalculation completed');
+        return true;
+    } catch (error) {
+        console.error('Error recalculating team statistics:', error);
+        return false;
+    }
+}
+
 // Initialize the application
-document.addEventListener('DOMContentLoaded', () => {
-    showSection('teams');
+document.addEventListener('DOMContentLoaded', async () => {
+    const firebaseService = new FirebaseService();
+    const migrationService = new MigrationService(storage, firebaseService);
+
+    // Initialize services
+    initializeTeamService(firebaseService);
+    initializeMatchService(firebaseService);
+
+    await migrationService.migrateData();
+
+    // Initialize the application with data from Firebase
+    await initializeApp(firebaseService);
 });
+
+async function initializeApp(firebaseService) {
+    // Set up real-time listeners
+    firebaseService.subscribeToTeams(teams => {
+        console.log('Received real-time update for teams:', teams);
+        refreshTeamsList();
+    });
+
+    firebaseService.subscribeToMatches(matches => {
+        console.log('Received real-time update for matches:', matches);
+        refreshMatchesList();
+    });
+
+    // Recalculate stats from existing data
+    await recalculateTeamStats();
+    
+    // Initial load
+    showSection('teams');
+}

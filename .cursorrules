@@ -1,0 +1,93 @@
+# CardGame Project - Cursor Rules
+
+## Project Overview
+This is a vanilla JavaScript card game score tracker application with no external dependencies. The project uses a modular architecture with models, services, and utilities.
+
+## Architecture Guidelines
+
+### File Structure
+- `index.html` - Main HTML entry point
+- `css/styles.css` - All styling
+- `js/app.js` - Main application logic and UI interactions
+- `js/models/` - Data models (Team.js, Match.js)
+- `js/services/` - Business logic services (teamService.js, matchService.js)
+- `js/utils/` - Utility functions (storage.js)
+
+### Code Style & Patterns
+
+#### JavaScript
+- Use ES6+ features (classes, arrow functions, template literals)
+- Follow camelCase naming convention
+- Use meaningful variable and function names
+- Add JSDoc comments for complex functions
+- Handle errors with try-catch blocks and user-friendly messages
+- Use const/let instead of var
+
+#### HTML
+- Use semantic HTML5 elements
+- Maintain accessibility with proper ARIA labels
+- Keep structure clean and well-organized
+
+#### CSS
+- Use BEM methodology for class naming
+- Maintain responsive design principles
+- Use CSS custom properties for theming
+- Keep styles modular and reusable
+
+## Development Rules
+
+### Model Classes
+- All models should have `toJSON()` and `fromJSON()` methods
+- Include proper validation in constructors
+- Use meaningful default values
+- Maintain data integrity with helper methods
+
+### Services
+- Keep business logic separate from UI logic
+- Use dependency injection where appropriate
+- Implement proper error handling
+- Return consistent data structures
+
+### UI/UX Guidelines
+- Provide immediate feedback for user actions
+- Use modals for data entry forms
+- Show loading states for async operations
+- Display user-friendly error messages
+- Maintain consistent styling across components
+
+### Data Management
+- Use localStorage for data persistence
+- Implement proper data validation
+- Handle data migration gracefully
+- Maintain data consistency across models
+
+### Performance
+- Minimize DOM queries by caching elements
+- Use event delegation where appropriate
+- Optimize localStorage operations
+- Avoid unnecessary re-renders
+
+## Testing & Quality
+- Test all user interactions
+- Validate data integrity
+- Ensure responsive design works
+- Test localStorage functionality
+- Verify error handling scenarios
+
+## Security Considerations
+- Validate all user inputs
+- Sanitize data before storage
+- Prevent XSS in dynamic content
+- Use proper data encoding
+
+## Browser Compatibility
+- Support modern browsers (ES6+)
+- Test on Chrome, Firefox, Safari, Edge
+- Ensure mobile responsiveness
+- Handle localStorage availability
+
+## Documentation
+- Keep README.md updated
+- Document complex algorithms
+- Include usage examples
+- Maintain clear code comments 

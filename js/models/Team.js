@@ -98,7 +98,7 @@ class Team {
 
     // Create team from JSON
     static fromJSON(json) {
-        const team = new Team(json.id, json.name, json.members, new Date(json.createdAt));
+        const team = new Team(json.id, json.name, json.members, DateUtils.safeDate(json.createdAt));
         team.stats = json.stats;
         team.matchHistory = json.matchHistory;
         return team;

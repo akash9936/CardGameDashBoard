@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read/write access to teams collection
+    match /teams/{document=**} {
+      allow read, write: if true; // For development - allow all access
+      // Future: implement authentication
+      // allow read, write: if request.auth != null;
+    }
+    
+    // Allow read/write access to matches collection
+    match /matches/{document=**} {
+      allow read, write: if true; // For development - allow all access
+      // Future: implement authentication
+      // allow read, write: if request.auth != null;
+    }
+    
+    // Allow access to test collection for connection testing
+    match /test/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Legacy cardGame path (for backward compatibility)
+    match /cardGame/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
