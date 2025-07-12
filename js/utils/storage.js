@@ -8,11 +8,47 @@ class Storage {
         };
         this.authState = {
             isAuthenticated: false,
-            authKey: 'redtoto'
+            authKey: this.getAuthKeyFromEnv()
         };
         console.log('Storage initialized with empty data');
         this.loadData();
         this.loadAuthState();
+        this.checkEnvironmentConfig();
+    }
+
+    // Get authentication key from environment variables
+    getAuthKeyFromEnv() {
+        // Try to get from environment variables
+        if (window.getEnvVar) {
+            const envAuthKey = window.getEnvVar('AUTH_KEY');
+            if (envAuthKey && envAuthKey !== 'your_authentication_key_here') {
+                console.log('✅ Authentication key loaded from environment variables');
+                return envAuthKey;
+            }
+        }
+        
+        // Fallback to hardcoded key for development
+        console.warn('⚠️ No AUTH_KEY found in environment variables, using fallback key');
+        console.log('💡 To use a custom auth key, create a .env file with: AUTH_KEY=your_secure_key');
+        return 'redtoto';
+    }
+
+    // Check if environment is properly configured
+    checkEnvironmentConfig() {
+        const firebaseKey = window.getEnvVar ? window.getEnvVar('FIREBASE_API_KEY') : null;
+        const authKey = this.authState.authKey;
+        
+        console.log('🔧 Environment Configuration Check:');
+        console.log(`   Firebase API Key: ${firebaseKey ? '✅ Loaded' : '❌ Not found'}`);
+        console.log(`   Auth Key: ${authKey && authKey !== 'redtoto' ? '✅ Custom key' : '⚠️ Using default key'}`);
+        
+        if (!firebaseKey || firebaseKey === 'your_firebase_api_key_here') {
+            console.warn('⚠️ Firebase API key not properly configured');
+        }
+        
+        if (authKey === 'redtoto') {
+            console.warn('⚠️ Using default authentication key - change this in production');
+        }
     }
 
     // Load data from localStorage
@@ -103,6 +139,11 @@ class Storage {
             return true;
         }
         return false;
+    }
+
+    // Get current auth key (for debugging - remove in production)
+    getCurrentAuthKey() {
+        return this.authState.authKey;
     }
 
     // Team operations

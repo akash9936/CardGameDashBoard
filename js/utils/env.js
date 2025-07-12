@@ -50,20 +50,31 @@ async function loadEnvironmentVariables() {
 function getEnvVar(key, fallback = null) {
     // Try to get from window.env (set by env.js)
     if (window.env && window.env[key]) {
+        console.log(`✅ Environment variable ${key} loaded from .env file`);
         return window.env[key];
     }
     
     // Try to get from process.env (for Node.js environments)
     if (typeof process !== 'undefined' && process.env && process.env[key]) {
+        console.log(`✅ Environment variable ${key} loaded from process.env`);
         return process.env[key];
     }
     
     // Return fallback
+    if (fallback !== null) {
+        console.log(`⚠️ Environment variable ${key} not found, using fallback`);
+    }
     return fallback;
 }
 
 // Load environment variables when the script loads
-loadEnvironmentVariables();
+loadEnvironmentVariables().then(() => {
+    console.log('🌍 Environment variables loaded');
+    console.log('📝 To configure environment variables:');
+    console.log('   1. Copy env.example to .env');
+    console.log('   2. Set FIREBASE_API_KEY=your_firebase_key');
+    console.log('   3. Set AUTH_KEY=your_secure_auth_key');
+});
 
 // Export for use in other modules
 window.getEnvVar = getEnvVar; 
