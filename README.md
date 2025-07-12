@@ -23,10 +23,11 @@ git clone https://github.com/yourusername/card-game-tracker.git
 cd card-game-tracker
 ```
 
-2. Set up Firebase configuration:
+2. Set up environment variables:
    - Copy `env.example` to `.env`
-   - Replace the placeholder value in `.env` with your actual Firebase API key
-   - You can find this value in your Firebase Console → Project Settings → General → Your apps
+   - Replace the placeholder values in `.env` with your actual configuration:
+     - `FIREBASE_API_KEY`: Your Firebase API key (from Firebase Console → Project Settings → General → Your apps)
+     - `AUTH_KEY`: Your authentication key for administrative actions (change from default 'redtoto' in production)
 
 3. Open `index.html` in your browser or use a local server:
 ```bash
@@ -39,38 +40,55 @@ npx serve
 
 4. Visit `http://localhost:8000` in your browser
 
-### Firebase Configuration
+### Environment Configuration
 
-This application uses Firebase for data storage. To set up Firebase:
+This application uses environment variables for secure configuration. To set up:
 
-1. Create a Firebase project at [https://console.firebase.google.com](https://console.firebase.google.com)
-2. Enable Firestore Database
-3. Get your project configuration from Project Settings → General → Your apps
-4. Create a `.env` file in the project root with the following variable:
+1. **Firebase Configuration**:
+   - Create a Firebase project at [https://console.firebase.google.com](https://console.firebase.google.com)
+   - Enable Firestore Database
+   - Get your project configuration from Project Settings → General → Your apps
+
+2. **Authentication Key**:
+   - The `AUTH_KEY` is used for administrative actions like adding teams, creating matches, and submitting rounds
+   - Change the default key 'redtoto' to a secure key in production
+   - Keep this key secret and share it only with authorized users
+
+3. **Create `.env` file** in the project root with:
    ```
    FIREBASE_API_KEY=your_firebase_api_key_here
+   AUTH_KEY=your_secure_authentication_key_here
    ```
 
 ### Deployment with GitHub Secrets
 
 For production deployment:
 
-1. Add your Firebase API key as a GitHub secret:
+1. Add your environment variables as GitHub secrets:
    - Go to your repository → Settings → Secrets and variables → Actions
-   - Create a new secret named `FIREBASE_API_KEY`
-   - Set the value to your actual Firebase API key
+   - Create secrets for:
+     - `FIREBASE_API_KEY`: Your Firebase API key
+     - `AUTH_KEY`: Your secure authentication key
 
 2. The GitHub Actions workflow will automatically:
-   - Create the `.env` file during deployment
+   - Create the `.env` file during deployment with your secrets
    - Deploy to GitHub Pages with the secure configuration
 
 ## Usage
 
-1. Create teams and add team members
-2. Start matches between teams
-3. Enter round scores as the game progresses
-4. View team statistics and match history
-5. Track team rankings and performance
+1. **Authentication**: Enter the authentication key when prompted for administrative actions
+2. Create teams and add team members
+3. Start matches between teams
+4. Enter round scores as the game progresses
+5. View team statistics and match history
+6. Track team rankings and performance
+
+## Security
+
+- The authentication key controls access to administrative functions
+- Change the default key 'redtoto' to a secure key in production
+- Keep your `.env` file secure and never commit it to version control
+- The `.env` file is already included in `.gitignore` for security
 
 ## Technologies Used
 
