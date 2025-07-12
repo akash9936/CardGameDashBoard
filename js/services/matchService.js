@@ -108,6 +108,28 @@ class MatchService {
             throw new Error('Promise and actual values cannot be negative');
         }
 
+        // Validate actual hands must equal 13
+        if (team1Actual + team2Actual !== 13) {
+            throw new Error('Actual hands of both teams must equal 13');
+        }
+
+        // Validate promise hands must be between 4 and 13
+        if (team1Promise < 4 || team1Promise > 13) {
+            throw new Error('Team 1 promise hand must be between 4 and 13');
+        }
+        if (team2Promise < 4 || team2Promise > 13) {
+            throw new Error('Team 2 promise hand must be between 4 and 13');
+        }
+
+        // Validate total score limits
+        const totalScore = team1Score + team2Score;
+        if (totalScore > 200) {
+            throw new Error('Total score cannot be greater than 200');
+        }
+        if (totalScore < -100) {
+            throw new Error('Total score cannot be less than -100');
+        }
+
         const newRound = {
             roundNumber: match.currentRound + 1,
             team1: { promise: team1Promise, actual: team1Actual, score: team1Score },
