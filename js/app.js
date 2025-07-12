@@ -291,24 +291,34 @@ async function showMatchRoundModal(matchId) {
                         <h4>${teams.team1.name}</h4>
                         <div class="form-group">
                             <label for="team1Promise">Promise Hand</label>
-                            <input type="number" id="team1Promise" min="0" required>
+                            <input type="number" id="team1Promise" min="4" max="13" required>
+                            <div class="validation-hint">Must be between 4 and 13</div>
                         </div>
                         <div class="form-group">
                             <label for="team1Actual">Actual Hand</label>
                             <input type="number" id="team1Actual" min="0" required>
+                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                         </div>
                     </div>
                     <div class="team-inputs">
                         <h4>${teams.team2.name}</h4>
                         <div class="form-group">
                             <label for="team2Promise">Promise Hand</label>
-                            <input type="number" id="team2Promise" min="0" required>
+                            <input type="number" id="team2Promise" min="4" max="13" required>
+                            <div class="validation-hint">Must be between 4 and 13</div>
                         </div>
                         <div class="form-group">
                             <label for="team2Actual">Actual Hand</label>
                             <input type="number" id="team2Actual" min="0" required>
+                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                         </div>
                     </div>
+                </div>
+                <div class="validation-hint" style="margin-bottom: 20px;">
+                    <strong>Validation Rules:</strong><br>
+                    • Promise hands must be between 4 and 13 for each team<br>
+                    • Actual hands of both teams must equal 13<br>
+                    • Total score cannot exceed 200 or be less than -100
                 </div>
                 <button type="submit" class="action-btn">Submit Round</button>
             </form>
@@ -558,11 +568,13 @@ async function refreshMatchesList() {
                                     <h5>${team1.name}</h5>
                                     <div class="form-group">
                                         <label for="team1Promise${match.id}">Promise Hand</label>
-                                        <input type="number" id="team1Promise${match.id}" min="0" required>
+                                        <input type="number" id="team1Promise${match.id}" min="4" max="13" required>
+                                        <div class="validation-hint">Must be between 4 and 13</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team1Actual${match.id}">Actual Hand</label>
                                         <input type="number" id="team1Actual${match.id}" min="0" required>
+                                        <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team1Score${match.id}">Score</label>
@@ -573,17 +585,25 @@ async function refreshMatchesList() {
                                     <h5>${team2.name}</h5>
                                     <div class="form-group">
                                         <label for="team2Promise${match.id}">Promise Hand</label>
-                                        <input type="number" id="team2Promise${match.id}" min="0" required>
+                                        <input type="number" id="team2Promise${match.id}" min="4" max="13" required>
+                                        <div class="validation-hint">Must be between 4 and 13</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team2Actual${match.id}">Actual Hand</label>
                                         <input type="number" id="team2Actual${match.id}" min="0" required>
+                                        <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team2Score${match.id}">Score</label>
                                         <input type="number" id="team2Score${match.id}" required>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="validation-hint" style="margin-bottom: 20px;">
+                                <strong>Validation Rules:</strong><br>
+                                • Promise hands must be between 4 and 13 for each team<br>
+                                • Actual hands of both teams must equal 13<br>
+                                • Total score cannot exceed 200 or be less than -100
                             </div>
                             <button type="submit" class="action-btn">Submit Round</button>
                             <button type="button" onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel Match</button>
