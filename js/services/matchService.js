@@ -1,13 +1,13 @@
 class MatchService {
-    constructor(storage) {
-        this.storage = storage;
+    constructor(firebaseService) {
+        this.firebaseService = firebaseService;
     }
 
     // Create a new match
-    createMatch(team1Id, team2Id) {
+    async createMatch(team1Id, team2Id) {
         // Validate teams
-        const team1 = this.storage.getTeam(team1Id);
-        const team2 = this.storage.getTeam(team2Id);
+        const team1 = await this.firebaseService.getTeam(team1Id);
+        const team2 = await this.firebaseService.getTeam(team2Id);
 
         if (!team1 || !team2) {
             throw new Error('One or both teams not found');
@@ -18,8 +18,8 @@ class MatchService {
         }
 
         // Check for existing pending matches between these teams
-        const existingMatch = this.storage.getAllMatches()
-            .find(match => 
+        const existingMatches = await this.firebaseService.getAllMatches();
+        const existingMatch = existingMatches.find(match => 
                 match.status === 'pending' &&
                 ((match.team1Id === team1Id && match.team2Id === team2Id) ||
                  (match.team1Id === team2Id && match.team2Id === team1Id))
@@ -29,104 +29,48 @@ class MatchService {
             throw new Error('There is already a pending match between these teams');
         }
 
-        return this.storage.addMatch(team1Id, team2Id);
+        const matchData = {
+            team1Id: team1Id,
+            team2Id: team2Id,
+            date: new Date(),
+            status: 'pending',
+            currentRound: 0,
+            rounds: [],
+            roundStats: {
+                team1: { won: 0, lost: 0 },
+                team2: { won: 0, lost: 0 }
+            },
+            finalScore: { team1: 0, team2: 0 },
+            winnerId: null,
+            history: []
+        };
+
+        const matchId = await this.firebaseService.createMatch(matchData);
+        return { id: matchId };
     }
 
     // Get match details
-    getMatchDetails(matchId) {
-        const match = this.storage.getMatch(matchId);
+    async getMatchDetails(matchId) {
+        const match = await this.firebaseService.getMatch(matchId);
         if (!match) {
             throw new Error('Match not found');
         }
 
-        const team1 = this.storage.getTeam(match.team1Id);
-        const team2 = this.storage.getTeam(match.team2Id);
+        const team1 = await this.firebaseService.getTeam(match.team1Id);
+        const team2 = await this.firebaseService.getTeam(match.team2Id);
 
         return {
-            ...match.getSummary(),
+            ...match,
             teams: {
-                team1: {
-                    id: team1.id,
-                    name: team1.name,
-                    stats: team1.stats
-                },
-                team2: {
-                    id: team2.id,
-                    name: team2.name,
-                    stats: team2.stats
-                }
-            },
-            history: match.history
+                team1: team1,
+                team2: team2
+            }
         };
     }
 
-    // Update match score
-    updateMatchScore(matchId, team1Score, team2Score) {
-        const match = this.storage.getMatch(matchId);
-        if (!match) {
-            throw new Error('Match not found');
-        }
-
-        if (match.status !== 'pending') {
-            throw new Error('Cannot update score of a completed or cancelled match');
-        }
-
-        if (team1Score < 0 || team2Score < 0) {
-            throw new Error('Scores cannot be negative');
-        }
-
-        match.updateScore(team1Score, team2Score);
-        return this.storage.updateMatch(match);
-    }
-
-    // Complete a match
-    completeMatch(matchId) {
-        const match = this.storage.getMatch(matchId);
-        if (!match) {
-            throw new Error('Match not found');
-        }
-
-        if (match.status !== 'pending') {
-            throw new Error('Match is not in pending status');
-        }
-
-        match.complete();
-        return this.storage.updateMatch(match);
-    }
-
-    // Cancel a match
-    cancelMatch(matchId, reason) {
-        const match = this.storage.getMatch(matchId);
-        if (!match) {
-            throw new Error('Match not found');
-        }
-
-        if (match.status !== 'pending') {
-            throw new Error('Match is not in pending status');
-        }
-
-        match.cancel(reason);
-        return this.storage.updateMatch(match);
-    }
-
-    // Start a match
-    startMatch(matchId) {
-        const match = this.storage.getMatch(matchId);
-        if (!match) {
-            throw new Error('Match not found');
-        }
-
-        if (match.status !== 'pending') {
-            throw new Error('Match must be in pending status to start');
-        }
-
-        match.start();
-        return this.storage.updateMatch(match);
-    }
-
     // Get all matches with optional filters
-    getAllMatches(filters = {}) {
-        let matches = this.storage.getAllMatches();
+    async getAllMatches(filters = {}) {
+        let matches = await this.firebaseService.getAllMatches();
 
         // Apply filters
         if (filters.status) {
@@ -139,93 +83,18 @@ class MatchService {
             );
         }
 
-        if (filters.startDate) {
-            const startDate = new Date(filters.startDate);
-            matches = matches.filter(match => new Date(match.date) >= startDate);
-        }
-
-        if (filters.endDate) {
-            const endDate = new Date(filters.endDate);
-            matches = matches.filter(match => new Date(match.date) <= endDate);
-        }
-
         // Sort by date (most recent first)
-        return matches
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .map(match => ({
-                ...match.getSummary(),
-                team1Id: match.team1Id,
-                team2Id: match.team2Id
-            }));
+        return matches.sort((a, b) => DateUtils.safeDate(b.date) - DateUtils.safeDate(a.date));
     }
 
     // Get recent matches
-    getRecentMatches(limit = 10) {
-        return this.getAllMatches()
-            .slice(0, limit);
+    async getRecentMatches(limit = 10) {
+        const matches = await this.getAllMatches();
+        return matches.slice(0, limit);
     }
 
-    // Get upcoming matches (pending matches)
-    getUpcomingMatches() {
-        return this.getAllMatches({ status: 'pending' });
-    }
-
-    // Get match statistics
-    getMatchStatistics() {
-        const matches = this.storage.getAllMatches();
-        const completedMatches = matches.filter(match => match.status === 'completed');
-        
-        return {
-            total: matches.length,
-            completed: completedMatches.length,
-            cancelled: matches.filter(match => match.status === 'cancelled').length,
-            pending: matches.filter(match => match.status === 'pending').length,
-            averageScore: completedMatches.length > 0 ? {
-                team1: completedMatches.reduce((sum, match) => sum + match.score.team1, 0) / completedMatches.length,
-                team2: completedMatches.reduce((sum, match) => sum + match.score.team2, 0) / completedMatches.length
-            } : { team1: 0, team2: 0 },
-            draws: completedMatches.filter(match => match.winnerId === null).length
-        };
-    }
-
-    // Search matches
-    searchMatches(query) {
-        if (!query) return this.getAllMatches();
-
-        const searchTerm = query.toLowerCase();
-        const teams = this.storage.getAllTeams()
-            .filter(team => team.name.toLowerCase().includes(searchTerm));
-
-        return this.storage.getAllMatches()
-            .filter(match => {
-                const team1 = this.storage.getTeam(match.team1Id);
-                const team2 = this.storage.getTeam(match.team2Id);
-                return teams.some(team => 
-                    team.id === match.team1Id || team.id === match.team2Id
-                );
-            })
-            .map(match => {
-                const team1 = this.storage.getTeam(match.team1Id);
-                const team2 = this.storage.getTeam(match.team2Id);
-                return {
-                    ...match.getSummary(),
-                    teams: {
-                        team1: {
-                            id: team1.id,
-                            name: team1.name
-                        },
-                        team2: {
-                            id: team2.id,
-                            name: team2.name
-                        }
-                    }
-                };
-            });
-    }
-
-    // Add a round to a match
-    addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score) {
-        const match = this.storage.getMatch(matchId);
+    async addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score) {
+        const match = await this.firebaseService.getMatch(matchId);
         if (!match) {
             throw new Error('Match not found');
         }
@@ -239,13 +108,201 @@ class MatchService {
             throw new Error('Promise and actual values cannot be negative');
         }
 
-        // Add the round with user-entered scores
-        match.addRound(team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
-        
-        // Update the match in storage
-        return this.storage.updateMatch(match);
+        const newRound = {
+            roundNumber: match.currentRound + 1,
+            team1: { promise: team1Promise, actual: team1Actual, score: team1Score },
+            team2: { promise: team2Promise, actual: team2Actual, score: team2Score }
+        };
+
+        const updatedRounds = [...match.rounds, newRound];
+        const updatedFinalScore = {
+            team1: match.finalScore.team1 + team1Score,
+            team2: match.finalScore.team2 + team2Score
+        };
+
+        // Calculate round statistics
+        const currentRoundStats = match.roundStats || {
+            team1: { won: 0, lost: 0 },
+            team2: { won: 0, lost: 0 }
+        };
+
+        const updatedRoundStats = {
+            team1: { ...currentRoundStats.team1 },
+            team2: { ...currentRoundStats.team2 }
+        };
+
+        // Update round stats based on scores
+        if (team1Score > team2Score) {
+            updatedRoundStats.team1.won = (updatedRoundStats.team1.won || 0) + 1;
+            updatedRoundStats.team2.lost = (updatedRoundStats.team2.lost || 0) + 1;
+        } else if (team2Score > team1Score) {
+            updatedRoundStats.team2.won = (updatedRoundStats.team2.won || 0) + 1;
+            updatedRoundStats.team1.lost = (updatedRoundStats.team1.lost || 0) + 1;
+        }
+
+        const updates = {
+            rounds: updatedRounds,
+            finalScore: updatedFinalScore,
+            currentRound: match.currentRound + 1,
+            roundStats: updatedRoundStats
+        };
+
+        if (updatedFinalScore.team1 >= 500 || updatedFinalScore.team2 >= 500) {
+            updates.status = 'completed';
+            updates.winnerId = updatedFinalScore.team1 >= 500 ? match.team1Id : match.team2Id;
+            
+            // Update team statistics when match is completed
+            await this.updateTeamStats(match.team1Id, match.team2Id, { ...updates, id: matchId });
+        }
+
+        await this.firebaseService.updateMatch(matchId, updates);
+    }
+
+    async startMatch(matchId) {
+        await this.firebaseService.updateMatch(matchId, { status: 'in_progress' });
+    }
+
+    async cancelMatch(matchId, reason) {
+        await this.firebaseService.updateMatch(matchId, { status: 'cancelled', cancellationReason: reason });
+    }
+
+    // Update team statistics when a match is completed
+    async updateTeamStats(team1Id, team2Id, matchUpdates) {
+        try {
+            const team1 = await this.firebaseService.getTeam(team1Id);
+            const team2 = await this.firebaseService.getTeam(team2Id);
+            
+            if (!team1 || !team2) {
+                console.warn('One or both teams not found for stats update');
+                return;
+            }
+
+            // Calculate team scores
+            const team1Score = matchUpdates.finalScore.team1;
+            const team2Score = matchUpdates.finalScore.team2;
+            
+            // Determine winner
+            const winnerId = matchUpdates.winnerId;
+            
+            // Update team 1 stats
+            const team1Updates = {
+                'stats.matchesPlayed': (team1.stats?.matchesPlayed || 0) + 1,
+                'stats.totalScore': (team1.stats?.totalScore || 0) + team1Score
+            };
+            
+            if (winnerId === team1Id) {
+                team1Updates['stats.wins'] = (team1.stats?.wins || 0) + 1;
+                team1Updates['stats.points'] = (team1.stats?.points || 0) + 3;
+            } else if (winnerId === team2Id) {
+                team1Updates['stats.losses'] = (team1.stats?.losses || 0) + 1;
+            } else {
+                team1Updates['stats.draws'] = (team1.stats?.draws || 0) + 1;
+                team1Updates['stats.points'] = (team1.stats?.points || 0) + 1;
+            }
+            
+            // Update team 2 stats
+            const team2Updates = {
+                'stats.matchesPlayed': (team2.stats?.matchesPlayed || 0) + 1,
+                'stats.totalScore': (team2.stats?.totalScore || 0) + team2Score
+            };
+            
+            if (winnerId === team2Id) {
+                team2Updates['stats.wins'] = (team2.stats?.wins || 0) + 1;
+                team2Updates['stats.points'] = (team2.stats?.points || 0) + 3;
+            } else if (winnerId === team1Id) {
+                team2Updates['stats.losses'] = (team2.stats?.losses || 0) + 1;
+            } else {
+                team2Updates['stats.draws'] = (team2.stats?.draws || 0) + 1;
+                team2Updates['stats.points'] = (team2.stats?.points || 0) + 1;
+            }
+            
+            // Update round statistics if available
+            if (matchUpdates.roundStats) {
+                team1Updates['stats.roundsWon'] = (team1.stats?.roundsWon || 0) + (matchUpdates.roundStats.team1?.won || 0);
+                team1Updates['stats.roundsLost'] = (team1.stats?.roundsLost || 0) + (matchUpdates.roundStats.team1?.lost || 0);
+                team2Updates['stats.roundsWon'] = (team2.stats?.roundsWon || 0) + (matchUpdates.roundStats.team2?.won || 0);
+                team2Updates['stats.roundsLost'] = (team2.stats?.roundsLost || 0) + (matchUpdates.roundStats.team2?.lost || 0);
+            }
+            
+            // Add match to team history
+            const team1HistoryEntry = {
+                matchId: matchUpdates.id || Date.now(),
+                opponentId: team2Id,
+                result: winnerId === team1Id ? 'win' : winnerId === team2Id ? 'loss' : 'draw',
+                date: new Date(),
+                score: team1Score
+            };
+            
+            const team2HistoryEntry = {
+                matchId: matchUpdates.id || Date.now(),
+                opponentId: team1Id,
+                result: winnerId === team2Id ? 'win' : winnerId === team1Id ? 'loss' : 'draw',
+                date: new Date(),
+                score: team2Score
+            };
+            
+            team1Updates['matchHistory'] = firebase.firestore.FieldValue.arrayUnion(team1HistoryEntry);
+            team2Updates['matchHistory'] = firebase.firestore.FieldValue.arrayUnion(team2HistoryEntry);
+            
+            // Update both teams
+            await Promise.all([
+                this.firebaseService.updateTeam(team1Id, team1Updates),
+                this.firebaseService.updateTeam(team2Id, team2Updates)
+            ]);
+            
+            console.log('Team statistics updated successfully');
+        } catch (error) {
+            console.error('Error updating team statistics:', error);
+        }
+    }
+
+    // Recalculate all team statistics from existing matches
+    async recalculateAllTeamStats() {
+        try {
+            console.log('Starting team statistics recalculation...');
+            
+            const allMatches = await this.firebaseService.getAllMatches();
+            const allTeams = await this.firebaseService.getAllTeams();
+            
+            // Reset all team statistics
+            const resetPromises = allTeams.map(team => {
+                const resetStats = {
+                    'stats.matchesPlayed': 0,
+                    'stats.wins': 0,
+                    'stats.losses': 0,
+                    'stats.draws': 0,
+                    'stats.points': 0,
+                    'stats.totalScore': 0,
+                    'stats.roundsWon': 0,
+                    'stats.roundsLost': 0,
+                    'matchHistory': []
+                };
+                return this.firebaseService.updateTeam(team.id, resetStats);
+            });
+            
+            await Promise.all(resetPromises);
+            console.log('Reset all team statistics');
+            
+            // Process completed matches
+            const completedMatches = allMatches.filter(match => match.status === 'completed');
+            console.log(`Processing ${completedMatches.length} completed matches`);
+            
+            for (const match of completedMatches) {
+                await this.updateTeamStats(match.team1Id, match.team2Id, match);
+            }
+            
+            console.log('Team statistics recalculation completed');
+        } catch (error) {
+            console.error('Error recalculating team statistics:', error);
+        }
     }
 }
 
-// Create a singleton instance
-const matchService = new MatchService(storage); 
+// Create a singleton instance - will be initialized in app.js
+let matchService = null;
+
+// Function to initialize the service
+function initializeMatchService(firebaseService) {
+    matchService = new MatchService(firebaseService);
+    return matchService;
+} 

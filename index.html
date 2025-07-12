@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Card Game Dashboard</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
 </head>
 <body>
     <div class="container">
@@ -22,7 +25,10 @@
             <section id="teamsSection" class="dashboard-section active">
                 <div class="section-header">
                     <h2>Teams</h2>
-                    <button id="addTeamBtn" class="action-btn">Add New Team</button>
+                    <div class="header-buttons">
+                        <button id="addTeamBtn" class="action-btn">Add New Team</button>
+                        <button id="fixStatsBtn" class="action-btn secondary">Fix Stats</button>
+                    </div>
                 </div>
                 <div id="teamsList" class="grid-container">
                     <!-- Teams will be dynamically added here -->
@@ -44,6 +50,7 @@
             <section id="statsSection" class="dashboard-section">
                 <div class="section-header">
                     <h2>Statistics</h2>
+                    <button id="recalculateStatsBtn" class="action-btn">Recalculate Stats</button>
                 </div>
                 <div class="stats-container">
                     <div class="stats-card">
@@ -74,6 +81,11 @@
     </div>
 
     <!-- JavaScript Files -->
+    <script src="js/utils/env.js"></script>
+    <script src="js/utils/firebaseConfig.js"></script>
+    <script src="js/utils/dateUtils.js"></script>
+    <script src="js/services/firebaseService.js"></script>
+    <script src="js/services/migrationService.js"></script>
     <script src="js/models/Team.js"></script>
     <script src="js/models/Match.js"></script>
     <script src="js/utils/storage.js"></script>

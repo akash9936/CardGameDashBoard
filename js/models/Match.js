@@ -192,7 +192,7 @@ class Match {
             json.id,
             json.team1Id,
             json.team2Id,
-            new Date(json.date)
+            DateUtils.safeDate(json.date)
         );
         
         match.status = json.status || 'pending';
@@ -217,7 +217,7 @@ class Match {
         match.winnerId = json.winnerId || null;
         match.history = Array.isArray(json.history) ? json.history.map(entry => ({
             ...entry,
-            timestamp: new Date(entry.timestamp)
+            timestamp: DateUtils.safeDate(entry.timestamp)
         })) : [{
             timestamp: new Date(),
             action: 'match_created',

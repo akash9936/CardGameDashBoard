@@ -23,7 +23,12 @@ git clone https://github.com/yourusername/card-game-tracker.git
 cd card-game-tracker
 ```
 
-2. Open `index.html` in your browser or use a local server:
+2. Set up Firebase configuration:
+   - Copy `env.example` to `.env`
+   - Replace the placeholder value in `.env` with your actual Firebase API key
+   - You can find this value in your Firebase Console → Project Settings → General → Your apps
+
+3. Open `index.html` in your browser or use a local server:
 ```bash
 # Using Python
 python -m http.server 8000
@@ -32,7 +37,32 @@ python -m http.server 8000
 npx serve
 ```
 
-3. Visit `http://localhost:8000` in your browser
+4. Visit `http://localhost:8000` in your browser
+
+### Firebase Configuration
+
+This application uses Firebase for data storage. To set up Firebase:
+
+1. Create a Firebase project at [https://console.firebase.google.com](https://console.firebase.google.com)
+2. Enable Firestore Database
+3. Get your project configuration from Project Settings → General → Your apps
+4. Create a `.env` file in the project root with the following variable:
+   ```
+   FIREBASE_API_KEY=your_firebase_api_key_here
+   ```
+
+### Deployment with GitHub Secrets
+
+For production deployment:
+
+1. Add your Firebase API key as a GitHub secret:
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Create a new secret named `FIREBASE_API_KEY`
+   - Set the value to your actual Firebase API key
+
+2. The GitHub Actions workflow will automatically:
+   - Create the `.env` file during deployment
+   - Deploy to GitHub Pages with the secure configuration
 
 ## Usage
 
