@@ -738,6 +738,7 @@ async function viewTeamDetails(teamId) {
                         <span class="match-date">${DateUtils.formatDate(match.date)}</span>
                         <span class="match-result ${match.result}">${match.result.toUpperCase()}</span>
                         <span class="match-score">${match.finalScore.team1} - ${match.finalScore.team2}</span>
+                        <span class="match-opponent">vs ${match.opponentName}</span>
                     </div>
                 `).join('')}
             </div>
