@@ -251,4 +251,9 @@ class Match {
         
         return match;
     }
+}
+
+// Export for Node.js environment (testing)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Match;
 } 

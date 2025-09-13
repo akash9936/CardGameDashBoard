@@ -122,3 +122,7 @@ function initializeTeamService(firebaseService) {
     teamService = new TeamService(firebaseService);
     return teamService;
 } 
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = TeamService;
+}
