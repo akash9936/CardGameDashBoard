@@ -504,9 +504,11 @@ nav {
     padding: 40px;
     width: 90%;
     max-width: 600px;
+    max-height: 80vh;
     border-radius: 20px;
     box-shadow: var(--shadow-heavy);
     animation: slideIn 0.3s ease-out;
+    overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -730,6 +732,27 @@ nav {
     background: rgba(51, 65, 85, 0.5);
     padding: 20px;
     border-radius: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar for recent matches */
+.recent-matches::-webkit-scrollbar {
+    width: 8px;
+}
+
+.recent-matches::-webkit-scrollbar-track {
+    background: rgba(51, 65, 85, 0.3);
+    border-radius: 4px;
+}
+
+.recent-matches::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.recent-matches::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
 
 .recent-matches h4 {

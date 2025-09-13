@@ -103,4 +103,9 @@ class Team {
         team.matchHistory = json.matchHistory;
         return team;
     }
+}
+
+// Export for Node.js environment (testing)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Team;
 } 

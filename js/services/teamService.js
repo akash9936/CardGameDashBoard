@@ -45,13 +45,19 @@ class TeamService {
         }
 
         const allMatches = await this.firebaseService.getAllMatches();
+        const allTeams = await this.firebaseService.getAllTeams();
         const teamMatches = allMatches.filter(match => match.team1Id === teamId || match.team2Id === teamId)
             .sort((a, b) => DateUtils.safeDate(b.date) - DateUtils.safeDate(a.date));
 
         const recentMatches = teamMatches.slice(0, 5).map(match => {
+            // Find opponent team
+            const opponentId = match.team1Id === teamId ? match.team2Id : match.team1Id;
+            const opponent = allTeams.find(t => t.id === opponentId);
+            
             return {
                 ...match,
-                result: this.getMatchResultForTeam(match, teamId)
+                result: this.getMatchResultForTeam(match, teamId),
+                opponentName: opponent ? opponent.name : 'Unknown Team'
             };
         });
 
@@ -122,3 +128,7 @@ function initializeTeamService(firebaseService) {
     teamService = new TeamService(firebaseService);
     return teamService;
 } 
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = TeamService;
+}

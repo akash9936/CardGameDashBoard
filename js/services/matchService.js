@@ -327,4 +327,8 @@ let matchService = null;
 function initializeMatchService(firebaseService) {
     matchService = new MatchService(firebaseService);
     return matchService;
-} 
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MatchService;
+}

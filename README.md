@@ -1,117 +1,122 @@
-# Card Game Score Tracker
+# Claude Context Documentation
 
-A web application for tracking scores and statistics in card games. Built with vanilla JavaScript, HTML, and CSS.
+This folder contains comprehensive documentation for the Card Game Dashboard project, created specifically to provide Claude with detailed context about the project structure, implementation, and functionality.
 
-## Features
+## Documentation Files
 
-- Team management with member tracking
-- Match creation and scoring
-- Round-by-round score tracking
-- Team statistics and rankings
-- Match history and activity feed
-- Responsive design
+### 📋 [Project Overview](./project-overview.md)
+Complete project description, technology stack, architecture patterns, and feature overview. Essential starting point for understanding the application.
 
-## Live Demo
+### 🏗️ [Architecture Overview](./architecture-overview.md)
+Detailed system architecture, design patterns, component relationships, and scalability considerations. Covers MVC pattern, service layer, and data flow.
 
-Visit the live demo at: [https://yourusername.github.io/card-game-tracker](https://yourusername.github.io/card-game-tracker)
+### 📚 [API Documentation](./api-documentation.md)
+Comprehensive API documentation for all services, methods, parameters, and return types. Includes Firebase service, team service, and match service APIs.
 
-## Setup
+### 🎮 [Game Rules and Conditions](./game-rules-and-conditions.md)
+Complete documentation of game rules, validation conditions, scoring mechanisms, and business logic. Essential for understanding the card game implementation.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/card-game-tracker.git
-cd card-game-tracker
-```
+### 🗄️ [Database Schema](./database-schema.md)
+Detailed Firestore database schema, document structures, relationships, and data validation rules. Includes performance optimization and scaling considerations.
 
-2. Set up environment variables:
-   - Copy `env.example` to `.env`
-   - Replace the placeholder values in `.env` with your actual configuration:
-     - `FIREBASE_API_KEY`: Your Firebase API key (from Firebase Console → Project Settings → General → Your apps)
-     - `AUTH_KEY`: Your authentication key for administrative actions (change from default 'redtoto' in production)
+### 🚀 [Setup and Development](./setup-and-development.md)
+Complete setup guide, development workflow, testing strategies, debugging tips, and deployment procedures. Everything needed to run and develop the application.
 
-3. Open `index.html` in your browser or use a local server:
-```bash
-# Using Python
-python -m http.server 8000
+## Quick Reference
 
-# Using Node.js
-npx serve
-```
+### Key Technologies
+- **Frontend**: Vanilla JavaScript, HTML5, CSS3
+- **Backend**: Firebase Firestore, Firebase Authentication
+- **3D Graphics**: Spline 3D viewer
+- **Deployment**: Firebase Hosting, GitHub Pages
 
-4. Visit `http://localhost:8000` in your browser
+### Main Components
+- **Models**: `Team.js`, `Match.js` - Business logic and data structures
+- **Services**: `firebaseService.js`, `teamService.js`, `matchService.js` - API and business operations
+- **Utils**: `dateUtils.js`, `storage.js`, `env.js` - Helper functions and utilities
+- **Controller**: `app.js` - Main application logic and UI management
 
-### Environment Configuration
+### Core Features
+1. **Team Management** - Create teams, track statistics, manage members
+2. **Match System** - Head-to-head matches with round-by-round scoring
+3. **Game Rules** - Promise vs actual hand validation, 500-point win condition
+4. **Real-time Updates** - Firebase listeners for live data synchronization
+5. **Statistics** - Comprehensive team rankings and performance metrics
+6. **Authentication** - Key-based authentication for administrative actions
 
-This application uses environment variables for secure configuration. To set up:
+### Game Rules Summary
+- **Teams**: 2 teams per match, multiple members per team
+- **Rounds**: Promise 4-13 hands, actual hands must sum to 13
+- **Scoring**: `Score = |Promise - Actual| × 10` (lower is better)
+- **Win Condition**: First team to 500 points wins
+- **Statistics**: Wins/losses, points, rounds won/lost, match history
 
-1. **Firebase Configuration**:
-   - Create a Firebase project at [https://console.firebase.google.com](https://console.firebase.google.com)
-   - Enable Firestore Database
-   - Get your project configuration from Project Settings → General → Your apps
+### Database Collections
+- **teams**: Team data, statistics, and match history
+- **matches**: Match details, rounds, scores, and audit trail
 
-2. **Authentication Key**:
-   - The `AUTH_KEY` is used for administrative actions like adding teams, creating matches, and submitting rounds
-   - Change the default key 'redtoto' to a secure key in production
-   - Keep this key secret and share it only with authorized users
+### Environment Variables
+- `FIREBASE_API_KEY`: Firebase project API key
+- `AUTH_KEY`: Administrative authentication key
 
-3. **Create `.env` file** in the project root with:
-   ```
-   FIREBASE_API_KEY=your_firebase_api_key_here
-   AUTH_KEY=your_secure_authentication_key_here
-   ```
+## Using This Documentation
 
-### Deployment with GitHub Secrets
+### For Feature Development
+1. Review **Game Rules** for business logic requirements
+2. Check **API Documentation** for available methods
+3. Consult **Database Schema** for data structures
+4. Reference **Architecture Overview** for design patterns
 
-For production deployment:
+### For Bug Fixes
+1. Check **Game Rules** for validation logic
+2. Review **API Documentation** for method signatures
+3. Consult **Database Schema** for data relationships
+4. Use **Setup Guide** for debugging techniques
 
-1. Add your environment variables as GitHub secrets:
-   - Go to your repository → Settings → Secrets and variables → Actions
-   - Create secrets for:
-     - `FIREBASE_API_KEY`: Your Firebase API key
-     - `AUTH_KEY`: Your secure authentication key
+### For System Understanding
+1. Start with **Project Overview** for general context
+2. Read **Architecture Overview** for system design
+3. Study **Database Schema** for data modeling
+4. Review **API Documentation** for implementation details
 
-2. The GitHub Actions workflow will automatically:
-   - Create the `.env` file during deployment with your secrets
-   - Deploy to GitHub Pages with the secure configuration
+### For Deployment/Setup
+1. Follow **Setup and Development** guide step by step
+2. Reference **Database Schema** for Firebase configuration
+3. Check **Project Overview** for environment requirements
 
-## Usage
+## Context Usage Guidelines
 
-1. **Authentication**: Enter the authentication key when prompted for administrative actions
-2. Create teams and add team members
-3. Start matches between teams
-4. Enter round scores as the game progresses
-5. View team statistics and match history
-6. Track team rankings and performance
+When working with this project:
 
-## Security
+1. **Always validate against game rules** - The scoring system and validation rules are complex
+2. **Maintain data consistency** - Team statistics must stay synchronized with match data
+3. **Handle authentication properly** - Administrative actions require key-based auth
+4. **Consider real-time updates** - UI should reflect Firebase changes automatically
+5. **Follow established patterns** - Use existing service layer and model patterns
+6. **Validate user inputs** - All inputs have specific validation requirements
+7. **Test thoroughly** - Game rules have many edge cases and validation scenarios
 
-- The authentication key controls access to administrative functions
-- Change the default key 'redtoto' to a secure key in production
-- Keep your `.env` file secure and never commit it to version control
-- The `.env` file is already included in `.gitignore` for security
+## File Locations Quick Reference
 
-## Technologies Used
+### Models
+- `js/models/Team.js` - Team entity and statistics
+- `js/models/Match.js` - Match entity and game rules
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Local Storage for data persistence
-- GitHub Pages for hosting
+### Services
+- `js/services/firebaseService.js` - Database operations
+- `js/services/teamService.js` - Team business logic
+- `js/services/matchService.js` - Match management
+- `js/services/migrationService.js` - Data migration
 
-## Contributing
+### Utils
+- `js/utils/firebaseConfig.js` - Firebase configuration
+- `js/utils/dateUtils.js` - Date handling utilities
+- `js/utils/storage.js` - Local storage management
+- `js/utils/env.js` - Environment variable loading
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Configuration
+- `firebase.json` - Firebase project configuration
+- `firestore.rules` - Database security rules
+- `.env` - Environment variables (local development)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Built as a simple and efficient way to track card game scores
-- No external dependencies required
-- Easy to use and maintain 
+This documentation provides comprehensive context for understanding and working with the Card Game Dashboard project. Each file contains detailed information about specific aspects of the system, enabling informed development and maintenance decisions.
