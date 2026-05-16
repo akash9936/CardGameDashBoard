@@ -19,7 +19,6 @@ const elements = {
     // Lists
     teamsList: document.getElementById('teamsList'),
     matchesList: document.getElementById('matchesList'),
-    teamRankings: document.getElementById('teamRankings'),
     recentActivity: document.getElementById('recentActivity'),
     
     // Modal
@@ -448,6 +447,7 @@ function showModal(content) {
 }
 
 function closeModal() {
+    destroyTeamCharts();
     elements.modal.style.display = 'none';
     elements.modalContent.innerHTML = '';
     elements.modal.classList.remove('auth-modal');
@@ -506,6 +506,146 @@ async function refreshTeamsList() {
             </div>
         `;
     }).join('');
+}
+
+const _wormCharts = new Map();
+
+function renderScorecard(match, team1, team2) {
+    const rounds = (Array.isArray(match.rounds) ? match.rounds : []).slice()
+        .sort((a, b) => a.roundNumber - b.roundNumber);
+    const summary = StatsUtils.matchSummary(match);
+
+    const rows = rounds.map(r => {
+        const c1 = StatsUtils.roundOutcome(r.team1);
+        const c2 = StatsUtils.roundOutcome(r.team2);
+        const s1 = Number(r.team1?.score || 0);
+        const s2 = Number(r.team2?.score || 0);
+        const winnerCol = s1 > s2 ? 't1' : s2 > s1 ? 't2' : 'tie';
+        const blindBadge = (side) => StatsUtils.isBlindSide(side) ? '<span class="blind-badge" title="Blind bid">B</span>' : '';
+        return `
+            <tr>
+                <td class="r-num">${r.roundNumber}</td>
+                <td>${r.team1?.promise ?? ''}${blindBadge(r.team1)}</td>
+                <td>${r.team1?.actual ?? ''}</td>
+                <td class="score-cell outcome-${c1}">${s1 >= 0 ? '+' : ''}${s1}</td>
+                <td>${r.team2?.promise ?? ''}${blindBadge(r.team2)}</td>
+                <td>${r.team2?.actual ?? ''}</td>
+                <td class="score-cell outcome-${c2}">${s2 >= 0 ? '+' : ''}${s2}</td>
+                <td class="winner-cell ${winnerCol}">${winnerCol === 't1' ? team1.name : winnerCol === 't2' ? team2.name : '—'}</td>
+            </tr>
+        `;
+    }).join('');
+
+    const summaryBits = [];
+    if (summary.blinds) summaryBits.push(`<span class="chip chip-gold">${summary.blinds} blind${summary.blinds > 1 ? 's' : ''}</span>`);
+    if (summary.overExtensions) summaryBits.push(`<span class="chip chip-purple">${summary.overExtensions} over-extension${summary.overExtensions > 1 ? 's' : ''}</span>`);
+    if (summary.biggestSwing.round) summaryBits.push(`<span class="chip">Biggest swing: R${summary.biggestSwing.round} (Δ${summary.biggestSwing.delta})</span>`);
+
+    return `
+        <div class="scorecard">
+            <div class="scorecard-chart-wrap">
+                <canvas class="worm-chart" data-match-id="${match.id}"></canvas>
+            </div>
+            <div class="scorecard-summary">${summaryBits.join('') || '<span class="chip">No rounds yet</span>'}</div>
+            <div class="scorecard-table-wrap">
+                <table class="scorecard-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">R</th>
+                            <th colspan="3" class="t1-head">${team1.name}</th>
+                            <th colspan="3" class="t2-head">${team2.name}</th>
+                            <th rowspan="2">Round Winner</th>
+                        </tr>
+                        <tr>
+                            <th>P</th><th>A</th><th>Score</th>
+                            <th>P</th><th>A</th><th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function mountWormCharts() {
+    for (const [, chart] of _wormCharts) chart.destroy();
+    _wormCharts.clear();
+
+    if (typeof Chart === 'undefined') return;
+
+    const canvases = document.querySelectorAll('canvas.worm-chart');
+    canvases.forEach(async (canvas) => {
+        const matchId = canvas.dataset.matchId;
+        const match = (await matchService.getAllMatches()).find(m => String(m.id) === String(matchId));
+        if (!match) return;
+        const teams = await teamService.getAllTeams();
+        const team1 = teams.find(t => String(t.id) === String(match.team1Id));
+        const team2 = teams.find(t => String(t.id) === String(match.team2Id));
+        if (!team1 || !team2) return;
+
+        const series = StatsUtils.cumulativeSeries(match);
+        const css = getComputedStyle(document.documentElement);
+        const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
+        const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
+        const muted = css.getPropertyValue('--text-muted').trim() || '#94a3b8';
+
+        const winLinePlugin = {
+            id: 'winLine',
+            afterDraw(chart) {
+                const { ctx, chartArea, scales } = chart;
+                if (!scales.y) return;
+                const yMax = scales.y.max ?? 500;
+                if (yMax < 500) return;
+                const y = scales.y.getPixelForValue(500);
+                if (y < chartArea.top || y > chartArea.bottom) return;
+                ctx.save();
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([6, 4]);
+                ctx.beginPath();
+                ctx.moveTo(chartArea.left, y);
+                ctx.lineTo(chartArea.right, y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#fbbf24';
+                ctx.font = '600 11px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('Win @ 500', chartArea.right - 6, y - 4);
+                ctx.restore();
+            },
+        };
+
+        const chart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: series.labels,
+                datasets: [
+                    { label: team1.name, data: series.team1, borderColor: c1, backgroundColor: c1 + '22', tension: 0.25, fill: false, pointRadius: 3 },
+                    { label: team2.name, data: series.team2, borderColor: c2, backgroundColor: c2 + '22', tension: 0.25, fill: false, pointRadius: 3 },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: muted } },
+                },
+                scales: {
+                    x: { ticks: { color: muted }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                    y: {
+                        ticks: { color: muted },
+                        grid: { color: 'rgba(148,163,184,0.1)' },
+                        suggestedMin: 0,
+                        suggestedMax: 550,
+                    },
+                },
+            },
+            plugins: [winLinePlugin],
+        });
+        _wormCharts.set(String(matchId), chart);
+    });
 }
 
 async function refreshMatchesList() {
@@ -623,32 +763,7 @@ async function refreshMatchesList() {
                         </form>
                     </div>
                 ` : ''}
-                ${rounds.length > 0 ? `
-                    <div class="match-rounds">
-                        <h4>Round History</h4>
-                        <div class="rounds-list">
-                            ${rounds.map(round => `
-                                <div class="round-item">
-                                    <h5>Round ${round.roundNumber}</h5>
-                                    <div class="round-scores">
-                                        <div class="team-round">
-                                            <strong>${team1.name}:</strong>
-                                            Promise: ${round.team1.promise}, 
-                                            Actual: ${round.team1.actual}, 
-                                            Score: ${round.team1.score}
-                                        </div>
-                                        <div class="team-round">
-                                            <strong>${team2.name}:</strong>
-                                            Promise: ${round.team2.promise}, 
-                                            Actual: ${round.team2.actual}, 
-                                            Score: ${round.team2.score}
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
+                ${rounds.length > 0 ? renderScorecard(match, team1, team2) : ''}
                 ${status === 'cancelled' ? `
                     <div class="match-summary">
                         <p class="cancelled-message">Match was cancelled</p>
@@ -660,23 +775,85 @@ async function refreshMatchesList() {
             </div>
         `;
     }).join('');
+
+    mountWormCharts();
+}
+
+let _leaderboardSort = { key: 'rank', dir: 'asc' };
+
+function renderKpiTiles(kpis) {
+    const tiles = [
+        { label: 'Matches', value: kpis.totalMatches, accent: 'primary' },
+        { label: 'Rounds Played', value: kpis.totalRounds, accent: 'info' },
+        { label: 'Highest Round', value: kpis.highestRoundScore, accent: 'success' },
+        { label: 'Blinds Called', value: kpis.blindsCalled, accent: 'warning' },
+    ];
+    document.getElementById('kpiTiles').innerHTML = tiles.map(t => `
+        <div class="kpi-tile kpi-${t.accent}">
+            <div class="kpi-value">${t.value}</div>
+            <div class="kpi-label">${t.label}</div>
+        </div>
+    `).join('');
+}
+
+function renderLeaderboard(rows, form) {
+    const { key, dir } = _leaderboardSort;
+    const sorted = rows.slice().sort((a, b) => {
+        const av = a[key], bv = b[key];
+        const cmp = typeof av === 'string' ? av.localeCompare(bv) : av - bv;
+        return dir === 'asc' ? cmp : -cmp;
+    });
+    document.getElementById('leaderboardBody').innerHTML = sorted.map(r => {
+        const rankClass = r.rank <= 3 ? `rank-${r.rank}` : '';
+        const formChips = (form.get(r.id) || []).map(o =>
+            `<span class="form-chip form-${o.toLowerCase()}">${o}</span>`
+        ).join('');
+        return `
+            <tr class="${rankClass}">
+                <td class="rank-cell">${r.rank}</td>
+                <td class="team-cell">${r.name}</td>
+                <td>${r.played}</td>
+                <td class="num pos">${r.wins}</td>
+                <td class="num neg">${r.losses}</td>
+                <td>${r.winPct.toFixed(1)}%</td>
+                <td class="pts">${r.points}</td>
+                <td>${r.totalScore}</td>
+                <td>${r.avgScore.toFixed(0)}</td>
+                <td class="form-cell">${formChips || '<span class="form-empty">—</span>'}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function wireLeaderboardSort() {
+    const ths = document.querySelectorAll('#leaderboardTable thead th[data-sort]');
+    ths.forEach(th => {
+        if (th.dataset.wired) return;
+        th.dataset.wired = '1';
+        th.addEventListener('click', () => {
+            const key = th.dataset.sort;
+            if (_leaderboardSort.key === key) {
+                _leaderboardSort.dir = _leaderboardSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                _leaderboardSort.key = key;
+                _leaderboardSort.dir = key === 'name' || key === 'rank' ? 'asc' : 'desc';
+            }
+            refreshStats();
+        });
+    });
 }
 
 async function refreshStats() {
-    // Update team rankings
-    const rankings = await teamService.getTeamRankings();
-    elements.teamRankings.innerHTML = rankings.map((team, index) => `
-        <div class="ranking-item">
-            <span class="rank">#${index + 1}</span>
-            <span class="team-name">${team.name}</span>
-            <span class="points">${team.stats.points} pts</span>
-            <span class="win-rate">${((team.stats.wins / team.stats.matchesPlayed) * 100 || 0).toFixed(1)}%</span>
-        </div>
-    `).join('');
-    
-    // Update recent activity
-    const recentMatches = await matchService.getRecentMatches();
     const teams = await teamService.getAllTeams();
+    const matches = await matchService.getAllMatches();
+
+    renderKpiTiles(StatsUtils.kpis(matches));
+    const rows = StatsUtils.leaderboard(teams, matches);
+    const form = StatsUtils.recentForm(teams, matches, 5);
+    renderLeaderboard(rows, form);
+    wireLeaderboardSort();
+
+    const recentMatches = await matchService.getRecentMatches();
     elements.recentActivity.innerHTML = recentMatches.map(match => {
         const team1 = teams.find(t => t.id === match.team1Id);
         const team2 = teams.find(t => t.id === match.team2Id);
@@ -703,60 +880,222 @@ async function refreshStats() {
     }).join('');
 }
 
-async function viewTeamDetails(teamId) {
-    const team = await teamService.getTeamDetails(teamId);
-    const opponentId = team.recentMatches[0]?.opponentId;
-    let headToHeadHTML = '';
-    if (opponentId) {
-        const headToHead = await teamService.getHeadToHead(teamId, opponentId);
-        const opponent = await teamService.getTeamDetails(opponentId);
-        headToHeadHTML = `
-            <div class="stat-item">
-                <h4>Head-to-Head vs ${opponent.name}</h4>
-                <p>Matches: ${headToHead.totalMatches}</p>
-                <p>Wins: ${headToHead.team1.wins}</p>
-                <p>Losses: ${headToHead.team1.losses}</p>
-                <p>Draws: ${headToHead.team1.draws}</p>
+const _teamCharts = new Map();
+
+function destroyTeamCharts() {
+    for (const [, chart] of _teamCharts) chart.destroy();
+    _teamCharts.clear();
+}
+
+function renderTeamOverview(profile, allTeams, matches) {
+    const formChips = StatsUtils.recentForm(allTeams, matches, 5).get(profile.id) || [];
+    const formHtml = formChips.length
+        ? formChips.map(o => `<span class="form-chip form-${o.toLowerCase()}">${o}</span>`).join('')
+        : '<span class="form-empty">No matches yet</span>';
+
+    let h2hHtml = '';
+    if (profile.topOpponentId) {
+        const opp = allTeams.find(t => String(t.id) === profile.topOpponentId);
+        const h2h = StatsUtils.headToHead(profile.id, profile.topOpponentId, matches);
+        const recentChips = h2h.recent.map(o => `<span class="form-chip form-${o.toLowerCase()}">${o}</span>`).join('') || '<span class="form-empty">—</span>';
+        h2hHtml = `
+            <div class="td-h2h">
+                <h4>Head-to-Head vs ${opp ? opp.name : profile.topOpponentId}</h4>
+                <div class="td-h2h-row">
+                    <div class="td-h2h-record"><strong>${h2h.wins}</strong>W &nbsp;–&nbsp; <strong>${h2h.losses}</strong>L</div>
+                    <div class="td-h2h-meta">${h2h.played} matches</div>
+                </div>
+                <div class="td-h2h-recent">Last 3: ${recentChips}</div>
             </div>
         `;
     }
-    
-    showModal(`
-        <h2>${team.name} Details</h2>
-        <div class="team-details">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h4>Overall Stats</h4>
-                    <p>Matches: ${team.stats.matchesPlayed}</p>
-                    <p>Wins: ${team.stats.wins}</p>
-                    <p>Losses: ${team.stats.losses}</p>
-                    <p>Draws: ${team.stats.draws}</p>
-                    <p>Points: ${team.stats.points}</p>
-                    <p>Win Rate: ${((team.stats.wins / team.stats.matchesPlayed) * 100 || 0).toFixed(1)}%</p>
-                </div>
-                <div class="stat-item">
-                    <h4>Recent Form</h4>
-                    <div class="form-indicators">
-                        ${team.recentForm.map(result => `
-                            <span class="form-indicator ${result}">${result[0].toUpperCase()}</span>
-                        `).join('')}
-                    </div>
-                </div>
-                ${headToHeadHTML}
+
+    return `
+        <div class="td-overview">
+            <div class="kpi-tiles">
+                <div class="kpi-tile kpi-primary"><div class="kpi-value">${profile.points}</div><div class="kpi-label">Points</div></div>
+                <div class="kpi-tile kpi-success"><div class="kpi-value">${profile.wins}–${profile.losses}</div><div class="kpi-label">W – L</div></div>
+                <div class="kpi-tile kpi-info"><div class="kpi-value">${profile.winPct.toFixed(0)}%</div><div class="kpi-label">Win Rate</div></div>
+                <div class="kpi-tile kpi-warning"><div class="kpi-value">${profile.bestMatchScore}</div><div class="kpi-label">Best Match</div></div>
             </div>
-            <div class="recent-matches">
-                <h4>Recent Matches</h4>
-                ${team.recentMatches.map(match => `
-                    <div class="match-item">
-                        <span class="match-date">${DateUtils.formatDate(match.date)}</span>
-                        <span class="match-result ${match.result}">${match.result.toUpperCase()}</span>
-                        <span class="match-score">${match.finalScore.team1} - ${match.finalScore.team2}</span>
-                        <span class="match-opponent">vs ${match.opponentName}</span>
-                    </div>
-                `).join('')}
+            <div class="td-row">
+                <div class="td-card">
+                    <h4>Recent Form</h4>
+                    <div class="form-cell">${formHtml}</div>
+                </div>
+                <div class="td-card">
+                    <h4>Totals</h4>
+                    <p><span class="td-label">Total score:</span> <strong>${profile.totalScore}</strong></p>
+                    <p><span class="td-label">Avg / match:</span> <strong>${profile.avgScore.toFixed(0)}</strong></p>
+                    <p><span class="td-label">Rounds W/L:</span> <strong>${profile.roundsWon}/${profile.roundsLost}</strong></p>
+                </div>
+                ${h2hHtml ? `<div class="td-card">${h2hHtml}</div>` : ''}
             </div>
         </div>
+    `;
+}
+
+function renderTeamMatchesTab(profile, allTeams) {
+    if (!profile.allMatches.length) return '<p class="td-empty">No matches yet.</p>';
+    const rows = profile.allMatches.map(m => {
+        const side = StatsUtils.teamSide(m, profile.id);
+        const oppId = StatsUtils.opponentId(m, profile.id);
+        const opp = allTeams.find(t => String(t.id) === oppId);
+        const myScore = Number(m.finalScore?.[side] || 0);
+        const oppScore = Number(m.finalScore?.[side === 'team1' ? 'team2' : 'team1'] || 0);
+        let resultCell = '<span class="result-chip result-pending">Pending</span>';
+        if (m.status === 'completed') {
+            const won = String(m.winnerId) === profile.id;
+            resultCell = won
+                ? '<span class="result-chip result-win">Won</span>'
+                : '<span class="result-chip result-loss">Lost</span>';
+        } else if (m.status === 'cancelled') {
+            resultCell = '<span class="result-chip result-cancelled">Cancelled</span>';
+        } else if (m.status === 'in_progress') {
+            resultCell = '<span class="result-chip result-progress">In progress</span>';
+        }
+        return `
+            <tr>
+                <td>${DateUtils.formatDate(m.date)}</td>
+                <td>${opp ? opp.name : oppId}</td>
+                <td>${resultCell}</td>
+                <td class="num">${myScore} – ${oppScore}</td>
+            </tr>
+        `;
+    }).join('');
+    return `
+        <div class="td-table-wrap">
+            <table class="td-table">
+                <thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Score</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+function renderTeamTrendsTab(profile) {
+    if (!profile.played) return '<p class="td-empty">Trends will appear once this team completes a match.</p>';
+    return `
+        <div class="td-charts">
+            <div class="td-chart-card">
+                <h4>Score per Match</h4>
+                <div class="td-chart-wrap"><canvas id="teamScoreChart"></canvas></div>
+            </div>
+            <div class="td-chart-card">
+                <h4>Promise vs Actual</h4>
+                <div class="td-chart-wrap"><canvas id="teamPaChart"></canvas></div>
+                <p class="td-chart-legend">Each dot = one round. Diagonal = met promise exactly. Above = took more than promised, below = took less.</p>
+            </div>
+        </div>
+    `;
+}
+
+function mountTeamCharts(profile, matches) {
+    destroyTeamCharts();
+    if (typeof Chart === 'undefined') return;
+
+    const css = getComputedStyle(document.documentElement);
+    const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
+    const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
+    const muted = css.getPropertyValue('--text-muted').trim() || '#94a3b8';
+
+    const scoreEl = document.getElementById('teamScoreChart');
+    if (scoreEl) {
+        const series = StatsUtils.teamScoreSeries(profile.id, matches);
+        _teamCharts.set('score', new Chart(scoreEl, {
+            type: 'line',
+            data: {
+                labels: series.map(p => `M${p.x}`),
+                datasets: [{
+                    label: profile.name,
+                    data: series.map(p => p.y),
+                    borderColor: c1,
+                    backgroundColor: c1 + '22',
+                    tension: 0.25,
+                    pointRadius: 3,
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: muted }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                    y: { ticks: { color: muted }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                },
+            },
+        }));
+    }
+
+    const paEl = document.getElementById('teamPaChart');
+    if (paEl) {
+        const pts = StatsUtils.teamPromiseActualPoints(profile.id, matches);
+        _teamCharts.set('pa', new Chart(paEl, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Round',
+                    data: pts.map(p => ({ x: p.x, y: p.y })),
+                    backgroundColor: pts.map(p => p.blind ? '#fbbf24' : (p.score > 0 ? c2 : 'rgba(239,68,68,0.7)')),
+                    pointRadius: 5,
+                }],
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { title: { display: true, text: 'Promise', color: muted }, min: 0, max: 14, ticks: { color: muted, stepSize: 1 }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                    y: { title: { display: true, text: 'Actual', color: muted }, min: 0, max: 14, ticks: { color: muted, stepSize: 1 }, grid: { color: 'rgba(148,163,184,0.1)' } },
+                },
+            },
+        }));
+    }
+}
+
+function wireTeamTabs(profile, allTeams, matches) {
+    const tabs = document.querySelectorAll('.td-tab');
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+            tabs.forEach(t => t.classList.toggle('active', t === btn));
+            const body = document.getElementById('teamDetailsBody');
+            if (target === 'overview') body.innerHTML = renderTeamOverview(profile, allTeams, matches);
+            else if (target === 'matches') body.innerHTML = renderTeamMatchesTab(profile, allTeams);
+            else if (target === 'trends') {
+                body.innerHTML = renderTeamTrendsTab(profile);
+                requestAnimationFrame(() => mountTeamCharts(profile, matches));
+            }
+        });
+    });
+}
+
+async function viewTeamDetails(teamId) {
+    const allTeams = await teamService.getAllTeams();
+    const matches = await matchService.getAllMatches();
+    const profile = StatsUtils.teamProfile(teamId, allTeams, matches);
+    if (!profile) {
+        showModal('<p>Team not found.</p>');
+        return;
+    }
+
+    showModal(`
+        <div class="team-details-modal">
+            <div class="td-header">
+                <h2>${profile.name}</h2>
+                <div class="td-meta">
+                    ${profile.members.length ? profile.members.map(m => `<span class="td-member">${m}</span>`).join('') : '<span class="td-empty">No members listed</span>'}
+                </div>
+            </div>
+            <div class="td-tabs">
+                <button class="td-tab active" data-tab="overview">Overview</button>
+                <button class="td-tab" data-tab="matches">Matches</button>
+                <button class="td-tab" data-tab="trends">Trends</button>
+            </div>
+            <div id="teamDetailsBody">${renderTeamOverview(profile, allTeams, matches)}</div>
+        </div>
     `);
+
+    wireTeamTabs(profile, allTeams, matches);
 }
 
 async function formatActivity(activity) {
@@ -954,15 +1293,10 @@ document.addEventListener('wheel', (e) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const firebaseService = new FirebaseService();
-    const migrationService = new MigrationService(storage, firebaseService);
 
-    // Initialize services
     initializeTeamService(firebaseService);
     initializeMatchService(firebaseService);
 
-    await migrationService.migrateData();
-
-    // Initialize the application with data from Firebase
     await initializeApp(firebaseService);
 });
 

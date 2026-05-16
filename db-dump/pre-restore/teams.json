@@ -4,1684 +4,1364 @@
     "matchHistory": [
       {
         "result": "loss",
+        "date": "2026-05-16T14:59:10.717Z",
         "opponentId": "2",
-        "date": "2026-05-16T13:45:31.435Z",
-        "matchId": "4",
-        "score": 153
-      },
-      {
-        "matchId": "9",
-        "score": 305,
-        "opponentId": "2",
-        "date": "2026-05-16T13:45:41.014Z",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "opponentId": "2",
-        "date": "2026-05-16T13:46:00.559Z",
-        "matchId": "4",
-        "score": 153
-      },
-      {
-        "result": "loss",
-        "score": 305,
-        "matchId": "9",
-        "date": "2026-05-16T13:46:07.217Z",
-        "opponentId": "2"
-      },
-      {
-        "result": "loss",
-        "matchId": "4",
         "score": 153,
-        "opponentId": "2",
-        "date": "2026-05-16T13:51:25.514Z"
+        "matchId": "4"
       },
       {
+        "date": "2026-05-16T14:59:20.105Z",
         "opponentId": "2",
-        "date": "2026-05-16T13:51:34.374Z",
-        "matchId": "9",
-        "score": 305,
-        "result": "loss"
-      },
-      {
-        "opponentId": "2",
-        "date": "2026-05-16T14:29:04.770Z",
-        "matchId": "4",
-        "score": 153,
-        "result": "loss"
-      },
-      {
         "result": "loss",
-        "matchId": "9",
         "score": 305,
-        "opponentId": "2",
-        "date": "2026-05-16T14:29:10.505Z"
+        "matchId": "9"
       }
     ],
     "name": "Water",
+    "members": [],
     "createdAt": "2025-05-20T18:54:27.839Z",
     "stats": {
-      "losses": 2,
-      "wins": 0,
+      "roundsLost": 7,
       "matchesPlayed": 2,
       "draws": 0,
-      "totalScore": 458,
-      "roundsLost": 7,
+      "wins": 0,
+      "losses": 2,
       "roundsWon": 10,
-      "points": 0
-    },
-    "members": []
+      "points": 0,
+      "totalScore": 458
+    }
   },
   {
     "id": 2,
+    "createdAt": "2025-05-20T18:54:34.661Z",
+    "stats": {
+      "matchesPlayed": 2,
+      "roundsLost": 10,
+      "roundsWon": 7,
+      "wins": 2,
+      "losses": 0,
+      "draws": 0,
+      "points": 6,
+      "totalScore": 1063
+    },
     "matchHistory": [
       {
+        "date": "2026-05-16T14:59:10.717Z",
+        "opponentId": "1",
         "result": "win",
-        "opponentId": "1",
-        "date": "2026-05-16T13:45:31.435Z",
-        "matchId": "4",
-        "score": 520
-      },
-      {
-        "result": "win",
-        "opponentId": "1",
-        "date": "2026-05-16T13:45:41.014Z",
-        "matchId": "9",
-        "score": 543
-      },
-      {
-        "opponentId": "1",
-        "date": "2026-05-16T13:46:00.559Z",
-        "matchId": "4",
         "score": 520,
-        "result": "win"
+        "matchId": "4"
       },
       {
-        "opponentId": "1",
-        "date": "2026-05-16T13:46:07.217Z",
-        "matchId": "9",
-        "score": 543,
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T13:51:25.514Z",
-        "opponentId": "1",
-        "score": 520,
-        "matchId": "4",
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "matchId": "9",
-        "score": 543,
-        "opponentId": "1",
-        "date": "2026-05-16T13:51:34.374Z"
-      },
-      {
-        "result": "win",
-        "matchId": "4",
-        "score": 520,
-        "opponentId": "1",
-        "date": "2026-05-16T14:29:04.770Z"
-      },
-      {
-        "date": "2026-05-16T14:29:10.505Z",
-        "opponentId": "1",
         "score": 543,
         "matchId": "9",
+        "opponentId": "1",
+        "date": "2026-05-16T14:59:20.105Z",
         "result": "win"
       }
     ],
     "name": "Fire",
-    "createdAt": "2025-05-20T18:54:34.661Z",
-    "stats": {
-      "points": 6,
-      "roundsWon": 7,
-      "roundsLost": 10,
-      "totalScore": 1063,
-      "draws": 0,
-      "matchesPlayed": 2,
-      "wins": 2,
-      "losses": 0
-    },
     "members": []
   },
   {
     "id": 3,
-    "name": "Now",
+    "stats": {
+      "totalScore": 3988,
+      "wins": 5,
+      "draws": 0,
+      "losses": 4,
+      "roundsWon": 42,
+      "roundsLost": 40,
+      "matchesPlayed": 9,
+      "points": 15
+    },
+    "createdAt": "2025-05-21T08:09:08.138Z",
+    "members": [],
     "matchHistory": [
       {
-        "date": "2026-05-16T13:45:28.973Z",
-        "opponentId": "4",
-        "score": 521,
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "result": "win"
-      },
-      {
-        "score": 564,
-        "matchId": "5",
-        "date": "2026-05-16T13:45:32.569Z",
-        "opponentId": "4",
-        "result": "win"
-      },
-      {
-        "matchId": "6",
-        "score": 495,
-        "opponentId": "4",
-        "date": "2026-05-16T13:45:33.880Z",
-        "result": "loss"
-      },
-      {
         "result": "win",
-        "matchId": "7",
-        "score": 510,
         "opponentId": "4",
-        "date": "2026-05-16T13:45:36.243Z"
-      },
-      {
-        "score": 404,
-        "matchId": "8",
-        "date": "2026-05-16T13:45:39.835Z",
-        "opponentId": "4",
-        "result": "loss"
-      },
-      {
-        "opponentId": "4",
-        "date": "2026-05-16T13:45:46.557Z",
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "score": 508,
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "score": 521,
-        "opponentId": "4",
-        "date": "2026-05-16T13:45:52.399Z"
-      },
-      {
-        "result": "win",
-        "score": 548,
-        "matchId": "jtesAiMqfAxW3YE3vsxn",
-        "date": "2026-05-16T13:45:53.723Z",
-        "opponentId": "4"
-      },
-      {
-        "result": "loss",
-        "score": 268,
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "date": "2026-05-16T13:45:55.158Z",
-        "opponentId": "4"
-      },
-      {
-        "result": "win",
-        "score": 508,
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "date": "2026-05-16T13:45:56.688Z",
-        "opponentId": "4"
-      },
-      {
-        "score": 170,
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "date": "2026-05-16T13:45:57.367Z",
-        "opponentId": "4",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "jtesAiMqfAxW3YE3vsxn",
-        "score": 548,
-        "opponentId": "4",
-        "date": "2026-05-16T13:45:58.877Z"
-      },
-      {
-        "opponentId": "4",
-        "date": "2026-05-16T13:45:59.310Z",
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "score": 170,
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "5",
-        "score": 564,
-        "opponentId": "4",
-        "date": "2026-05-16T13:46:01.993Z"
-      },
-      {
-        "result": "loss",
-        "opponentId": "4",
-        "date": "2026-05-16T13:46:03.147Z",
-        "matchId": "6",
-        "score": 495
-      },
-      {
-        "opponentId": "4",
-        "date": "2026-05-16T13:46:04.607Z",
-        "matchId": "7",
-        "score": 510,
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:46:05.844Z",
-        "opponentId": "4",
-        "score": 404,
-        "matchId": "8"
-      },
-      {
-        "result": "loss",
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "score": 268,
-        "opponentId": "4",
-        "date": "2026-05-16T13:46:08.564Z"
-      },
-      {
-        "result": "win",
-        "date": "2026-05-16T13:51:14.747Z",
-        "opponentId": "4",
+        "date": "2026-05-16T14:58:59.426Z",
         "score": 521,
         "matchId": "2Dhhzu3ZiHMINM1ixlL5"
       },
       {
-        "date": "2026-05-16T13:51:16.489Z",
-        "opponentId": "4",
         "score": 548,
         "matchId": "jtesAiMqfAxW3YE3vsxn",
+        "date": "2026-05-16T14:59:01.232Z",
+        "opponentId": "4",
         "result": "win"
       },
       {
         "score": 268,
         "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "date": "2026-05-16T13:51:18.210Z",
+        "result": "loss",
         "opponentId": "4",
-        "result": "loss"
+        "date": "2026-05-16T14:59:03.198Z"
       },
       {
+        "opponentId": "4",
+        "date": "2026-05-16T14:59:05.029Z",
         "result": "win",
         "score": 508,
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "date": "2026-05-16T13:51:19.952Z",
-        "opponentId": "4"
-      },
-      {
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "score": 170,
-        "opponentId": "4",
-        "date": "2026-05-16T13:51:23.635Z",
-        "result": "loss"
-      },
-      {
-        "date": "2026-05-16T13:51:27.313Z",
-        "opponentId": "4",
-        "score": 564,
-        "matchId": "5",
-        "result": "win"
-      },
-      {
-        "matchId": "6",
-        "score": 495,
-        "opponentId": "4",
-        "date": "2026-05-16T13:51:29.118Z",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "opponentId": "4",
-        "date": "2026-05-16T13:51:30.894Z",
-        "matchId": "7",
-        "score": 510
-      },
-      {
-        "opponentId": "4",
-        "date": "2026-05-16T13:51:32.630Z",
-        "matchId": "8",
-        "score": 404,
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "score": 521,
-        "opponentId": "4",
-        "date": "2026-05-16T14:28:57.248Z"
-      },
-      {
-        "matchId": "jtesAiMqfAxW3YE3vsxn",
-        "score": 548,
-        "opponentId": "4",
-        "date": "2026-05-16T14:28:58.524Z",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "opponentId": "4",
-        "date": "2026-05-16T14:28:59.855Z",
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "score": 268
-      },
-      {
-        "date": "2026-05-16T14:29:01.106Z",
-        "opponentId": "4",
-        "score": 508,
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T14:29:03.620Z",
-        "opponentId": "4",
-        "score": 170,
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "score": 564,
-        "matchId": "5",
-        "date": "2026-05-16T14:29:05.954Z",
-        "opponentId": "4"
-      },
-      {
-        "score": 495,
-        "matchId": "6",
-        "date": "2026-05-16T14:29:07.078Z",
-        "opponentId": "4",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "7",
-        "score": 510,
-        "opponentId": "4",
-        "date": "2026-05-16T14:29:08.223Z"
-      },
-      {
-        "result": "loss",
-        "score": 404,
-        "matchId": "8",
-        "date": "2026-05-16T14:29:09.330Z",
-        "opponentId": "4"
-      }
-    ],
-    "members": [],
-    "stats": {
-      "wins": 5,
-      "losses": 4,
-      "matchesPlayed": 9,
-      "draws": 0,
-      "roundsLost": 40,
-      "totalScore": 3988,
-      "roundsWon": 42,
-      "points": 15
-    },
-    "createdAt": "2025-05-21T08:09:08.138Z"
-  },
-  {
-    "id": 4,
-    "members": [],
-    "createdAt": "2025-05-21T08:10:25.269Z",
-    "stats": {
-      "points": 12,
-      "roundsWon": 40,
-      "losses": 5,
-      "wins": 4,
-      "matchesPlayed": 9,
-      "draws": 0,
-      "roundsLost": 42,
-      "totalScore": 3579
-    },
-    "name": "ww",
-    "matchHistory": [
-      {
-        "result": "loss",
-        "score": 371,
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "date": "2026-05-16T13:45:28.973Z",
-        "opponentId": "3"
-      },
-      {
-        "result": "loss",
-        "matchId": "5",
-        "score": 373,
-        "opponentId": "3",
-        "date": "2026-05-16T13:45:32.569Z"
-      },
-      {
-        "result": "win",
-        "matchId": "6",
-        "score": 501,
-        "opponentId": "3",
-        "date": "2026-05-16T13:45:33.880Z"
-      },
-      {
-        "result": "loss",
-        "score": 311,
-        "matchId": "7",
-        "date": "2026-05-16T13:45:36.243Z",
-        "opponentId": "3"
-      },
-      {
-        "result": "win",
-        "opponentId": "3",
-        "date": "2026-05-16T13:45:39.835Z",
-        "matchId": "8",
-        "score": 538
-      },
-      {
-        "date": "2026-05-16T13:45:46.557Z",
-        "opponentId": "3",
-        "score": 10,
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "score": 371,
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "date": "2026-05-16T13:45:52.399Z",
-        "opponentId": "3"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:45:53.723Z",
-        "opponentId": "3",
-        "score": 391,
-        "matchId": "jtesAiMqfAxW3YE3vsxn"
-      },
-      {
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "score": 553,
-        "opponentId": "3",
-        "date": "2026-05-16T13:45:55.158Z",
-        "result": "win"
-      },
-      {
-        "score": 10,
-        "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "date": "2026-05-16T13:45:56.688Z",
-        "opponentId": "3",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "score": 531,
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "date": "2026-05-16T13:45:57.367Z",
-        "opponentId": "3"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:45:58.877Z",
-        "opponentId": "3",
-        "score": 391,
-        "matchId": "jtesAiMqfAxW3YE3vsxn"
-      },
-      {
-        "date": "2026-05-16T13:45:59.310Z",
-        "opponentId": "3",
-        "score": 531,
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "result": "win"
-      },
-      {
-        "opponentId": "3",
-        "date": "2026-05-16T13:46:01.993Z",
-        "matchId": "5",
-        "score": 373,
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "score": 501,
-        "matchId": "6",
-        "date": "2026-05-16T13:46:03.147Z",
-        "opponentId": "3"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:46:04.607Z",
-        "opponentId": "3",
-        "score": 311,
-        "matchId": "7"
-      },
-      {
-        "matchId": "8",
-        "score": 538,
-        "opponentId": "3",
-        "date": "2026-05-16T13:46:05.844Z",
-        "result": "win"
-      },
-      {
-        "opponentId": "3",
-        "date": "2026-05-16T13:46:08.564Z",
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "score": 553,
-        "result": "win"
-      },
-      {
-        "score": 371,
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
-        "date": "2026-05-16T13:51:14.747Z",
-        "opponentId": "3",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:51:16.489Z",
-        "opponentId": "3",
-        "score": 391,
-        "matchId": "jtesAiMqfAxW3YE3vsxn"
-      },
-      {
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "score": 553,
-        "opponentId": "3",
-        "date": "2026-05-16T13:51:18.210Z",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:51:19.952Z",
-        "opponentId": "3",
-        "score": 10,
         "matchId": "NEqqmAsjaONiT8ChlQsh"
       },
       {
-        "score": 531,
+        "score": 170,
         "matchId": "j705AtMU3ESSIF5xkoYI",
-        "date": "2026-05-16T13:51:23.635Z",
-        "opponentId": "3",
-        "result": "win"
+        "date": "2026-05-16T14:59:08.871Z",
+        "opponentId": "4",
+        "result": "loss"
       },
       {
-        "opponentId": "3",
-        "date": "2026-05-16T13:51:27.313Z",
+        "score": 564,
         "matchId": "5",
-        "score": 373,
-        "result": "loss"
-      },
-      {
-        "score": 501,
-        "matchId": "6",
-        "date": "2026-05-16T13:51:29.118Z",
-        "opponentId": "3",
+        "opponentId": "4",
+        "date": "2026-05-16T14:59:12.555Z",
         "result": "win"
       },
       {
-        "opponentId": "3",
-        "date": "2026-05-16T13:51:30.894Z",
-        "matchId": "7",
-        "score": 311,
-        "result": "loss"
+        "date": "2026-05-16T14:59:14.502Z",
+        "opponentId": "4",
+        "result": "loss",
+        "score": 495,
+        "matchId": "6"
       },
       {
         "result": "win",
-        "opponentId": "3",
-        "date": "2026-05-16T13:51:32.630Z",
+        "date": "2026-05-16T14:59:16.333Z",
+        "opponentId": "4",
+        "score": 510,
+        "matchId": "7"
+      },
+      {
+        "score": 404,
         "matchId": "8",
-        "score": 538
-      },
-      {
         "result": "loss",
-        "matchId": "2Dhhzu3ZiHMINM1ixlL5",
+        "date": "2026-05-16T14:59:18.086Z",
+        "opponentId": "4"
+      }
+    ],
+    "name": "Now"
+  },
+  {
+    "id": 4,
+    "matchHistory": [
+      {
+        "opponentId": "3",
+        "date": "2026-05-16T14:58:59.426Z",
+        "result": "loss",
         "score": 371,
-        "opponentId": "3",
-        "date": "2026-05-16T14:28:57.248Z"
+        "matchId": "2Dhhzu3ZiHMINM1ixlL5"
       },
       {
-        "matchId": "jtesAiMqfAxW3YE3vsxn",
+        "opponentId": "3",
+        "date": "2026-05-16T14:59:01.232Z",
+        "result": "loss",
         "score": 391,
-        "opponentId": "3",
-        "date": "2026-05-16T14:28:58.524Z",
-        "result": "loss"
+        "matchId": "jtesAiMqfAxW3YE3vsxn"
       },
       {
-        "date": "2026-05-16T14:28:59.855Z",
+        "result": "win",
+        "date": "2026-05-16T14:59:03.198Z",
         "opponentId": "3",
         "score": 553,
-        "matchId": "yRsrPyWhYv5yJdkE7Bw3",
-        "result": "win"
+        "matchId": "yRsrPyWhYv5yJdkE7Bw3"
       },
       {
         "score": 10,
         "matchId": "NEqqmAsjaONiT8ChlQsh",
-        "date": "2026-05-16T14:29:01.106Z",
-        "opponentId": "3",
-        "result": "loss"
-      },
-      {
-        "score": 531,
-        "matchId": "j705AtMU3ESSIF5xkoYI",
-        "date": "2026-05-16T14:29:03.620Z",
-        "opponentId": "3",
-        "result": "win"
-      },
-      {
-        "matchId": "5",
-        "score": 373,
-        "opponentId": "3",
-        "date": "2026-05-16T14:29:05.954Z",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "score": 501,
-        "matchId": "6",
-        "date": "2026-05-16T14:29:07.078Z",
+        "result": "loss",
+        "date": "2026-05-16T14:59:05.029Z",
         "opponentId": "3"
       },
       {
-        "result": "loss",
-        "date": "2026-05-16T14:29:08.223Z",
+        "result": "win",
         "opponentId": "3",
-        "score": 311,
-        "matchId": "7"
+        "date": "2026-05-16T14:59:08.871Z",
+        "score": 531,
+        "matchId": "j705AtMU3ESSIF5xkoYI"
       },
       {
+        "score": 373,
+        "matchId": "5",
+        "date": "2026-05-16T14:59:12.555Z",
         "opponentId": "3",
-        "date": "2026-05-16T14:29:09.330Z",
-        "matchId": "8",
-        "score": 538,
+        "result": "loss"
+      },
+      {
+        "score": 501,
+        "matchId": "6",
+        "opponentId": "3",
+        "date": "2026-05-16T14:59:14.502Z",
         "result": "win"
+      },
+      {
+        "score": 311,
+        "matchId": "7",
+        "date": "2026-05-16T14:59:16.333Z",
+        "opponentId": "3",
+        "result": "loss"
+      },
+      {
+        "score": 538,
+        "matchId": "8",
+        "result": "win",
+        "date": "2026-05-16T14:59:18.086Z",
+        "opponentId": "3"
       }
-    ]
+    ],
+    "name": "ww",
+    "members": [],
+    "createdAt": "2025-05-21T08:10:25.269Z",
+    "stats": {
+      "totalScore": 3579,
+      "losses": 5,
+      "draws": 0,
+      "wins": 4,
+      "roundsWon": 40,
+      "matchesPlayed": 9,
+      "roundsLost": 42,
+      "points": 12
+    }
   },
   {
     "id": 5,
     "createdAt": "2025-05-21T08:11:25.037Z",
     "stats": {
-      "roundsWon": 83,
-      "points": 33,
-      "roundsLost": 100,
-      "totalScore": 7300,
       "matchesPlayed": 20,
+      "roundsLost": 100,
+      "losses": 9,
+      "roundsWon": 83,
       "draws": 0,
       "wins": 11,
-      "losses": 9
+      "points": 33,
+      "totalScore": 7300
     },
-    "members": [
-      "aa",
-      "bb"
-    ],
     "matchHistory": [
       {
-        "result": "loss",
-        "date": "2026-05-16T13:45:27.796Z",
-        "opponentId": "6",
-        "score": 384,
-        "matchId": "1OTUHJWlokOVCqTjCIR5"
-      },
-      {
         "result": "win",
-        "date": "2026-05-16T13:45:27.797Z",
         "opponentId": "7",
+        "date": "2026-05-16T14:58:21.255Z",
         "score": 502,
         "matchId": "MkdPdKM1tU207UbgyMy5"
       },
       {
-        "result": "loss",
         "score": 404,
         "matchId": "LaWHieEToJxiilZpJMuj",
-        "date": "2026-05-16T13:45:29.075Z",
-        "opponentId": "7"
-      },
-      {
-        "matchId": "3FhUHp7DQugRYtUkKZWX",
-        "score": 564,
+        "date": "2026-05-16T14:58:23.099Z",
         "opponentId": "7",
-        "date": "2026-05-16T13:45:30.156Z",
-        "result": "win"
+        "result": "loss"
       },
       {
-        "matchId": "pVsfMicad54dHcx2Ex0M",
         "score": 379,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
         "opponentId": "7",
-        "date": "2026-05-16T13:45:30.157Z",
+        "date": "2026-05-16T14:58:25.019Z",
         "result": "loss"
       },
       {
-        "result": "win",
         "opponentId": "7",
-        "date": "2026-05-16T13:45:31.437Z",
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "score": 557
+        "date": "2026-05-16T14:58:26.887Z",
+        "result": "win",
+        "score": 557,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
       },
       {
-        "result": "loss",
-        "date": "2026-05-16T13:45:32.680Z",
-        "opponentId": "7",
         "score": -119,
-        "matchId": "PMlR4oXfmgY5IptEnLN6"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:35.073Z",
-        "matchId": "6z1cVT7SdEyeP4E8zler",
-        "score": 508,
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T13:45:35.075Z",
-        "opponentId": "7",
-        "score": 510,
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:36.347Z",
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "score": 362
-      },
-      {
-        "result": "loss",
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
-        "score": 16,
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:37.556Z"
-      },
-      {
-        "score": 504,
-        "matchId": "hyvmEQQCebNUQHtgiGwm",
-        "date": "2026-05-16T13:45:38.760Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:39.951Z",
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "score": 533
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:41.286Z",
-        "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "score": 503,
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T13:45:42.240Z",
-        "opponentId": "7",
-        "score": -99,
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "result": "loss"
-      },
-      {
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "score": -99,
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:42.241Z",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:43.368Z",
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
-        "score": 30
-      },
-      {
-        "date": "2026-05-16T13:45:43.369Z",
-        "opponentId": "7",
-        "score": 546,
-        "matchId": "rG6WhoEt22C9NMhua2he",
-        "result": "win"
-      },
-      {
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "score": 404,
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:44.519Z",
-        "result": "loss"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:44.520Z",
-        "matchId": "6z1cVT7SdEyeP4E8zler",
-        "score": 508,
-        "result": "win"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:45.416Z",
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "score": 502,
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "score": 30,
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
-        "date": "2026-05-16T13:45:45.779Z",
-        "opponentId": "7"
-      },
-      {
-        "result": "win",
-        "date": "2026-05-16T13:45:47.079Z",
-        "opponentId": "7",
-        "score": 564,
-        "matchId": "3FhUHp7DQugRYtUkKZWX"
-      },
-      {
-        "date": "2026-05-16T13:45:47.780Z",
-        "opponentId": "7",
-        "score": 533,
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "matchId": "glYuGPQYqzkzmUzc0qhU",
-        "score": 542,
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:48.284Z"
-      },
-      {
-        "result": "loss",
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:49.003Z",
         "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "score": -119
-      },
-      {
         "result": "loss",
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
-        "score": 54,
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:49.681Z"
-      },
-      {
-        "result": "loss",
-        "opponentId": "7",
-        "date": "2026-05-16T13:45:50.491Z",
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
-        "score": 54
-      },
-      {
-        "result": "win",
-        "score": 620,
-        "matchId": "despHuUshXJVHuibTNWL",
-        "date": "2026-05-16T13:45:51.012Z",
+        "date": "2026-05-16T14:58:28.883Z",
         "opponentId": "7"
       },
       {
         "result": "win",
-        "date": "2026-05-16T13:45:51.859Z",
         "opponentId": "7",
-        "score": 620,
-        "matchId": "despHuUshXJVHuibTNWL"
-      },
-      {
-        "date": "2026-05-16T13:45:53.112Z",
-        "opponentId": "7",
-        "score": 542,
-        "matchId": "glYuGPQYqzkzmUzc0qhU",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "score": 16,
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
-        "date": "2026-05-16T13:45:54.503Z",
-        "opponentId": "7"
-      },
-      {
-        "score": 504,
-        "matchId": "hyvmEQQCebNUQHtgiGwm",
-        "date": "2026-05-16T13:45:55.894Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "matchId": "1OTUHJWlokOVCqTjCIR5",
-        "score": 384,
-        "opponentId": "6",
-        "date": "2026-05-16T13:45:57.930Z"
-      },
-      {
-        "result": "loss",
-        "opponentId": "7",
-        "date": "2026-05-16T13:46:00.448Z",
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "score": 362
-      },
-      {
-        "result": "win",
-        "date": "2026-05-16T13:46:01.876Z",
-        "opponentId": "7",
+        "date": "2026-05-16T14:58:32.671Z",
         "score": 510,
         "matchId": "ljumM5L4QE5uI9OTEeYJ"
       },
       {
+        "score": 362,
+        "matchId": "k0BHObsO98U53vemGi3B",
         "result": "loss",
-        "date": "2026-05-16T13:46:03.143Z",
-        "opponentId": "7",
-        "score": 379,
-        "matchId": "pVsfMicad54dHcx2Ex0M"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:46:04.341Z",
-        "matchId": "rG6WhoEt22C9NMhua2he",
-        "score": 546,
-        "result": "win"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:46:05.792Z",
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "score": 557,
-        "result": "win"
-      },
-      {
-        "score": 503,
-        "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "date": "2026-05-16T13:46:07.032Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T13:50:37.020Z",
-        "opponentId": "7",
-        "score": 502,
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "score": 404,
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "date": "2026-05-16T13:50:38.799Z",
+        "date": "2026-05-16T14:58:34.721Z",
         "opponentId": "7"
       },
       {
-        "score": 379,
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "date": "2026-05-16T13:50:40.653Z",
-        "opponentId": "7",
-        "result": "loss"
-      },
-      {
-        "score": 557,
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "date": "2026-05-16T13:50:42.587Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:50:44.432Z",
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "score": -119,
-        "result": "loss"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:50:48.222Z",
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "score": 510,
-        "result": "win"
-      },
-      {
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "score": 362,
-        "opponentId": "7",
-        "date": "2026-05-16T13:50:50.026Z",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:50:51.791Z",
-        "opponentId": "7",
         "score": 16,
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "date": "2026-05-16T14:58:36.487Z",
+        "opponentId": "7",
+        "result": "loss"
       },
       {
-        "opponentId": "7",
-        "date": "2026-05-16T13:50:53.638Z",
-        "matchId": "hyvmEQQCebNUQHtgiGwm",
         "score": 504,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "date": "2026-05-16T14:58:38.304Z",
+        "opponentId": "7",
         "result": "win"
       },
       {
-        "result": "win",
-        "date": "2026-05-16T13:50:55.523Z",
         "opponentId": "7",
+        "date": "2026-05-16T14:58:40.303Z",
+        "result": "win",
         "score": 533,
         "matchId": "OPojHN0jjIOmYFHM7YWQ"
       },
       {
-        "score": 503,
-        "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "date": "2026-05-16T13:50:57.020Z",
+        "result": "win",
         "opponentId": "7",
-        "result": "win"
+        "date": "2026-05-16T14:58:42.178Z",
+        "score": 503,
+        "matchId": "yDxDGpvhLnxcjazrg8ty"
       },
       {
+        "date": "2026-05-16T14:58:44.040Z",
+        "opponentId": "7",
         "result": "loss",
         "score": -99,
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "date": "2026-05-16T13:50:59.023Z",
-        "opponentId": "7"
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
       },
       {
         "result": "win",
-        "matchId": "rG6WhoEt22C9NMhua2he",
+        "opponentId": "7",
+        "date": "2026-05-16T14:58:45.883Z",
         "score": 546,
-        "opponentId": "7",
-        "date": "2026-05-16T13:51:01.074Z"
+        "matchId": "rG6WhoEt22C9NMhua2he"
       },
       {
+        "opponentId": "7",
+        "date": "2026-05-16T14:58:47.828Z",
         "result": "win",
-        "opponentId": "7",
-        "date": "2026-05-16T13:51:02.937Z",
-        "matchId": "6z1cVT7SdEyeP4E8zler",
-        "score": 508
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T13:51:05.377Z",
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
-        "score": 30,
-        "result": "loss"
-      },
-      {
-        "score": 564,
-        "matchId": "3FhUHp7DQugRYtUkKZWX",
-        "date": "2026-05-16T13:51:07.334Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "date": "2026-05-16T13:51:09.174Z",
-        "opponentId": "7",
-        "score": 542,
-        "matchId": "glYuGPQYqzkzmUzc0qhU"
-      },
-      {
-        "date": "2026-05-16T13:51:10.972Z",
-        "opponentId": "7",
-        "score": 54,
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "opponentId": "7",
-        "date": "2026-05-16T13:51:12.718Z",
-        "matchId": "despHuUshXJVHuibTNWL",
-        "score": 620
-      },
-      {
-        "result": "loss",
-        "score": 384,
-        "matchId": "1OTUHJWlokOVCqTjCIR5",
-        "date": "2026-05-16T13:51:21.758Z",
-        "opponentId": "6"
-      },
-      {
-        "result": "win",
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:14.486Z",
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "score": 502
-      },
-      {
-        "score": 404,
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "date": "2026-05-16T14:28:15.656Z",
-        "opponentId": "7",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "score": 379,
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "date": "2026-05-16T14:28:16.846Z",
-        "opponentId": "7"
-      },
-      {
-        "result": "win",
-        "score": 557,
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "date": "2026-05-16T14:28:18.384Z",
-        "opponentId": "7"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:19.569Z",
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "score": -119,
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "score": 510,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:21.965Z"
-      },
-      {
-        "score": 362,
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "date": "2026-05-16T14:28:23.175Z",
-        "opponentId": "7",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "score": 502,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:33.541Z"
-      },
-      {
-        "score": 404,
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "date": "2026-05-16T14:28:34.674Z",
-        "opponentId": "7",
-        "result": "loss"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:35.841Z",
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "score": 379,
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:36.977Z",
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "score": 557
-      },
-      {
-        "date": "2026-05-16T14:28:38.133Z",
-        "opponentId": "7",
-        "score": -119,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "result": "loss"
-      },
-      {
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "score": 510,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:40.495Z",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "score": 362,
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "date": "2026-05-16T14:28:41.628Z",
-        "opponentId": "7"
-      },
-      {
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
-        "score": 16,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:42.802Z",
-        "result": "loss"
-      },
-      {
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:43.979Z",
-        "matchId": "hyvmEQQCebNUQHtgiGwm",
-        "score": 504,
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "score": 533,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:45.105Z"
-      },
-      {
-        "score": 503,
-        "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "date": "2026-05-16T14:28:46.309Z",
-        "opponentId": "7",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "score": -99,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:47.477Z"
-      },
-      {
-        "date": "2026-05-16T14:28:48.727Z",
-        "opponentId": "7",
-        "score": 546,
-        "matchId": "rG6WhoEt22C9NMhua2he",
-        "result": "win"
-      },
-      {
-        "date": "2026-05-16T14:28:49.962Z",
-        "opponentId": "7",
         "score": 508,
-        "matchId": "6z1cVT7SdEyeP4E8zler",
-        "result": "win"
+        "matchId": "6z1cVT7SdEyeP4E8zler"
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:51.149Z",
+        "date": "2026-05-16T14:58:49.786Z",
         "opponentId": "7",
         "score": 30,
         "matchId": "Hdgi4T2YYpN4hwitnGuZ"
       },
       {
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:52.339Z",
-        "matchId": "3FhUHp7DQugRYtUkKZWX",
         "score": 564,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "result": "win",
+        "date": "2026-05-16T14:58:51.776Z",
+        "opponentId": "7"
+      },
+      {
+        "score": 542,
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "opponentId": "7",
+        "date": "2026-05-16T14:58:53.656Z",
         "result": "win"
       },
       {
-        "result": "win",
-        "matchId": "glYuGPQYqzkzmUzc0qhU",
-        "score": 542,
-        "opponentId": "7",
-        "date": "2026-05-16T14:28:53.468Z"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T14:28:54.766Z",
-        "opponentId": "7",
         "score": 54,
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "result": "loss",
+        "date": "2026-05-16T14:58:55.590Z",
+        "opponentId": "7"
       },
       {
         "score": 620,
         "matchId": "despHuUshXJVHuibTNWL",
-        "date": "2026-05-16T14:28:56.116Z",
+        "result": "win",
         "opponentId": "7",
-        "result": "win"
+        "date": "2026-05-16T14:58:57.620Z"
       },
       {
+        "result": "loss",
         "opponentId": "6",
-        "date": "2026-05-16T14:29:02.367Z",
-        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "date": "2026-05-16T14:59:07.008Z",
         "score": 384,
-        "result": "loss"
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
       }
     ],
-    "name": "qq"
+    "name": "qq",
+    "members": [
+      "aa",
+      "bb"
+    ]
   },
   {
     "id": "6",
-    "members": [],
-    "createdAt": "2025-07-12T17:50:56.697Z",
-    "stats": {
-      "points": 3,
-      "roundsWon": 7,
-      "matchesPlayed": 2,
-      "draws": 0,
-      "roundsLost": 10,
-      "totalScore": 532,
-      "losses": 1,
-      "wins": 1
-    },
-    "name": "Alegeus stars",
     "matchHistory": [
-      {
-        "result": "loss",
-        "score": -60,
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "date": "2026-05-16T13:45:25.963Z",
-        "opponentId": "Df3wbNNOeAmzivJB8Cu8"
-      },
-      {
-        "date": "2026-05-16T13:45:27.796Z",
-        "opponentId": "5",
-        "score": 592,
-        "matchId": "1OTUHJWlokOVCqTjCIR5",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
-        "date": "2026-05-16T13:45:38.634Z",
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "score": -60
-      },
-      {
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:57.930Z",
-        "matchId": "1OTUHJWlokOVCqTjCIR5",
-        "score": 592,
-        "result": "win"
-      },
-      {
-        "score": -60,
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "date": "2026-05-16T13:50:35.621Z",
-        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
-        "result": "loss"
-      },
       {
         "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T13:51:21.758Z",
+        "date": "2026-04-18T11:48:04.130Z",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "result": "loss",
+        "date": "2026-04-18T11:48:05.307Z",
+        "opponentId": "5"
+      },
+      {
+        "date": "2026-04-18T11:48:07.744Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 522,
+        "matchId": "3"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-18T17:55:38.313Z",
+        "result": "win",
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "score": 592
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "result": "loss",
+        "date": "2026-04-18T17:55:40.669Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "3",
+        "score": 522,
+        "date": "2026-04-18T17:55:41.847Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "result": "win",
+        "date": "2026-04-23T17:50:07.377Z",
+        "opponentId": "5"
+      },
+      {
+        "date": "2026-04-23T17:50:09.652Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": -70,
+        "matchId": "2"
+      },
+      {
+        "matchId": "3",
+        "score": 522,
+        "date": "2026-04-23T17:50:10.795Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "date": "2026-04-24T14:40:46.239Z",
+        "opponentId": "5",
+        "result": "win",
         "matchId": "1OTUHJWlokOVCqTjCIR5",
         "score": 592
       },
       {
         "result": "loss",
-        "score": -60,
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "date": "2026-05-16T14:28:13.307Z",
-        "opponentId": "Df3wbNNOeAmzivJB8Cu8"
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:48.636Z",
+        "score": -70,
+        "matchId": "2"
       },
       {
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "score": -60,
-        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
-        "date": "2026-05-16T14:28:32.412Z",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:49.841Z",
+        "result": "win",
+        "score": 522,
+        "matchId": "3"
+      },
+      {
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:24.483Z"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:26.857Z",
+        "result": "loss",
+        "matchId": "2",
+        "score": -70
+      },
+      {
+        "result": "win",
+        "date": "2026-04-30T18:37:28.134Z",
+        "opponentId": "5",
+        "matchId": "3",
+        "score": 522
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:23.307Z",
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "score": 592
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "date": "2026-04-30T19:18:25.809Z",
+        "opponentId": "5",
         "result": "loss"
+      },
+      {
+        "score": 522,
+        "matchId": "3",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:26.965Z"
+      },
+      {
+        "date": "2026-05-15T00:55:09.569Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:10.560Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "3",
+        "score": 522,
+        "date": "2026-05-15T00:55:10.895Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "date": "2026-05-15T02:12:24.318Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T02:12:26.744Z",
+        "score": -70,
+        "matchId": "2"
+      },
+      {
+        "date": "2026-05-15T02:12:27.905Z",
+        "opponentId": "5",
+        "result": "win",
+        "matchId": "3",
+        "score": 522
       },
       {
         "matchId": "1OTUHJWlokOVCqTjCIR5",
         "score": 592,
+        "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T14:29:02.367Z",
+        "date": "2026-05-15T11:44:25.395Z"
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "date": "2026-05-15T11:44:27.891Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:29.045Z",
+        "result": "win",
+        "matchId": "3",
+        "score": 522
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T14:26:16.206Z",
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "score": 592
+      },
+      {
+        "date": "2026-05-15T14:26:19.266Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "2",
+        "score": -70
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T14:26:21.316Z",
+        "opponentId": "5",
+        "score": 522,
+        "matchId": "3"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:24:13.156Z",
+        "result": "win",
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "score": 592
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:24:16.991Z",
+        "score": -70,
+        "matchId": "2"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T15:24:18.756Z",
+        "opponentId": "5",
+        "matchId": "3",
+        "score": 522
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T09:04:38.427Z",
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "matchId": "7X8kiF0xfUtrE0COBUU8",
+        "score": -60
+      },
+      {
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8",
+        "date": "2026-05-16T14:38:16.914Z",
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "result": "loss"
+      },
+      {
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:47.586Z",
         "result": "win"
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:49.861Z",
+        "result": "loss"
+      },
+      {
+        "score": 522,
+        "matchId": "3",
+        "date": "2026-05-16T14:38:51.306Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "date": "2026-05-16T14:39:50.615Z",
+        "result": "loss",
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:20.494Z",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "score": -70,
+        "matchId": "2",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:22.878Z"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:24.019Z",
+        "result": "win",
+        "score": 522,
+        "matchId": "3"
+      },
+      {
+        "date": "2026-05-16T14:47:56.362Z",
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "result": "loss",
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:45.044Z",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8",
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "date": "2026-05-16T14:49:53.549Z",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:50:41.022Z",
+        "opponentId": "5",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "date": "2026-05-16T14:52:55.980Z",
+        "result": "loss",
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "date": "2026-05-16T14:53:27.637Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5"
+      },
+      {
+        "opponentId": "Df3wbNNOeAmzivJB8Cu8",
+        "date": "2026-05-16T14:58:19.354Z",
+        "result": "loss",
+        "score": -60,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "score": 592,
+        "matchId": "1OTUHJWlokOVCqTjCIR5",
+        "result": "win",
+        "date": "2026-05-16T14:59:07.008Z",
+        "opponentId": "5"
       }
-    ]
+    ],
+    "name": "Alegeus stars",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "stats": {
+      "totalScore": 532,
+      "matchesPlayed": 2,
+      "roundsLost": 10,
+      "losses": 1,
+      "wins": 1,
+      "roundsWon": 7,
+      "draws": 0,
+      "points": 3
+    }
   },
   {
     "id": "6RMhZRyFxyjL0YpHfp9U",
-    "name": "Gaurav/ Palash",
-    "matchHistory": [
-      {
-        "result": "loss",
-        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
-        "date": "2026-05-16T13:45:33.931Z",
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "score": 36
-      },
-      {
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "score": 36,
-        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
-        "date": "2026-05-16T13:45:37.445Z",
-        "result": "loss"
-      },
-      {
-        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
-        "date": "2026-05-16T13:50:46.334Z",
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "score": 36,
-        "result": "loss"
-      },
-      {
-        "score": 36,
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "date": "2026-05-16T14:28:20.745Z",
-        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
-        "result": "loss"
-      },
-      {
-        "result": "loss",
-        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
-        "date": "2026-05-16T14:28:39.293Z",
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "score": 36
-      }
-    ],
     "members": [
       "Gaurav Palash"
     ],
+    "name": "Gaurav/ Palash",
+    "matchHistory": [
+      {
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "result": "loss",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-04-18T18:59:32.739Z"
+      },
+      {
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "result": "loss",
+        "date": "2026-04-23T17:49:44.994Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36,
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-04-24T14:40:19.698Z",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-04-30T18:37:01.146Z",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "date": "2026-04-30T19:17:57.231Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "result": "loss",
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36,
+        "result": "loss",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-15T00:55:00.973Z"
+      },
+      {
+        "date": "2026-05-15T02:11:58.231Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "result": "loss",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T11:44:01.468Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "result": "loss",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-15T14:25:46.758Z",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "result": "loss",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-15T15:21:46.804Z",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36,
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-15T15:22:07.746Z",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T15:22:47.882Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36,
+        "date": "2026-05-15T15:23:13.379Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "result": "loss"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 36,
+        "result": "loss",
+        "date": "2026-05-15T15:23:36.163Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:38:24.137Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-16T14:39:57.739Z",
+        "result": "loss",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "date": "2026-05-16T14:48:07.365Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "result": "loss",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "date": "2026-05-16T14:50:04.302Z",
+        "result": "loss"
+      },
+      {
+        "date": "2026-05-16T14:53:03.455Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H",
+        "result": "loss",
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "score": 36,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "result": "loss",
+        "date": "2026-05-16T14:58:30.777Z",
+        "opponentId": "I2bXAsPQWuSIhjbaVC9H"
+      }
+    ],
     "stats": {
-      "roundsWon": 3,
+      "totalScore": 36,
       "points": 0,
       "roundsLost": 5,
-      "totalScore": 36,
       "matchesPlayed": 1,
-      "draws": 0,
       "wins": 0,
+      "roundsWon": 3,
+      "draws": 0,
       "losses": 1
     },
     "createdAt": "2026-02-08T04:05:32.102Z"
   },
   {
     "id": "7",
-    "members": [],
-    "stats": {
-      "roundsLost": 79,
-      "totalScore": 7460,
-      "draws": 0,
-      "matchesPlayed": 19,
-      "losses": 11,
-      "wins": 8,
-      "roundsWon": 95,
-      "points": 24
-    },
-    "createdAt": "2025-07-12T17:50:56.697Z",
     "name": "KorbaGang",
     "matchHistory": [
       {
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "score": 266,
         "opponentId": "5",
-        "date": "2026-05-16T13:45:27.797Z",
-        "result": "loss"
-      },
-      {
-        "date": "2026-05-16T13:45:29.075Z",
-        "opponentId": "5",
-        "score": 561,
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "result": "win"
-      },
-      {
+        "date": "2026-04-18T11:48:08.960Z",
         "result": "loss",
-        "date": "2026-05-16T13:45:30.156Z",
-        "opponentId": "5",
-        "score": 380,
-        "matchId": "3FhUHp7DQugRYtUkKZWX"
-      },
-      {
-        "result": "win",
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "score": 561,
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:30.157Z"
-      },
-      {
-        "score": 312,
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "date": "2026-05-16T13:45:31.437Z",
-        "opponentId": "5",
-        "result": "loss"
-      },
-      {
-        "score": 547,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "date": "2026-05-16T13:45:32.680Z",
-        "opponentId": "5",
-        "result": "win"
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380
       },
       {
         "opponentId": "5",
-        "date": "2026-05-16T13:45:35.073Z",
+        "date": "2026-04-18T11:48:13.568Z",
+        "result": "loss",
         "matchId": "6z1cVT7SdEyeP4E8zler",
-        "score": 270,
-        "result": "loss"
+        "score": 270
       },
       {
-        "result": "loss",
+        "result": "win",
+        "date": "2026-04-18T11:48:18.338Z",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:35.075Z",
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "score": 67
-      },
-      {
-        "date": "2026-05-16T13:45:36.347Z",
-        "opponentId": "5",
-        "score": 508,
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "result": "win"
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
       },
       {
         "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:37.556Z",
+        "date": "2026-04-18T11:48:19.478Z",
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:21.711Z",
+        "result": "loss",
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "score": 341
+      },
+      {
+        "result": "win",
+        "date": "2026-04-18T11:48:22.839Z",
+        "opponentId": "5",
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:23.970Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:25.136Z"
+      },
+      {
         "matchId": "hUUkqWNQ6ZBN1dKxknWa",
-        "score": 541
+        "score": 541,
+        "result": "win",
+        "date": "2026-04-18T11:48:30.361Z",
+        "opponentId": "5"
       },
       {
         "matchId": "hyvmEQQCebNUQHtgiGwm",
         "score": 161,
         "opponentId": "5",
-        "date": "2026-05-16T13:45:38.760Z",
+        "date": "2026-04-18T11:48:31.748Z",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:35.205Z",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:36.364Z",
+        "result": "loss",
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "date": "2026-04-18T11:48:37.561Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256,
+        "opponentId": "5",
+        "date": "2026-04-18T11:48:38.952Z",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-18T17:55:15.981Z",
+        "result": "loss",
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67
+      },
+      {
+        "result": "win",
+        "date": "2026-04-18T17:55:17.219Z",
+        "opponentId": "5",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-18T17:55:18.414Z",
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "score": 541
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "date": "2026-04-18T17:55:19.634Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "score": 341,
+        "date": "2026-04-18T17:55:21.110Z",
+        "opponentId": "5",
         "result": "loss"
       },
       {
         "result": "loss",
-        "score": 341,
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "date": "2026-05-16T13:45:39.951Z",
-        "opponentId": "5"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:45:41.286Z",
         "opponentId": "5",
+        "date": "2026-04-18T17:55:22.453Z",
         "score": 256,
         "matchId": "yDxDGpvhLnxcjazrg8ty"
       },
       {
-        "result": "win",
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:42.240Z",
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "score": 538
-      },
-      {
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:42.241Z",
         "matchId": "DCpxXVQxnjg0lP7BUC5t",
         "score": 538,
+        "date": "2026-04-18T17:55:23.621Z",
+        "opponentId": "5",
         "result": "win"
       },
       {
-        "result": "win",
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
-        "score": 549,
+        "result": "loss",
+        "date": "2026-04-18T17:55:24.760Z",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:43.368Z"
-      },
-      {
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:43.369Z",
-        "matchId": "rG6WhoEt22C9NMhua2he",
         "score": 373,
-        "result": "loss"
+        "matchId": "rG6WhoEt22C9NMhua2he"
       },
       {
         "opponentId": "5",
-        "date": "2026-05-16T13:45:44.519Z",
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "score": 561,
-        "result": "win"
-      },
-      {
+        "date": "2026-04-18T17:55:25.979Z",
         "result": "loss",
         "matchId": "6z1cVT7SdEyeP4E8zler",
-        "score": 270,
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:44.520Z"
+        "score": 270
       },
       {
-        "result": "loss",
-        "score": 266,
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "date": "2026-05-16T13:45:45.416Z",
-        "opponentId": "5"
-      },
-      {
-        "result": "win",
         "matchId": "Hdgi4T2YYpN4hwitnGuZ",
         "score": 549,
+        "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:45.779Z"
+        "date": "2026-04-18T17:55:27.154Z"
       },
       {
-        "result": "loss",
         "matchId": "3FhUHp7DQugRYtUkKZWX",
         "score": 380,
         "opponentId": "5",
-        "date": "2026-05-16T13:45:47.079Z"
-      },
-      {
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "score": 341,
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:47.780Z",
+        "date": "2026-04-18T17:55:28.333Z",
         "result": "loss"
       },
       {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-18T17:55:29.462Z",
         "matchId": "glYuGPQYqzkzmUzc0qhU",
-        "score": 361,
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:48.284Z",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "score": 547,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "date": "2026-05-16T13:45:49.003Z",
-        "opponentId": "5"
+        "score": 361
       },
       {
         "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:49.681Z",
+        "date": "2026-04-18T17:55:30.589Z",
         "matchId": "ZmQNcAPwtGjChvSCGnXJ",
         "score": 527
       },
       {
-        "score": 527,
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
-        "date": "2026-05-16T13:45:50.491Z",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-04-18T17:55:31.759Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "date": "2026-04-23T17:49:46.198Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ"
+      },
+      {
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "score": 508,
+        "date": "2026-04-23T17:49:47.372Z",
         "opponentId": "5",
         "result": "win"
       },
       {
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "score": 541,
         "opponentId": "5",
-        "date": "2026-05-16T13:45:51.012Z",
-        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-04-23T17:49:48.551Z",
+        "result": "win"
+      },
+      {
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "score": 161,
+        "result": "loss",
+        "date": "2026-04-23T17:49:49.726Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
         "score": 341,
+        "date": "2026-04-23T17:49:50.954Z",
+        "opponentId": "5",
         "result": "loss"
       },
       {
-        "result": "loss",
-        "matchId": "despHuUshXJVHuibTNWL",
-        "score": 341,
+        "date": "2026-04-23T17:49:52.247Z",
         "opponentId": "5",
-        "date": "2026-05-16T13:45:51.859Z"
+        "result": "loss",
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty"
       },
       {
-        "result": "loss",
-        "matchId": "glYuGPQYqzkzmUzc0qhU",
-        "score": 361,
         "opponentId": "5",
-        "date": "2026-05-16T13:45:53.112Z"
+        "date": "2026-04-23T17:49:53.629Z",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373,
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-23T17:49:55.032Z"
+      },
+      {
+        "date": "2026-04-23T17:49:56.178Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler"
       },
       {
         "result": "win",
-        "date": "2026-05-16T13:45:54.503Z",
+        "date": "2026-04-23T17:49:57.024Z",
+        "opponentId": "5",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-23T17:49:58.145Z",
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX"
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "result": "loss",
+        "date": "2026-04-23T17:49:59.302Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-23T17:50:00.471Z",
+        "result": "win",
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-04-23T17:50:01.640Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-04-23T18:55:39.937Z",
+        "opponentId": "5",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "result": "win",
+        "date": "2026-04-24T14:40:18.294Z",
+        "opponentId": "5",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:23.768Z",
+        "result": "loss",
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:24.996Z",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "result": "win",
+        "date": "2026-04-24T14:40:25.834Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "score": 161,
+        "result": "loss",
+        "date": "2026-04-24T14:40:27.195Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:28.811Z"
+      },
+      {
+        "date": "2026-04-24T14:40:30.166Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:31.520Z",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "result": "loss",
+        "date": "2026-04-24T14:40:32.732Z",
+        "opponentId": "5",
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373
+      },
+      {
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "score": 270,
+        "date": "2026-04-24T14:40:33.969Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549,
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:35.254Z",
+        "result": "win"
+      },
+      {
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:36.678Z",
+        "result": "loss"
+      },
+      {
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "opponentId": "5",
+        "date": "2026-04-24T14:40:37.959Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527,
+        "date": "2026-04-24T14:40:39.159Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "matchId": "despHuUshXJVHuibTNWL",
+        "score": 341,
+        "result": "loss",
+        "date": "2026-04-24T14:40:40.372Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "loss",
+        "date": "2026-04-24T15:21:36.793Z",
+        "opponentId": "5",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-30T18:36:58.619Z",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547,
+        "date": "2026-04-30T18:36:59.900Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:02.427Z"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:03.963Z",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "result": "win",
+        "date": "2026-04-30T18:37:05.114Z",
         "opponentId": "5",
         "score": 541,
         "matchId": "hUUkqWNQ6ZBN1dKxknWa"
@@ -1689,479 +1369,2129 @@
       {
         "matchId": "hyvmEQQCebNUQHtgiGwm",
         "score": 161,
-        "opponentId": "5",
-        "date": "2026-05-16T13:45:55.894Z",
-        "result": "loss"
-      },
-      {
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "score": 508,
-        "opponentId": "5",
-        "date": "2026-05-16T13:46:00.448Z",
-        "result": "win"
-      },
-      {
-        "score": 67,
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "date": "2026-05-16T13:46:01.876Z",
-        "opponentId": "5",
-        "result": "loss"
-      },
-      {
-        "result": "win",
-        "opponentId": "5",
-        "date": "2026-05-16T13:46:03.143Z",
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "score": 561
-      },
-      {
         "result": "loss",
-        "score": 373,
-        "matchId": "rG6WhoEt22C9NMhua2he",
-        "date": "2026-05-16T13:46:04.341Z",
+        "date": "2026-04-30T18:37:06.294Z",
         "opponentId": "5"
       },
       {
-        "score": 312,
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "date": "2026-05-16T13:46:05.792Z",
-        "opponentId": "5",
-        "result": "loss"
-      },
-      {
-        "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "score": 256,
-        "opponentId": "5",
-        "date": "2026-05-16T13:46:07.032Z",
-        "result": "loss"
-      },
-      {
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "score": 266,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:37.020Z",
-        "result": "loss"
-      },
-      {
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "score": 561,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:38.799Z",
-        "result": "win"
-      },
-      {
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "score": 561,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:40.653Z",
-        "result": "win"
-      },
-      {
         "result": "loss",
-        "matchId": "tOW4V10i8uIMsx9BvGI0",
-        "score": 312,
         "opponentId": "5",
-        "date": "2026-05-16T13:50:42.587Z"
-      },
-      {
-        "date": "2026-05-16T13:50:44.432Z",
-        "opponentId": "5",
-        "score": 547,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "result": "win"
-      },
-      {
-        "result": "loss",
-        "matchId": "ljumM5L4QE5uI9OTEeYJ",
-        "score": 67,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:48.222Z"
-      },
-      {
-        "date": "2026-05-16T13:50:50.026Z",
-        "opponentId": "5",
-        "score": 508,
-        "matchId": "k0BHObsO98U53vemGi3B",
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
-        "score": 541,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:51.791Z"
-      },
-      {
-        "result": "loss",
-        "date": "2026-05-16T13:50:53.638Z",
-        "opponentId": "5",
-        "score": 161,
-        "matchId": "hyvmEQQCebNUQHtgiGwm"
-      },
-      {
-        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "date": "2026-04-30T18:37:07.516Z",
         "score": 341,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:55.523Z",
-        "result": "loss"
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
       },
       {
-        "result": "loss",
         "matchId": "yDxDGpvhLnxcjazrg8ty",
         "score": 256,
-        "opponentId": "5",
-        "date": "2026-05-16T13:50:57.020Z"
+        "result": "loss",
+        "date": "2026-04-30T18:37:08.710Z",
+        "opponentId": "5"
       },
       {
-        "score": 538,
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:10.166Z",
+        "result": "win",
         "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "date": "2026-05-16T13:50:59.023Z",
-        "opponentId": "5",
-        "result": "win"
+        "score": 538
       },
       {
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:11.096Z",
         "result": "loss",
-        "date": "2026-05-16T13:51:01.074Z",
-        "opponentId": "5",
-        "score": 373,
-        "matchId": "rG6WhoEt22C9NMhua2he"
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373
       },
       {
         "opponentId": "5",
-        "date": "2026-05-16T13:51:02.937Z",
-        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "date": "2026-04-30T18:37:12.305Z",
+        "result": "loss",
         "score": 270,
-        "result": "loss"
+        "matchId": "6z1cVT7SdEyeP4E8zler"
       },
       {
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:13.491Z",
         "result": "win",
-        "date": "2026-05-16T13:51:05.377Z",
-        "opponentId": "5",
-        "score": 549,
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549
       },
       {
-        "date": "2026-05-16T13:51:07.334Z",
-        "opponentId": "5",
-        "score": 380,
         "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380,
+        "opponentId": "5",
+        "date": "2026-04-30T18:37:14.697Z",
         "result": "loss"
       },
       {
-        "result": "loss",
-        "date": "2026-05-16T13:51:09.174Z",
-        "opponentId": "5",
         "score": 361,
-        "matchId": "glYuGPQYqzkzmUzc0qhU"
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "result": "loss",
+        "date": "2026-04-30T18:37:15.859Z",
+        "opponentId": "5"
       },
       {
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
         "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "date": "2026-04-30T18:37:17.097Z",
         "opponentId": "5",
-        "date": "2026-05-16T13:51:10.972Z",
         "result": "win"
-      },
-      {
-        "score": 341,
-        "matchId": "despHuUshXJVHuibTNWL",
-        "date": "2026-05-16T13:51:12.718Z",
-        "opponentId": "5",
-        "result": "loss"
-      },
-      {
-        "score": 266,
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "date": "2026-05-16T14:28:14.486Z",
-        "opponentId": "5",
-        "result": "loss"
-      },
-      {
-        "opponentId": "5",
-        "date": "2026-05-16T14:28:15.656Z",
-        "matchId": "LaWHieEToJxiilZpJMuj",
-        "score": 561,
-        "result": "win"
-      },
-      {
-        "result": "win",
-        "opponentId": "5",
-        "date": "2026-05-16T14:28:16.846Z",
-        "matchId": "pVsfMicad54dHcx2Ex0M",
-        "score": 561
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:18.384Z",
         "opponentId": "5",
+        "date": "2026-04-30T18:37:18.280Z",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-30T19:17:54.328Z",
+        "result": "loss",
         "score": 312,
         "matchId": "tOW4V10i8uIMsx9BvGI0"
       },
       {
         "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T19:17:55.623Z",
         "score": 547,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "date": "2026-05-16T14:28:19.569Z",
-        "opponentId": "5"
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
       },
       {
-        "date": "2026-05-16T14:28:21.965Z",
-        "opponentId": "5",
-        "score": 67,
         "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67,
+        "opponentId": "5",
+        "date": "2026-04-30T19:17:58.386Z",
         "result": "loss"
       },
       {
-        "result": "win",
         "matchId": "k0BHObsO98U53vemGi3B",
         "score": 508,
+        "date": "2026-04-30T19:17:59.594Z",
         "opponentId": "5",
-        "date": "2026-05-16T14:28:23.175Z"
+        "result": "win"
+      },
+      {
+        "result": "win",
+        "date": "2026-04-30T19:18:00.920Z",
+        "opponentId": "5",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:02.244Z",
+        "result": "loss",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
+      },
+      {
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:03.643Z"
+      },
+      {
+        "date": "2026-04-30T19:18:05.005Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256
+      },
+      {
+        "date": "2026-04-30T19:18:06.788Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:08.175Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "score": 270,
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:09.422Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:10.801Z"
       },
       {
         "result": "loss",
-        "score": 266,
-        "matchId": "MkdPdKM1tU207UbgyMy5",
-        "date": "2026-05-16T14:28:33.541Z",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:12.259Z",
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:13.576Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-04-30T19:18:15.598Z"
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "result": "loss",
+        "date": "2026-04-30T19:18:16.753Z",
         "opponentId": "5"
       },
       {
-        "result": "win",
-        "date": "2026-05-16T14:28:34.674Z",
-        "opponentId": "5",
-        "score": 561,
-        "matchId": "LaWHieEToJxiilZpJMuj"
-      },
-      {
-        "result": "win",
-        "date": "2026-05-16T14:28:35.841Z",
-        "opponentId": "5",
-        "score": 561,
-        "matchId": "pVsfMicad54dHcx2Ex0M"
-      },
-      {
-        "result": "loss",
         "matchId": "tOW4V10i8uIMsx9BvGI0",
         "score": 312,
+        "result": "loss",
+        "date": "2026-05-15T00:54:59.886Z",
+        "opponentId": "5"
+      },
+      {
         "opponentId": "5",
-        "date": "2026-05-16T14:28:36.977Z"
+        "date": "2026-05-15T00:55:00.441Z",
+        "result": "win",
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T00:55:01.360Z",
+        "opponentId": "5",
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67
+      },
+      {
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "score": 508,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:01.754Z"
       },
       {
         "result": "win",
-        "score": 547,
-        "matchId": "PMlR4oXfmgY5IptEnLN6",
-        "date": "2026-05-16T14:28:38.133Z",
+        "date": "2026-05-15T00:55:02.300Z",
+        "opponentId": "5",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:02.788Z",
+        "result": "loss",
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "score": 161
+      },
+      {
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "score": 341,
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:03.266Z"
+      },
+      {
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:03.702Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "score": 538,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:04.129Z"
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:04.630Z",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:05.172Z",
+        "result": "loss",
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "score": 270
+      },
+      {
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:05.499Z",
+        "result": "win"
+      },
+      {
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "opponentId": "5",
+        "date": "2026-05-15T00:55:05.944Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "result": "loss",
+        "date": "2026-05-15T00:55:06.404Z",
         "opponentId": "5"
+      },
+      {
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527,
+        "result": "win",
+        "date": "2026-05-15T00:55:06.857Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T00:55:07.259Z",
+        "opponentId": "5",
+        "matchId": "despHuUshXJVHuibTNWL",
+        "score": 341
+      },
+      {
+        "date": "2026-05-15T02:11:55.815Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T02:11:57.024Z",
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547
       },
       {
         "matchId": "ljumM5L4QE5uI9OTEeYJ",
         "score": 67,
-        "opponentId": "5",
-        "date": "2026-05-16T14:28:40.495Z",
-        "result": "loss"
+        "result": "loss",
+        "date": "2026-05-15T02:11:59.440Z",
+        "opponentId": "5"
       },
       {
-        "result": "win",
-        "date": "2026-05-16T14:28:41.628Z",
-        "opponentId": "5",
         "score": 508,
-        "matchId": "k0BHObsO98U53vemGi3B"
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "result": "win",
+        "date": "2026-05-15T02:12:00.842Z",
+        "opponentId": "5"
       },
       {
-        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
         "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "result": "win",
+        "date": "2026-05-15T02:12:02.062Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "loss",
         "opponentId": "5",
-        "date": "2026-05-16T14:28:42.802Z",
+        "date": "2026-05-15T02:12:03.368Z",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T02:12:04.580Z",
+        "result": "loss",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T02:12:05.808Z",
+        "opponentId": "5",
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256
+      },
+      {
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "score": 538,
+        "opponentId": "5",
+        "date": "2026-05-15T02:12:07.025Z",
         "result": "win"
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:43.979Z",
+        "date": "2026-05-15T02:12:08.720Z",
+        "opponentId": "5",
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "result": "loss",
+        "date": "2026-05-15T02:12:10.225Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549,
+        "date": "2026-05-15T02:12:13.038Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380,
+        "result": "loss",
+        "date": "2026-05-15T02:12:14.215Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "date": "2026-05-15T02:12:15.625Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "date": "2026-05-15T02:12:16.835Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-05-15T02:12:18.077Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T03:20:19.566Z"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T11:43:57.217Z",
+        "opponentId": "5",
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T11:43:58.375Z",
+        "result": "loss",
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "score": 312
+      },
+      {
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T11:43:59.643Z"
+      },
+      {
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67,
+        "result": "loss",
+        "date": "2026-05-15T11:44:02.889Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:04.480Z"
+      },
+      {
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "score": 541,
+        "result": "win",
+        "date": "2026-05-15T11:44:05.919Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:07.115Z"
+      },
+      {
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "result": "loss",
+        "date": "2026-05-15T11:44:08.412Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256,
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:09.681Z",
+        "result": "loss"
+      },
+      {
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:10.843Z"
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:12.064Z"
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "date": "2026-05-15T11:44:13.291Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:14.467Z",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "date": "2026-05-15T11:44:15.715Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380
+      },
+      {
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361,
+        "date": "2026-05-15T11:44:16.926Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T11:44:18.179Z",
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T11:44:19.358Z",
+        "opponentId": "5",
+        "matchId": "despHuUshXJVHuibTNWL",
+        "score": 341
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T13:07:34.207Z",
+        "result": "win",
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "score": 561
+      },
+      {
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T14:25:40.586Z"
+      },
+      {
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "result": "win",
+        "date": "2026-05-15T14:25:42.111Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "score": 312,
+        "date": "2026-05-15T14:25:43.608Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "result": "win",
+        "date": "2026-05-15T14:25:45.137Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "result": "loss",
+        "date": "2026-05-15T14:25:48.322Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "score": 508,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T14:25:49.902Z"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T14:25:51.415Z",
+        "opponentId": "5",
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "score": 541
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "date": "2026-05-15T14:25:52.906Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "score": 341,
+        "date": "2026-05-15T14:25:54.374Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T14:25:55.874Z",
+        "result": "loss",
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T14:25:57.429Z",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "date": "2026-05-15T14:25:59.001Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T14:26:00.538Z",
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "score": 270
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T14:26:02.148Z",
+        "result": "win",
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "score": 549
+      },
+      {
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380,
+        "result": "loss",
+        "date": "2026-05-15T14:26:03.728Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T14:26:05.283Z",
+        "result": "loss",
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU"
+      },
+      {
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "score": 527,
+        "result": "win",
+        "date": "2026-05-15T14:26:06.752Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T14:26:08.250Z",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:21:01.253Z"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "result": "loss",
+        "date": "2026-05-15T15:21:37.352Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "score": 561,
+        "result": "win",
+        "date": "2026-05-15T15:21:39.088Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T15:21:41.108Z",
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561
+      },
+      {
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "score": 312,
+        "opponentId": "5",
+        "date": "2026-05-15T15:21:43.101Z",
+        "result": "loss"
+      },
+      {
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547,
+        "result": "win",
+        "date": "2026-05-15T15:21:44.946Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67,
+        "date": "2026-05-15T15:21:48.699Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:21:50.725Z",
+        "result": "win",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "score": 266,
+        "date": "2026-05-15T15:21:58.496Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:00.347Z",
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "score": 561
+      },
+      {
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561,
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:02.200Z",
+        "result": "win"
+      },
+      {
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "result": "loss",
+        "date": "2026-05-15T15:22:03.951Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:05.959Z",
+        "result": "win",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:09.533Z",
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:11.406Z"
+      },
+      {
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:13.292Z",
+        "result": "win"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T15:22:15.296Z",
         "opponentId": "5",
         "score": 161,
         "matchId": "hyvmEQQCebNUQHtgiGwm"
       },
       {
         "result": "loss",
-        "score": 341,
+        "date": "2026-05-15T15:22:17.252Z",
+        "opponentId": "5",
         "matchId": "OPojHN0jjIOmYFHM7YWQ",
-        "date": "2026-05-16T14:28:45.105Z",
+        "score": 341
+      },
+      {
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:19.118Z"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "result": "loss",
+        "date": "2026-05-15T15:22:26.859Z",
         "opponentId": "5"
       },
       {
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:28.655Z",
+        "result": "win",
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj"
+      },
+      {
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561,
+        "result": "win",
+        "date": "2026-05-15T15:22:30.524Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
         "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:38.943Z"
+      },
+      {
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "score": 561,
+        "date": "2026-05-15T15:22:40.692Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:42.519Z",
+        "result": "win",
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561
+      },
+      {
+        "date": "2026-05-15T15:22:44.252Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "result": "win",
+        "date": "2026-05-15T15:22:45.979Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:49.597Z",
+        "result": "loss",
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "date": "2026-05-15T15:22:51.444Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "date": "2026-05-15T15:22:53.325Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:22:55.239Z",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
+      },
+      {
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "date": "2026-05-15T15:22:57.072Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:03.836Z",
+        "result": "loss",
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "score": 266
+      },
+      {
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "score": 561,
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:05.777Z",
+        "result": "win"
+      },
+      {
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "score": 561,
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:07.602Z"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T15:23:09.677Z",
+        "opponentId": "5",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:11.499Z"
+      },
+      {
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "score": 67,
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:15.437Z",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T15:23:17.368Z",
+        "opponentId": "5",
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "score": 508
+      },
+      {
+        "date": "2026-05-15T15:23:19.146Z",
+        "opponentId": "5",
+        "result": "win",
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "score": 541
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-15T15:23:26.591Z",
+        "opponentId": "5",
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "score": 266
+      },
+      {
+        "date": "2026-05-15T15:23:28.610Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj"
+      },
+      {
+        "date": "2026-05-15T15:23:30.459Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M"
+      },
+      {
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "date": "2026-05-15T15:23:32.402Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:34.347Z",
+        "result": "win",
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "score": 547
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "result": "loss",
+        "date": "2026-05-15T15:23:37.939Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "score": 508,
+        "result": "win",
+        "date": "2026-05-15T15:23:39.768Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:41.745Z",
+        "result": "win",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:43.784Z",
+        "result": "loss",
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "score": 161
+      },
+      {
+        "matchId": "OPojHN0jjIOmYFHM7YWQ",
+        "score": 341,
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:45.619Z",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:47.462Z",
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "score": 256
+      },
+      {
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "score": 538,
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:49.320Z",
+        "result": "win"
+      },
+      {
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "score": 373,
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:51.550Z"
+      },
+      {
+        "date": "2026-05-15T15:23:53.611Z",
+        "opponentId": "5",
+        "result": "loss",
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "score": 270
+      },
+      {
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "result": "win",
+        "date": "2026-05-15T15:23:55.653Z",
+        "opponentId": "5"
+      },
+      {
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "score": 380,
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:57.745Z",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-15T15:23:59.786Z",
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "score": 361
+      },
+      {
+        "result": "win",
+        "date": "2026-05-15T15:24:01.821Z",
+        "opponentId": "5",
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-05-15T15:24:03.689Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:38:18.196Z",
+        "opponentId": "5",
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:19.376Z",
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj"
+      },
+      {
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "date": "2026-05-16T14:38:20.551Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:21.780Z",
+        "result": "loss",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:38:22.964Z",
+        "opponentId": "5",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "date": "2026-05-16T14:38:25.295Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "date": "2026-05-16T14:38:26.493Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:38:27.722Z",
+        "opponentId": "5",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:28.874Z",
+        "result": "loss"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:30.049Z",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
         "score": 256,
         "matchId": "yDxDGpvhLnxcjazrg8ty",
-        "date": "2026-05-16T14:28:46.309Z",
+        "result": "loss",
+        "date": "2026-05-16T14:38:31.309Z",
+        "opponentId": "5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:32.541Z",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "date": "2026-05-16T14:38:33.729Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he"
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "result": "loss",
+        "date": "2026-05-16T14:38:34.876Z",
         "opponentId": "5"
       },
       {
         "result": "win",
         "opponentId": "5",
-        "date": "2026-05-16T14:28:47.477Z",
-        "matchId": "DCpxXVQxnjg0lP7BUC5t",
-        "score": 538
+        "date": "2026-05-16T14:38:36.146Z",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:37.388Z",
+        "result": "loss",
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX"
+      },
+      {
+        "date": "2026-05-16T14:38:38.527Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:39.723Z",
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "opponentId": "5",
+        "date": "2026-05-16T14:38:40.868Z",
+        "result": "loss"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "date": "2026-05-16T14:39:51.792Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:39:52.972Z"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:39:54.204Z",
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M"
       },
       {
         "result": "loss",
         "opponentId": "5",
-        "date": "2026-05-16T14:28:48.727Z",
-        "matchId": "rG6WhoEt22C9NMhua2he",
-        "score": 373
+        "date": "2026-05-16T14:39:55.411Z",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "opponentId": "5",
+        "date": "2026-05-16T14:39:56.585Z",
+        "result": "win"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:39:58.878Z",
+        "result": "loss",
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "result": "win",
+        "date": "2026-05-16T14:40:00.091Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:01.385Z",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:02.508Z",
+        "result": "loss",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:49.962Z",
+        "date": "2026-05-16T14:40:03.732Z",
+        "opponentId": "5",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:05.004Z",
+        "result": "loss"
+      },
+      {
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:06.235Z"
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "result": "loss",
+        "date": "2026-05-16T14:40:07.381Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:08.517Z",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:40:09.914Z",
+        "opponentId": "5",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:40:11.054Z",
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX"
+      },
+      {
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "date": "2026-05-16T14:40:12.191Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "date": "2026-05-16T14:40:13.452Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:40:14.637Z",
+        "opponentId": "5",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:47:58.201Z",
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5"
+      },
+      {
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "opponentId": "5",
+        "date": "2026-05-16T14:47:59.946Z",
+        "result": "win"
+      },
+      {
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:01.781Z"
+      },
+      {
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:03.678Z"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:05.502Z"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:09.418Z",
+        "result": "loss"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:11.207Z"
+      },
+      {
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:13.088Z",
+        "result": "win"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:15.200Z",
+        "result": "loss",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:17.076Z",
+        "result": "loss",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "result": "loss",
+        "date": "2026-05-16T14:48:19.055Z",
+        "opponentId": "5"
+      },
+      {
+        "date": "2026-05-16T14:48:21.017Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:48:22.954Z",
+        "opponentId": "5",
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he"
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "result": "loss",
+        "date": "2026-05-16T14:48:24.955Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:26.945Z"
+      },
+      {
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:28.947Z"
+      },
+      {
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "opponentId": "5",
+        "date": "2026-05-16T14:48:30.997Z",
+        "result": "loss"
+      },
+      {
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
+        "result": "win",
+        "date": "2026-05-16T14:48:33.030Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL",
+        "date": "2026-05-16T14:48:35.261Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:49:55.436Z",
+        "result": "loss",
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:49:56.895Z",
+        "result": "win",
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj"
+      },
+      {
+        "date": "2026-05-16T14:49:58.722Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:00.539Z",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:50:02.355Z",
+        "opponentId": "5",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "date": "2026-05-16T14:50:06.113Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B",
+        "date": "2026-05-16T14:50:07.991Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:09.885Z",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "result": "loss",
+        "date": "2026-05-16T14:50:11.745Z",
+        "opponentId": "5"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:50:13.783Z",
+        "opponentId": "5",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:15.626Z",
+        "result": "loss",
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty"
+      },
+      {
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t",
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:17.585Z",
+        "result": "win"
+      },
+      {
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he",
+        "result": "loss",
+        "date": "2026-05-16T14:50:19.522Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler",
+        "result": "loss",
+        "date": "2026-05-16T14:50:21.571Z",
+        "opponentId": "5"
+      },
+      {
+        "date": "2026-05-16T14:50:23.617Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "date": "2026-05-16T14:50:25.580Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:27.573Z",
+        "result": "loss",
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:50:29.412Z",
+        "opponentId": "5",
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:50:31.239Z",
+        "result": "loss",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL"
+      },
+      {
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5",
+        "date": "2026-05-16T14:52:57.212Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "date": "2026-05-16T14:52:58.449Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj"
+      },
+      {
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "opponentId": "5",
+        "date": "2026-05-16T14:52:59.769Z",
+        "result": "win"
+      },
+      {
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0",
+        "date": "2026-05-16T14:53:01.047Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6",
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:02.239Z"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:04.591Z"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:53:05.726Z",
+        "opponentId": "5",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa",
+        "result": "win",
+        "date": "2026-05-16T14:53:06.940Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm",
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:08.473Z",
+        "result": "loss"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:09.805Z",
+        "result": "loss",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty",
+        "date": "2026-05-16T14:53:11.087Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:12.369Z",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "date": "2026-05-16T14:53:13.568Z",
+        "opponentId": "5",
+        "result": "loss",
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:53:14.826Z",
         "opponentId": "5",
         "score": 270,
         "matchId": "6z1cVT7SdEyeP4E8zler"
       },
       {
-        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
         "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ",
         "opponentId": "5",
-        "date": "2026-05-16T14:28:51.149Z",
+        "date": "2026-05-16T14:53:16.052Z",
         "result": "win"
       },
       {
         "result": "loss",
-        "matchId": "3FhUHp7DQugRYtUkKZWX",
-        "score": 380,
         "opponentId": "5",
-        "date": "2026-05-16T14:28:52.339Z"
+        "date": "2026-05-16T14:53:17.468Z",
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX"
+      },
+      {
+        "score": 361,
+        "matchId": "glYuGPQYqzkzmUzc0qhU",
+        "date": "2026-05-16T14:53:18.652Z",
+        "opponentId": "5",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:53:19.812Z",
+        "opponentId": "5",
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:53:20.982Z",
+        "result": "loss",
+        "score": 341,
+        "matchId": "despHuUshXJVHuibTNWL"
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:53.468Z",
         "opponentId": "5",
+        "date": "2026-05-16T14:58:21.255Z",
+        "score": 266,
+        "matchId": "MkdPdKM1tU207UbgyMy5"
+      },
+      {
+        "score": 561,
+        "matchId": "LaWHieEToJxiilZpJMuj",
+        "result": "win",
+        "date": "2026-05-16T14:58:23.099Z",
+        "opponentId": "5"
+      },
+      {
+        "score": 561,
+        "matchId": "pVsfMicad54dHcx2Ex0M",
+        "date": "2026-05-16T14:58:25.019Z",
+        "opponentId": "5",
+        "result": "win"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:26.887Z",
+        "result": "loss",
+        "score": 312,
+        "matchId": "tOW4V10i8uIMsx9BvGI0"
+      },
+      {
+        "date": "2026-05-16T14:58:28.883Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 547,
+        "matchId": "PMlR4oXfmgY5IptEnLN6"
+      },
+      {
+        "score": 67,
+        "matchId": "ljumM5L4QE5uI9OTEeYJ",
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:32.671Z",
+        "result": "loss"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:58:34.721Z",
+        "opponentId": "5",
+        "score": 508,
+        "matchId": "k0BHObsO98U53vemGi3B"
+      },
+      {
+        "date": "2026-05-16T14:58:36.487Z",
+        "opponentId": "5",
+        "result": "win",
+        "score": 541,
+        "matchId": "hUUkqWNQ6ZBN1dKxknWa"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:58:38.304Z",
+        "opponentId": "5",
+        "score": 161,
+        "matchId": "hyvmEQQCebNUQHtgiGwm"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:40.303Z",
+        "score": 341,
+        "matchId": "OPojHN0jjIOmYFHM7YWQ"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:42.178Z",
+        "result": "loss",
+        "score": 256,
+        "matchId": "yDxDGpvhLnxcjazrg8ty"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:44.040Z",
+        "result": "win",
+        "score": 538,
+        "matchId": "DCpxXVQxnjg0lP7BUC5t"
+      },
+      {
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:45.883Z",
+        "score": 373,
+        "matchId": "rG6WhoEt22C9NMhua2he"
+      },
+      {
+        "result": "loss",
+        "date": "2026-05-16T14:58:47.828Z",
+        "opponentId": "5",
+        "score": 270,
+        "matchId": "6z1cVT7SdEyeP4E8zler"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:58:49.786Z",
+        "opponentId": "5",
+        "score": 549,
+        "matchId": "Hdgi4T2YYpN4hwitnGuZ"
+      },
+      {
+        "score": 380,
+        "matchId": "3FhUHp7DQugRYtUkKZWX",
+        "result": "loss",
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:51.776Z"
+      },
+      {
+        "opponentId": "5",
+        "date": "2026-05-16T14:58:53.656Z",
+        "result": "loss",
         "score": 361,
         "matchId": "glYuGPQYqzkzmUzc0qhU"
       },
       {
-        "score": 527,
-        "matchId": "ZmQNcAPwtGjChvSCGnXJ",
-        "date": "2026-05-16T14:28:54.766Z",
+        "result": "win",
+        "date": "2026-05-16T14:58:55.590Z",
         "opponentId": "5",
-        "result": "win"
+        "score": 527,
+        "matchId": "ZmQNcAPwtGjChvSCGnXJ"
       },
       {
         "result": "loss",
-        "date": "2026-05-16T14:28:56.116Z",
+        "date": "2026-05-16T14:58:57.620Z",
         "opponentId": "5",
         "score": 341,
         "matchId": "despHuUshXJVHuibTNWL"
       }
-    ]
+    ],
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "stats": {
+      "totalScore": 7460,
+      "draws": 0,
+      "roundsWon": 95,
+      "losses": 11,
+      "wins": 8,
+      "roundsLost": 79,
+      "matchesPlayed": 19,
+      "points": 24
+    }
   },
   {
     "id": "Df3wbNNOeAmzivJB8Cu8",
-    "members": [
-      "Gaurav",
-      "Kritagya"
-    ],
+    "createdAt": "2026-05-16T07:54:45.747Z",
     "stats": {
-      "losses": 0,
-      "wins": 1,
+      "roundsLost": 2,
       "matchesPlayed": 1,
       "draws": 0,
-      "roundsLost": 2,
-      "totalScore": 519,
+      "losses": 0,
+      "wins": 1,
+      "roundsWon": 6,
       "points": 3,
-      "roundsWon": 6
+      "totalScore": 519
     },
-    "createdAt": "2026-05-16T07:54:45.747Z",
-    "name": "K2-G",
     "matchHistory": [
       {
-        "result": "win",
-        "opponentId": "6",
-        "date": "2026-05-16T13:45:25.963Z",
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "score": 519
-      },
-      {
-        "result": "win",
         "matchId": "7X8kiF0xfUtrE0COBUU8",
         "score": 519,
-        "opponentId": "6",
-        "date": "2026-05-16T13:45:38.634Z"
-      },
-      {
-        "opponentId": "6",
-        "date": "2026-05-16T13:50:35.621Z",
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "score": 519,
-        "result": "win"
-      },
-      {
         "result": "win",
-        "score": 519,
-        "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "date": "2026-05-16T14:28:13.307Z",
+        "date": "2026-05-16T09:04:38.427Z",
         "opponentId": "6"
       },
       {
-        "date": "2026-05-16T14:28:32.412Z",
+        "date": "2026-05-16T14:38:16.914Z",
         "opponentId": "6",
+        "result": "win",
+        "score": 519,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "result": "win",
+        "opponentId": "6",
+        "date": "2026-05-16T14:39:50.615Z",
+        "score": 519,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
         "score": 519,
         "matchId": "7X8kiF0xfUtrE0COBUU8",
-        "result": "win"
+        "result": "win",
+        "date": "2026-05-16T14:47:56.362Z",
+        "opponentId": "6"
+      },
+      {
+        "result": "win",
+        "opponentId": "6",
+        "date": "2026-05-16T14:49:53.549Z",
+        "score": 519,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "opponentId": "6",
+        "date": "2026-05-16T14:52:55.980Z",
+        "result": "win",
+        "score": 519,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
+      },
+      {
+        "date": "2026-05-16T14:58:19.354Z",
+        "opponentId": "6",
+        "result": "win",
+        "score": 519,
+        "matchId": "7X8kiF0xfUtrE0COBUU8"
       }
+    ],
+    "name": "K2-G",
+    "members": [
+      "Gaurav",
+      "Kritagya"
     ]
   },
   {
     "id": "I2bXAsPQWuSIhjbaVC9H",
-    "name": "Sky/K2",
     "matchHistory": [
       {
-        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
-        "date": "2026-05-16T13:45:33.931Z",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "result": "win",
+        "date": "2026-04-18T18:59:32.739Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U"
+      },
+      {
         "matchId": "7F1xqRQeOAeEYco7NuVo",
         "score": 552,
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-04-23T17:49:44.994Z",
         "result": "win"
+      },
+      {
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "date": "2026-04-24T14:40:19.698Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "result": "win"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 552,
+        "result": "win",
+        "date": "2026-04-30T18:37:01.146Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U"
       },
       {
         "result": "win",
         "opponentId": "6RMhZRyFxyjL0YpHfp9U",
-        "date": "2026-05-16T13:45:37.445Z",
+        "date": "2026-04-30T19:17:57.231Z",
         "matchId": "7F1xqRQeOAeEYco7NuVo",
         "score": 552
       },
       {
         "result": "win",
-        "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "score": 552,
         "opponentId": "6RMhZRyFxyjL0YpHfp9U",
-        "date": "2026-05-16T13:50:46.334Z"
+        "date": "2026-05-15T00:55:00.973Z",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "result": "win",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-15T02:11:58.231Z",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-15T11:44:01.468Z",
+        "result": "win",
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 552
+      },
+      {
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-15T14:25:46.758Z",
+        "result": "win"
+      },
+      {
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-15T15:21:46.804Z",
+        "result": "win"
       },
       {
         "matchId": "7F1xqRQeOAeEYco7NuVo",
         "score": 552,
         "opponentId": "6RMhZRyFxyjL0YpHfp9U",
-        "date": "2026-05-16T14:28:20.745Z",
+        "date": "2026-05-15T15:22:07.746Z",
+        "result": "win"
+      },
+      {
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 552,
+        "date": "2026-05-15T15:22:47.882Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "result": "win"
+      },
+      {
+        "date": "2026-05-15T15:23:13.379Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "result": "win",
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "score": 552
+      },
+      {
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-15T15:23:36.163Z",
+        "result": "win",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "result": "win",
+        "date": "2026-05-16T14:38:24.137Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-16T14:39:57.739Z",
+        "result": "win",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "date": "2026-05-16T14:48:07.365Z",
         "result": "win"
       },
       {
         "result": "win",
+        "date": "2026-05-16T14:50:04.302Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo"
+      },
+      {
         "score": 552,
         "matchId": "7F1xqRQeOAeEYco7NuVo",
-        "date": "2026-05-16T14:28:39.293Z",
+        "result": "win",
+        "date": "2026-05-16T14:53:03.455Z",
         "opponentId": "6RMhZRyFxyjL0YpHfp9U"
+      },
+      {
+        "score": 552,
+        "matchId": "7F1xqRQeOAeEYco7NuVo",
+        "date": "2026-05-16T14:58:30.777Z",
+        "opponentId": "6RMhZRyFxyjL0YpHfp9U",
+        "result": "win"
       }
     ],
+    "name": "Sky/K2",
     "members": [
       "Akash",
       "k2"
     ],
     "createdAt": "2026-04-18T17:59:17.933Z",
     "stats": {
-      "wins": 1,
-      "losses": 0,
-      "matchesPlayed": 1,
-      "draws": 0,
-      "totalScore": 552,
       "roundsLost": 3,
+      "matchesPlayed": 1,
+      "roundsWon": 5,
+      "losses": 0,
+      "wins": 1,
+      "draws": 0,
       "points": 3,
-      "roundsWon": 5
+      "totalScore": 552
     }
   }
 ]
