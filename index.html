@@ -19,13 +19,24 @@
 
     <div class="container">
         <header>
-            <h1>🎮 Card Game Dashboard</h1>
+            <h1>🃏 Card Game Dashboard</h1>
             <nav>
                 <button id="viewTeams" class="nav-btn active">🏆 Teams</button>
                 <button id="viewMatches" class="nav-btn">⚔️ Matches</button>
                 <button id="viewStats" class="nav-btn">📊 Statistics</button>
             </nav>
         </header>
+
+        <div class="sticky-nav" id="stickyNav">
+            <div class="sticky-nav-inner">
+                <span class="sticky-nav-title">🎮 Card Game</span>
+                <div class="sticky-nav-buttons">
+                    <button class="sticky-nav-btn active" data-target="teams">Teams</button>
+                    <button class="sticky-nav-btn" data-target="matches">Matches</button>
+                    <button class="sticky-nav-btn" data-target="stats">Stats</button>
+                </div>
+            </div>
+        </div>
 
         <main>
             <!-- Teams Section -->
@@ -60,9 +71,13 @@
                     <button id="recalculateStatsBtn" class="action-btn">🔄 Recalculate Stats</button>
                 </div>
 
+                <div id="hotStrip" class="hot-strip"></div>
+
                 <div id="kpiTiles" class="kpi-tiles">
                     <!-- KPI tiles injected here -->
                 </div>
+
+                <div class="section-divider"><span>Leaderboard</span></div>
 
                 <div class="stats-card leaderboard-card">
                     <h3>🏆 Leaderboard</h3>
@@ -86,6 +101,18 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="section-divider"><span>Head to Head</span></div>
+
+                <div class="stats-card">
+                    <h3>⚔️ Head-to-Head Matrix</h3>
+                    <p class="card-hint">Each cell shows the row team's record vs the column team (W–L). Diagonal and empty pairs show —.</p>
+                    <div class="h2h-scroll">
+                        <table id="h2hMatrix" class="h2h-table"></table>
+                    </div>
+                </div>
+
+                <div class="section-divider"><span>Recent Activity</span></div>
 
                 <div class="stats-card">
                     <h3>📈 Recent Activity</h3>
