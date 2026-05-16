@@ -529,6 +529,46 @@ function wireEmptyStateCtas(container) {
     });
 }
 
+function renderH2hMatrix(teams, matches) {
+    const tbl = document.getElementById('h2hMatrix');
+    if (!tbl) return;
+    if (teams.length < 2) { tbl.innerHTML = ''; return; }
+
+    const m = StatsUtils.headToHeadMatrix(teams, matches);
+    const head = `
+        <thead>
+            <tr>
+                <th class="h2h-corner"></th>
+                ${m.ids.map(id => `<th class="h2h-colhead" title="${m.namesById.get(id)}"><span class="team-dot" style="background:${StatsUtils.teamColor(id)}"></span>${m.namesById.get(id)}</th>`).join('')}
+            </tr>
+        </thead>
+    `;
+    const rows = m.ids.map(rowId => {
+        const cells = m.ids.map(colId => {
+            if (rowId === colId) return '<td class="h2h-diag">—</td>';
+            const h = m.cells[rowId][colId];
+            if (!h || h.played === 0) return '<td class="h2h-empty">—</td>';
+            let cls = 'h2h-tie';
+            if (h.wins > h.losses) cls = 'h2h-win';
+            else if (h.losses > h.wins) cls = 'h2h-loss';
+            return `
+                <td class="${cls} h2h-clickable" data-row="${rowId}" data-col="${colId}" title="View ${m.namesById.get(rowId)}'s matches vs ${m.namesById.get(colId)}">
+                    <div class="h2h-record">${h.wins}–${h.losses}</div>
+                    <div class="h2h-played">${h.played} played</div>
+                </td>
+            `;
+        }).join('');
+        return `<tr><th class="h2h-rowhead"><span class="team-dot" style="background:${StatsUtils.teamColor(rowId)}"></span>${m.namesById.get(rowId)}</th>${cells}</tr>`;
+    }).join('');
+    tbl.innerHTML = head + `<tbody>${rows}</tbody>`;
+
+    tbl.querySelectorAll('.h2h-clickable').forEach(cell => {
+        cell.addEventListener('click', () => {
+            viewTeamDetails(cell.dataset.row, cell.dataset.col);
+        });
+    });
+}
+
 function renderHotStrip(teams, matches) {
     const el = document.getElementById('hotStrip');
     if (!el) return;
@@ -656,8 +696,8 @@ function renderScorecard(match, team1, team2) {
                     <thead>
                         <tr>
                             <th rowspan="2">R</th>
-                            <th colspan="3" class="t1-head">${team1.name}</th>
-                            <th colspan="3" class="t2-head">${team2.name}</th>
+                            <th colspan="3" class="t1-head" style="color:${StatsUtils.teamColor(team1.id)}">${team1.name}</th>
+                            <th colspan="3" class="t2-head" style="color:${StatsUtils.teamColor(team2.id)}">${team2.name}</th>
                             <th rowspan="2">Round Winner</th>
                         </tr>
                         <tr>
@@ -673,15 +713,14 @@ function renderScorecard(match, team1, team2) {
 }
 
 function mountSparklines() {
-    const css = getComputedStyle(document.documentElement);
-    const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
-    const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
     const dpr = window.devicePixelRatio || 1;
 
     document.querySelectorAll('canvas.sparkline').forEach(async (canvas) => {
         const matchId = canvas.dataset.matchId;
         const match = (await matchService.getAllMatches()).find(m => String(m.id) === String(matchId));
         if (!match) return;
+        const tc1 = StatsUtils.teamColor(match.team1Id);
+        const tc2 = StatsUtils.teamColor(match.team2Id);
         const { team1, team2 } = StatsUtils.cumulativeSeries(match);
         const w = canvas.clientWidth || 120, h = canvas.clientHeight || 28;
         canvas.width = w * dpr; canvas.height = h * dpr;
@@ -705,8 +744,8 @@ function mountSparklines() {
             ctx.lineJoin = 'round';
             ctx.stroke();
         };
-        drawLine(team1, c1);
-        drawLine(team2, c2);
+        drawLine(team1, tc1);
+        drawLine(team2, tc2);
     });
 }
 
@@ -728,8 +767,8 @@ function mountWormCharts() {
 
         const series = StatsUtils.cumulativeSeries(match);
         const css = getComputedStyle(document.documentElement);
-        const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
-        const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
+        const c1 = StatsUtils.teamColor(match.team1Id);
+        const c2 = StatsUtils.teamColor(match.team2Id);
         const muted = css.getPropertyValue('--text-muted').trim() || '#94a3b8';
 
         const winLinePlugin = {
@@ -976,7 +1015,7 @@ function renderLeaderboard(rows, form) {
         return `
             <tr class="${rankClass}">
                 <td class="rank-cell">${r.rank}</td>
-                <td class="team-cell">${r.name}</td>
+                <td class="team-cell"><span class="team-dot" style="background:${StatsUtils.teamColor(r.id)}"></span>${r.name}</td>
                 <td>${r.played}</td>
                 <td class="num pos">${r.wins}</td>
                 <td class="num neg">${r.losses}</td>
@@ -1023,6 +1062,7 @@ async function refreshStats() {
     const form = StatsUtils.recentForm(teams, matches, 5);
     renderLeaderboard(rows, form);
     wireLeaderboardSort();
+    renderH2hMatrix(teams, matches);
 
     const recentMatches = await matchService.getRecentMatches();
     if (!recentMatches.length) {
@@ -1116,9 +1156,27 @@ function renderTeamOverview(profile, allTeams, matches) {
     `;
 }
 
-function renderTeamMatchesTab(profile, allTeams) {
-    if (!profile.allMatches.length) return '<p class="td-empty">No matches yet.</p>';
-    const rows = profile.allMatches.map(m => {
+function renderTeamMatchesTab(profile, allTeams, opponentFilter) {
+    const filtered = opponentFilter
+        ? profile.allMatches.filter(m => StatsUtils.opponentId(m, profile.id) === String(opponentFilter))
+        : profile.allMatches;
+
+    const oppName = opponentFilter
+        ? (allTeams.find(t => String(t.id) === String(opponentFilter))?.name || opponentFilter)
+        : null;
+
+    const filterChip = opponentFilter
+        ? `<div class="td-filter-bar">
+               <span class="td-filter-label">Filtered to matches vs <strong>${oppName}</strong></span>
+               <button class="td-filter-clear" data-clear-filter>Show all matches</button>
+           </div>`
+        : '';
+
+    if (!filtered.length) {
+        return `${filterChip}<p class="td-empty">${opponentFilter ? `No matches vs ${oppName} yet.` : 'No matches yet.'}</p>`;
+    }
+
+    const rows = filtered.map(m => {
         const side = StatsUtils.teamSide(m, profile.id);
         const oppId = StatsUtils.opponentId(m, profile.id);
         const opp = allTeams.find(t => String(t.id) === oppId);
@@ -1145,6 +1203,7 @@ function renderTeamMatchesTab(profile, allTeams) {
         `;
     }).join('');
     return `
+        ${filterChip}
         <div class="td-table-wrap">
             <table class="td-table">
                 <thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Score</th></tr></thead>
@@ -1176,7 +1235,7 @@ function mountTeamCharts(profile, matches) {
     if (typeof Chart === 'undefined') return;
 
     const css = getComputedStyle(document.documentElement);
-    const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
+    const c1 = StatsUtils.teamColor(profile.id);
     const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
     const muted = css.getPropertyValue('--text-muted').trim() || '#94a3b8';
 
@@ -1233,24 +1292,40 @@ function mountTeamCharts(profile, matches) {
     }
 }
 
-function wireTeamTabs(profile, allTeams, matches) {
+function wireTeamTabs(profile, allTeams, matches, initialFilter) {
+    let currentFilter = initialFilter || null;
     const tabs = document.querySelectorAll('.td-tab');
+
+    function renderTab(target) {
+        const body = document.getElementById('teamDetailsBody');
+        if (target === 'overview') body.innerHTML = renderTeamOverview(profile, allTeams, matches);
+        else if (target === 'matches') {
+            body.innerHTML = renderTeamMatchesTab(profile, allTeams, currentFilter);
+            const clear = body.querySelector('[data-clear-filter]');
+            if (clear) clear.addEventListener('click', () => { currentFilter = null; renderTab('matches'); });
+        }
+        else if (target === 'trends') {
+            body.innerHTML = renderTeamTrendsTab(profile);
+            requestAnimationFrame(() => mountTeamCharts(profile, matches));
+        }
+    }
+
     tabs.forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.dataset.tab;
             tabs.forEach(t => t.classList.toggle('active', t === btn));
-            const body = document.getElementById('teamDetailsBody');
-            if (target === 'overview') body.innerHTML = renderTeamOverview(profile, allTeams, matches);
-            else if (target === 'matches') body.innerHTML = renderTeamMatchesTab(profile, allTeams);
-            else if (target === 'trends') {
-                body.innerHTML = renderTeamTrendsTab(profile);
-                requestAnimationFrame(() => mountTeamCharts(profile, matches));
-            }
+            // Clear opponent filter when manually switching tabs
+            if (target !== 'matches') currentFilter = null;
+            renderTab(target);
         });
     });
+
+    // If we opened pre-filtered to the matches tab, re-render once through renderTab
+    // so the "Show all matches" button gets its click listener wired.
+    if (currentFilter) renderTab('matches');
 }
 
-async function viewTeamDetails(teamId) {
+async function viewTeamDetails(teamId, opponentId) {
     const allTeams = await teamService.getAllTeams();
     const matches = await matchService.getAllMatches();
     const profile = StatsUtils.teamProfile(teamId, allTeams, matches);
@@ -1259,24 +1334,29 @@ async function viewTeamDetails(teamId) {
         return;
     }
 
+    const startTab = opponentId ? 'matches' : 'overview';
+    const initialBody = startTab === 'matches'
+        ? renderTeamMatchesTab(profile, allTeams, String(opponentId))
+        : renderTeamOverview(profile, allTeams, matches);
+
     showModal(`
         <div class="team-details-modal">
-            <div class="td-header">
-                <h2>${profile.name}</h2>
+            <div class="td-header" style="border-left: 4px solid ${StatsUtils.teamColor(profile.id)}; padding-left: 14px;">
+                <h2><span class="team-dot" style="background:${StatsUtils.teamColor(profile.id)}"></span>${profile.name}</h2>
                 <div class="td-meta">
                     ${profile.members.length ? profile.members.map(m => `<span class="td-member">${m}</span>`).join('') : '<span class="td-empty">No members listed</span>'}
                 </div>
             </div>
             <div class="td-tabs">
-                <button class="td-tab active" data-tab="overview">Overview</button>
-                <button class="td-tab" data-tab="matches">Matches</button>
+                <button class="td-tab ${startTab === 'overview' ? 'active' : ''}" data-tab="overview">Overview</button>
+                <button class="td-tab ${startTab === 'matches' ? 'active' : ''}" data-tab="matches">Matches</button>
                 <button class="td-tab" data-tab="trends">Trends</button>
             </div>
-            <div id="teamDetailsBody">${renderTeamOverview(profile, allTeams, matches)}</div>
+            <div id="teamDetailsBody">${initialBody}</div>
         </div>
     `);
 
-    wireTeamTabs(profile, allTeams, matches);
+    wireTeamTabs(profile, allTeams, matches, opponentId ? String(opponentId) : null);
 }
 
 async function formatActivity(activity) {

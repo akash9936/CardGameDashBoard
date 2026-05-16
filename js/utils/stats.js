@@ -285,6 +285,45 @@ const StatsUtils = (() => {
         return best;
     }
 
+    const TEAM_PALETTE = [
+        '#6366f1', // indigo
+        '#10b981', // emerald
+        '#f59e0b', // amber
+        '#ef4444', // red
+        '#06b6d4', // cyan
+        '#a855f7', // purple
+        '#84cc16', // lime
+        '#ec4899', // pink
+        '#f97316', // orange
+        '#14b8a6', // teal
+        '#3b82f6', // blue
+        '#eab308', // yellow
+    ];
+
+    function teamColor(teamId) {
+        const s = String(teamId);
+        let hash = 0;
+        for (let i = 0; i < s.length; i++) {
+            hash = (hash * 41 + s.charCodeAt(i)) >>> 0;
+        }
+        return TEAM_PALETTE[hash % TEAM_PALETTE.length];
+    }
+
+    function headToHeadMatrix(teams, matches) {
+        const ranked = leaderboard(teams, matches);
+        const ids = ranked.map(r => r.id);
+        const cells = {};
+        for (const a of ids) {
+            cells[a] = {};
+            for (const b of ids) {
+                if (a === b) { cells[a][b] = null; continue; }
+                cells[a][b] = headToHead(a, b, matches);
+            }
+        }
+        const namesById = new Map(ranked.map(r => [r.id, r.name]));
+        return { ids, namesById, cells };
+    }
+
     function topRivalry(matches) {
         const counts = new Map();
         for (const m of matches) {
@@ -329,6 +368,7 @@ const StatsUtils = (() => {
         cumulativeSeries, roundOutcome, matchSummary,
         teamProfile, headToHead, teamScoreSeries, teamPromiseActualPoints, teamMatches,
         currentStreak, hottestStreak, topRoundScore, topRivalry,
+        headToHeadMatrix, teamColor, TEAM_PALETTE,
     };
 })();
 
