@@ -1,0 +1,5521 @@
+[
+  {
+    "id": "1",
+    "team1Id": "1",
+    "team2Id": "2",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 305,
+      "team2": 543
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-05-23T15:38:21.121Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "2",
+    "completedAt": "2025-05-23T15:38:21.121Z"
+  },
+  {
+    "id": "1OTUHJWlokOVCqTjCIR5",
+    "team1Id": "6",
+    "team2Id": "5",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 592,
+      "team2": 384
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-08-29T19:48:18.478Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "6",
+    "completedAt": "2025-08-29T19:48:18.478Z"
+  },
+  {
+    "id": "1ZrXzdtjsmeGUrf5Uoip",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "in_progress",
+    "currentRound": 0,
+    "rounds": [],
+    "finalScore": {
+      "team1": 0,
+      "team2": 0
+    },
+    "roundStats": {
+      "team1": {
+        "won": 0,
+        "lost": 0
+      },
+      "team2": {
+        "won": 0,
+        "lost": 0
+      }
+    },
+    "createdAt": "2026-04-17T17:04:46.983Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "2",
+    "team1Id": "6",
+    "team2Id": "5",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 1,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 12,
+          "score": 75
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 72
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": -70,
+      "team2": 522
+    },
+    "roundStats": {
+      "team1": {
+        "won": 2,
+        "lost": 7
+      },
+      "team2": {
+        "won": 7,
+        "lost": 2
+      }
+    },
+    "createdAt": "2025-07-10T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2025-07-10T18:30:00.000Z"
+  },
+  {
+    "id": "2Dhhzu3ZiHMINM1ixlL5",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 14,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 8,
+          "actual": 9,
+          "score": 81
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 2,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 11,
+          "score": 65
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 4,
+          "actual": 1,
+          "score": -40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 12,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 5,
+          "actual": 3,
+          "score": -50
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 10,
+          "score": -50
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 11,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 12,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 13,
+        "team1": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        }
+      },
+      {
+        "roundNumber": 14,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 521,
+      "team2": 371
+    },
+    "roundStats": {
+      "team1": {
+        "won": 8,
+        "lost": 5
+      },
+      "team2": {
+        "won": 5,
+        "lost": 8
+      }
+    },
+    "createdAt": "2026-01-16T16:36:58.486Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "3",
+    "completedAt": "2026-01-16T16:36:58.486Z"
+  },
+  {
+    "id": "3",
+    "team1Id": "6",
+    "team2Id": "5",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 522,
+      "team2": 361
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-07-05T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "6",
+    "completedAt": "2025-07-05T18:30:00.000Z"
+  },
+  {
+    "id": "3FhUHp7DQugRYtUkKZWX",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 10,
+          "score": 64
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 564,
+      "team2": 380
+    },
+    "roundStats": {
+      "team1": {
+        "won": 4,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 4
+      }
+    },
+    "createdAt": "2026-01-25T14:10:00.852Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-01-25T14:10:00.852Z"
+  },
+  {
+    "id": "4",
+    "team1Id": "1",
+    "team2Id": "2",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 9,
+          "score": -40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 4,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 153,
+      "team2": 520
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-06-27T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "2",
+    "completedAt": "2025-06-27T18:30:00.000Z"
+  },
+  {
+    "id": "5",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 6,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 564,
+      "team2": 373
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 3
+      }
+    },
+    "createdAt": "2025-06-05T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "3",
+    "completedAt": "2025-06-05T18:30:00.000Z"
+  },
+  {
+    "id": "6",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 4,
+          "actual": 2,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 11,
+          "score": 74
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 495,
+      "team2": 501
+    },
+    "roundStats": {
+      "team1": {
+        "won": 4,
+        "lost": 5
+      },
+      "team2": {
+        "won": 5,
+        "lost": 4
+      }
+    },
+    "createdAt": "2025-05-29T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "4",
+    "completedAt": "2025-05-29T18:30:00.000Z"
+  },
+  {
+    "id": "6z1cVT7SdEyeP4E8zler",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 12,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 6,
+          "score": -80
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 11,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 12,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 508,
+      "team2": 270
+    },
+    "roundStats": {
+      "team1": {
+        "won": 6,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 6
+      }
+    },
+    "createdAt": "2026-02-20T17:23:25.085Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-02-20T17:23:25.085Z"
+  },
+  {
+    "id": "7",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 10,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 5,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 6,
+          "actual": 10,
+          "score": 64
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 3,
+          "score": -50
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 510,
+      "team2": 311
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 5
+      },
+      "team2": {
+        "won": 5,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-05-24T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "3",
+    "completedAt": "2025-05-24T18:30:00.000Z"
+  },
+  {
+    "id": "7F1xqRQeOAeEYco7NuVo",
+    "team1Id": "I2bXAsPQWuSIhjbaVC9H",
+    "team2Id": "6RMhZRyFxyjL0YpHfp9U",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 11,
+          "score": 74
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 2,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 552,
+      "team2": 36
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-04-18T17:59:33.597Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "I2bXAsPQWuSIhjbaVC9H",
+    "completedAt": "2026-04-18T17:59:33.597Z"
+  },
+  {
+    "id": "7X8kiF0xfUtrE0COBUU8",
+    "team1Id": "6",
+    "team2Id": "Df3wbNNOeAmzivJB8Cu8",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 8,
+          "actual": 8,
+          "score": 80
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 129
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 64
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 2,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 11,
+          "score": 74
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": -60,
+      "team2": 519
+    },
+    "roundStats": {
+      "team1": {
+        "won": 2,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 2
+      }
+    },
+    "createdAt": "2026-05-16T07:55:05.586Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "Df3wbNNOeAmzivJB8Cu8",
+    "completedAt": "2026-05-16T07:55:05.586Z"
+  },
+  {
+    "id": "8",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 404,
+      "team2": 538
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-05-24T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "4",
+    "completedAt": "2025-05-24T18:30:00.000Z"
+  },
+  {
+    "id": "9",
+    "team1Id": "1",
+    "team2Id": "2",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 305,
+      "team2": 543
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-05-22T18:30:00.000Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "2",
+    "completedAt": "2025-05-22T18:30:00.000Z"
+  },
+  {
+    "id": "9Bv588DiscZVp60GE9de",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "in_progress",
+    "currentRound": 0,
+    "rounds": [],
+    "finalScore": {
+      "team1": 0,
+      "team2": 0
+    },
+    "roundStats": {
+      "team1": {
+        "won": 0,
+        "lost": 0
+      },
+      "team2": {
+        "won": 0,
+        "lost": 0
+      }
+    },
+    "createdAt": "2026-04-11T17:47:12.303Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "DCpxXVQxnjg0lP7BUC5t",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 2,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 11,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": -99,
+      "team2": 538
+    },
+    "roundStats": {
+      "team1": {
+        "won": 2,
+        "lost": 7
+      },
+      "team2": {
+        "won": 7,
+        "lost": 2
+      }
+    },
+    "createdAt": "2026-02-21T15:28:14.647Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-02-21T15:28:14.647Z"
+  },
+  {
+    "id": "Hdgi4T2YYpN4hwitnGuZ",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 2,
+          "score": -40
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 11,
+          "score": 83
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 9,
+          "score": 81
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 30,
+      "team2": 549
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-02-14T17:05:47.187Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-02-14T17:05:47.187Z"
+  },
+  {
+    "id": "JO5QW6X7Gqjy4FbG0Efo",
+    "team1Id": "7",
+    "team2Id": "5",
+    "status": "cancelled",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -60
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 10,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 5,
+          "actual": 4,
+          "score": -50
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 151,
+      "team2": 450
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-02-14T18:03:14.223Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "completedAt": "2026-02-14T18:03:14.223Z",
+    "cancellationReason": "dele"
+  },
+  {
+    "id": "LaWHieEToJxiilZpJMuj",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 12,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -72
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 11,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 12,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 404,
+      "team2": 561
+    },
+    "roundStats": {
+      "team1": {
+        "won": 6,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 6
+      }
+    },
+    "createdAt": "2026-05-15T11:44:06.612Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-05-15T11:44:06.612Z"
+  },
+  {
+    "id": "MkdPdKM1tU207UbgyMy5",
+    "team1Id": "7",
+    "team2Id": "5",
+    "status": "completed",
+    "currentRound": 6,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 7,
+          "actual": 11,
+          "score": 74
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 2,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 9,
+          "score": 81
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 266,
+      "team2": 502
+    },
+    "roundStats": {
+      "team1": {
+        "won": 2,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 2
+      }
+    },
+    "createdAt": "2026-05-15T14:45:55.953Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-05-15T14:45:55.953Z"
+  },
+  {
+    "id": "NEqqmAsjaONiT8ChlQsh",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 4,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 10,
+          "score": 64
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 508,
+      "team2": 10
+    },
+    "roundStats": {
+      "team1": {
+        "won": 6,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 6
+      }
+    },
+    "createdAt": "2025-09-05T16:40:25.301Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "3",
+    "completedAt": "2025-09-05T16:40:25.301Z"
+  },
+  {
+    "id": "OPojHN0jjIOmYFHM7YWQ",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 14,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 9,
+          "score": 81
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 46
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 58
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 138
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 9,
+          "score": 72
+        }
+      },
+      {
+        "roundNumber": 11,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 35
+        }
+      },
+      {
+        "roundNumber": 12,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -49
+        }
+      },
+      {
+        "roundNumber": 13,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 14,
+        "team1": {
+          "promise": 6,
+          "actual": 10,
+          "score": 64
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 533,
+      "team2": 341
+    },
+    "roundStats": {
+      "team1": {
+        "won": 7,
+        "lost": 7
+      },
+      "team2": {
+        "won": 7,
+        "lost": 7
+      }
+    },
+    "createdAt": "2026-04-10T17:23:39.333Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-04-10T17:23:39.333Z"
+  },
+  {
+    "id": "PMlR4oXfmgY5IptEnLN6",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 10,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 9,
+          "score": -40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 4,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 5,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 9,
+          "actual": 9,
+          "score": 90
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 38
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -73
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": -119,
+      "team2": 547
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 7
+      },
+      "team2": {
+        "won": 7,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-04-23T17:50:09.269Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-04-23T17:50:09.269Z"
+  },
+  {
+    "id": "ZmQNcAPwtGjChvSCGnXJ",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 10,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 4,
+          "score": -50
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 4,
+          "score": -50
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 8,
+          "actual": 11,
+          "score": 83
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 2,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 5,
+          "actual": 4,
+          "score": -50
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 3,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 10,
+          "score": 53
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 54,
+      "team2": 527
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 7
+      },
+      "team2": {
+        "won": 7,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-01-24T18:30:18.219Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-01-24T18:30:18.219Z"
+  },
+  {
+    "id": "despHuUshXJVHuibTNWL",
+    "team1Id": "7",
+    "team2Id": "5",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 6,
+          "actual": 4,
+          "score": -60
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 341,
+      "team2": 620
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 5
+      },
+      "team2": {
+        "won": 5,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-01-18T07:46:21.372Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-01-18T07:46:21.372Z"
+  },
+  {
+    "id": "glYuGPQYqzkzmUzc0qhU",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 6,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 542,
+      "team2": 361
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-01-24T20:02:21.118Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-01-24T20:02:21.118Z"
+  },
+  {
+    "id": "hUUkqWNQ6ZBN1dKxknWa",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 11,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 136
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 0,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 13,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 1,
+          "score": -50
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 12,
+          "score": -45
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -57
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 9,
+          "score": 74
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 11,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 16,
+      "team2": 541
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 8
+      },
+      "team2": {
+        "won": 8,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-04-11T19:00:26.168Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-04-11T19:00:26.168Z"
+  },
+  {
+    "id": "hVX7hazKQnIlsoxv5R7O",
+    "team1Id": "4",
+    "team2Id": "6RMhZRyFxyjL0YpHfp9U",
+    "status": "in_progress",
+    "currentRound": 0,
+    "rounds": [],
+    "finalScore": {
+      "team1": 0,
+      "team2": 0
+    },
+    "roundStats": {
+      "team1": {
+        "won": 0,
+        "lost": 0
+      },
+      "team2": {
+        "won": 0,
+        "lost": 0
+      }
+    },
+    "createdAt": "2026-02-08T04:05:59.817Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "hyvmEQQCebNUQHtgiGwm",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -33
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 9,
+          "score": 54
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 48
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 55
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 504,
+      "team2": 161
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-04-11T17:47:13.589Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-04-11T17:47:13.589Z"
+  },
+  {
+    "id": "j705AtMU3ESSIF5xkoYI",
+    "team1Id": "3",
+    "team2Id": "4",
+    "status": "completed",
+    "currentRound": 10,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        }
+      },
+      {
+        "roundNumber": 10,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 170,
+      "team2": 531
+    },
+    "roundStats": {
+      "team1": {
+        "won": 4,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 4
+      }
+    },
+    "createdAt": "2025-07-26T18:07:33.826Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "4",
+    "completedAt": "2025-07-26T18:07:33.826Z"
+  },
+  {
+    "id": "jKHZEN3jWX32i074PNvC",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "in_progress",
+    "currentRound": 0,
+    "rounds": [],
+    "finalScore": {
+      "team1": 0,
+      "team2": 0
+    },
+    "roundStats": {
+      "team1": {
+        "won": 0,
+        "lost": 0
+      },
+      "team2": {
+        "won": 0,
+        "lost": 0
+      }
+    },
+    "createdAt": "2026-01-24T20:02:19.907Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "jtesAiMqfAxW3YE3vsxn",
+    "team1Id": "4",
+    "team2Id": "3",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 391,
+      "team2": 548
+    },
+    "roundStats": {
+      "team1": {
+        "won": 4,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 4
+      }
+    },
+    "createdAt": "2025-09-19T18:36:20.677Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "3",
+    "completedAt": "2025-09-19T18:36:20.677Z"
+  },
+  {
+    "id": "k0BHObsO98U53vemGi3B",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 10,
+          "score": 78
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 4,
+          "score": -50
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 5,
+          "score": 50
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 8,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 5,
+          "score": -60
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 9,
+          "score": 136
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 142
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 362,
+      "team2": 508
+    },
+    "roundStats": {
+      "team1": {
+        "won": 2,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 2
+      }
+    },
+    "createdAt": "2026-04-11T20:30:45.290Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-04-11T20:30:45.290Z"
+  },
+  {
+    "id": "ljumM5L4QE5uI9OTEeYJ",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 9,
+          "score": 63
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 510,
+      "team2": 67
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-04-17T17:04:48.783Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-04-17T17:04:48.783Z"
+  },
+  {
+    "id": "o1FnhNblZLZrXfa2nORk",
+    "team1Id": "6",
+    "team2Id": "5",
+    "status": "cancelled",
+    "currentRound": 2,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 70
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 8,
+          "actual": 9,
+          "score": 81
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 123,
+      "team2": 110
+    },
+    "roundStats": {
+      "team1": {
+        "won": 1,
+        "lost": 1
+      },
+      "team2": {
+        "won": 1,
+        "lost": 1
+      }
+    },
+    "createdAt": "2026-04-30T18:37:10.707Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "completedAt": "2026-04-30T18:37:10.707Z",
+    "cancellationReason": "Not Available"
+  },
+  {
+    "id": "pVsfMicad54dHcx2Ex0M",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 379,
+      "team2": 561
+    },
+    "roundStats": {
+      "team1": {
+        "won": 3,
+        "lost": 6
+      },
+      "team2": {
+        "won": 6,
+        "lost": 3
+      }
+    },
+    "createdAt": "2026-05-15T02:13:30.497Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "7",
+    "completedAt": "2026-05-15T02:13:30.497Z"
+  },
+  {
+    "id": "rG6WhoEt22C9NMhua2he",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 10,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 5,
+          "actual": 8,
+          "score": 53
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 5,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 6,
+          "actual": 8,
+          "score": 62
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 6,
+          "actual": 11,
+          "score": 65
+        },
+        "team2": {
+          "promise": 8,
+          "actual": 2,
+          "score": -80
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 546,
+      "team2": 373
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-02-20T20:24:26.562Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-02-20T20:24:26.562Z"
+  },
+  {
+    "id": "tOW4V10i8uIMsx9BvGI0",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 7,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 11,
+          "score": 65
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 2,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 71
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 1,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 12,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 5,
+          "score": 47
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 54
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 6,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 557,
+      "team2": 312
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 2
+      },
+      "team2": {
+        "won": 2,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-04-24T14:40:27.763Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-04-24T14:40:27.763Z"
+  },
+  {
+    "id": "yDxDGpvhLnxcjazrg8ty",
+    "team1Id": "5",
+    "team2Id": "7",
+    "status": "completed",
+    "currentRound": 9,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 5,
+          "actual": 6,
+          "score": 51
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 5,
+          "actual": 7,
+          "score": 52
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 6,
+          "actual": 10,
+          "score": 64
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 3,
+          "score": -40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 10,
+          "score": 73
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 9,
+        "team1": {
+          "promise": 7,
+          "actual": 9,
+          "score": 160
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 4,
+          "score": -70
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 503,
+      "team2": 256
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 4
+      },
+      "team2": {
+        "won": 4,
+        "lost": 5
+      }
+    },
+    "createdAt": "2026-02-21T17:21:36.124Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "5",
+    "completedAt": "2026-02-21T17:21:36.124Z"
+  },
+  {
+    "id": "yRsrPyWhYv5yJdkE7Bw3",
+    "team1Id": "4",
+    "team2Id": "3",
+    "status": "completed",
+    "currentRound": 8,
+    "rounds": [
+      {
+        "roundNumber": 1,
+        "team1": {
+          "promise": 6,
+          "actual": 7,
+          "score": 61
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        }
+      },
+      {
+        "roundNumber": 2,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 72
+        }
+      },
+      {
+        "roundNumber": 3,
+        "team1": {
+          "promise": 7,
+          "actual": 8,
+          "score": 140
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 5,
+          "score": 41
+        }
+      },
+      {
+        "roundNumber": 4,
+        "team1": {
+          "promise": 6,
+          "actual": 6,
+          "score": 60
+        },
+        "team2": {
+          "promise": 4,
+          "actual": 7,
+          "score": 43
+        }
+      },
+      {
+        "roundNumber": 5,
+        "team1": {
+          "promise": 9,
+          "actual": 12,
+          "score": 94
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 1,
+          "score": -70
+        }
+      },
+      {
+        "roundNumber": 6,
+        "team1": {
+          "promise": 4,
+          "actual": 4,
+          "score": 40
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 9,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 7,
+        "team1": {
+          "promise": 4,
+          "actual": 6,
+          "score": 42
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 7,
+          "score": 140
+        }
+      },
+      {
+        "roundNumber": 8,
+        "team1": {
+          "promise": 7,
+          "actual": 13,
+          "score": 76
+        },
+        "team2": {
+          "promise": 7,
+          "actual": 0,
+          "score": -140
+        }
+      }
+    ],
+    "finalScore": {
+      "team1": 553,
+      "team2": 268
+    },
+    "roundStats": {
+      "team1": {
+        "won": 5,
+        "lost": 3
+      },
+      "team2": {
+        "won": 3,
+        "lost": 5
+      }
+    },
+    "createdAt": "2025-09-12T20:19:58.737Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2,
+    "winnerId": "4",
+    "completedAt": "2025-09-12T20:19:58.737Z"
+  }
+]

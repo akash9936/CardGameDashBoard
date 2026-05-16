@@ -39,21 +39,84 @@ Each round consists of two phases:
 ### Scoring System
 
 #### Basic Scoring Formula
-The scoring system is based on the accuracy of promises vs actual performance:
+The scoring system rewards teams for meeting their promised hands and penalizes them for falling short. Three cases apply depending on the relationship between `promiseHands` and `actualHands`, plus a special **Blind** case.
+
+##### Case 1 — Under-promise (Actual < Promise)
+If a team fails to meet its promise, the **entire promise** is converted into a negative score (×10). The size of the shortfall does not change the magnitude.
 
 ```javascript
-teamScore = Math.abs(promiseHands - actualHands) * 10
+teamScore = -(promiseHands * 10)
 ```
 
 **Examples:**
-- Promise 6, Actual 6: Score = |6-6| × 10 = 0 points (perfect accuracy)
-- Promise 8, Actual 5: Score = |8-5| × 10 = 30 points (3-hand difference)
-- Promise 4, Actual 9: Score = |4-9| × 10 = 50 points (5-hand difference)
+- Promise 4, Actual 3 → Score = -(4 × 10) = **-40**
+- Promise 8, Actual 5 → Score = -(8 × 10) = **-80**
+- Promise 10, Actual 0 → Score = -(10 × 10) = **-100**
+
+##### Case 2 — Met promise, with extras (Promise ≤ Actual < Promise × 2)
+If a team meets or exceeds its promise but stays **strictly below** double the promise, the promise scores at full value (×10) and each extra hand `a` adds **1 point** (not ×10).
+
+```javascript
+const a = actualHands - promiseHands; // a >= 0
+// Applies only when actualHands < promiseHands * 2
+teamScore = (promiseHands * 10) + a;
+```
+
+**Examples:**
+- Promise 8, Actual 8 (a = 0) → Score = (8 × 10) + 0 = **80**
+- Promise 8, Actual 10 (a = 2) → Score = (8 × 10) + 2 = **82**
+- Promise 4, Actual 7 (a = 3) → Score = (4 × 10) + 3 = **43**
+- Promise 5, Actual 9 (a = 4) → Score = (5 × 10) + 4 = **54**
+
+> Note: Promise 4, Actual 9 no longer falls here — `9 ≥ 4 × 2` triggers Case 3 (over-extension) below.
+
+##### Case 3 — Over-extension (Actual ≥ Promise × 2)
+If a team takes **at least double** its promised hands, the entire promise becomes negative (×10), the same magnitude as an under-promise miss.
+
+```javascript
+// Applies when actualHands >= promiseHands * 2
+teamScore = -(promiseHands * 10);
+```
+
+This rule takes **priority** over Case 2 at and beyond the `2 × Promise` threshold.
+
+**Examples:**
+- Promise 4, Actual 8 (8 = 4×2) → Score = -(4 × 10) = **−40**
+- Promise 4, Actual 9 → Score = -(4 × 10) = **−40**
+- Promise 4, Actual 13 → Score = -(4 × 10) = **−40**
+- Promise 5, Actual 10 → Score = -(5 × 10) = **−50**
+- Promise 6, Actual 11 → falls under Case 2 → **+65** (11 < 12)
+
+##### Case 4 — Blind bid
+If **Blind** is selected for a team, the promise is fixed at **7** and the extra-hand rule does **not** apply.
+
+- **Blind success** (Actual ≥ 7): Score is doubled and fixed.
+  ```javascript
+  teamScore = 7 * 2 * 10; // = 140
+  ```
+- **Blind failure** (Actual < 7): Standard under-promise rule applies with promise = 7.
+  ```javascript
+  teamScore = -(7 * 10); // = -70
+  ```
+
+**Examples:**
+- Blind, Actual 7 → Score = **+140**
+- Blind, Actual 11 → Score = **+140** (extras do not add)
+- Blind, Actual 5 → Score = **-70**
 
 #### Score Characteristics
-- **Lower is Better**: Accurate promises result in lower scores
-- **Perfect Promise**: Matching promise and actual results in 0 points for that round
-- **Penalty System**: Inaccuracy is penalized proportionally
+- **Higher is Better**: Meeting the promise within range yields positive points; missing or over-extending yields negative points.
+- **Promise Commitment**: Falling short forfeits the entire promise value (negative).
+- **Over-Extension Penalty**: Taking ≥ 2× the promised hands also forfeits the entire promise as negative — symmetric with the under-promise penalty.
+- **Bonus for Extras**: Hands beyond the promise add 1 point each, but only while `Actual < Promise × 2` (non-Blind only).
+- **Blind Bonus**: A successful Blind doubles the standard 7-promise score (140); a failed Blind costs -70 with no extra penalty for the shortfall size. The over-extension rule does not apply to Blind.
+
+#### Case Priority
+Evaluate cases in order; the first match wins:
+1. Blind selected → Case 4
+2. `Actual < Promise` → Case 1 (under-promise)
+3. `Actual ≥ Promise × 2` → Case 3 (over-extension)
+4. `Promise ≤ Actual < Promise × 2` → Case 2 (met-with-extras)
 
 ### Match Progression
 

@@ -35,9 +35,11 @@ function createTestMatch(team1Id = 'team-1', team2Id = 'team-2') {
     return match;
 }
 
-// Helper function to calculate expected score using game rules
+// Locked rules — CLAUDE.md §4 (non-Blind only)
 function calculateExpectedScore(promise, actual) {
-    return Math.abs(promise - actual) * 10;
+    if (actual < promise) return -(promise * 10);
+    if (actual >= promise * 2) return -(promise * 10);
+    return (promise * 10) + (actual - promise);
 }
 
 describe('Promise Hand Validation Tests (Section 3.1)', () => {
