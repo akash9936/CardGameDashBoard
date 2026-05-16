@@ -241,6 +241,68 @@ const StatsUtils = (() => {
         return points;
     }
 
+    function currentStreak(teamId, matches) {
+        const id = String(teamId);
+        const completed = matches
+            .filter(m => isCompleted(m) && teamIdsOf(m).includes(id))
+            .slice()
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+        if (!completed.length) return { count: 0, type: null };
+        const first = String(completed[0].winnerId) === id ? 'W' : 'L';
+        let count = 0;
+        for (const m of completed) {
+            const r = String(m.winnerId) === id ? 'W' : 'L';
+            if (r !== first) break;
+            count++;
+        }
+        return { count, type: first };
+    }
+
+    function hottestStreak(teams, matches, minCount = 3) {
+        let best = null;
+        for (const t of teams) {
+            const s = currentStreak(t.id, matches);
+            if (s.count >= minCount && (!best || s.count > best.count)) {
+                best = { teamId: String(t.id), name: t.name, ...s };
+            }
+        }
+        return best;
+    }
+
+    function topRoundScore(matches) {
+        let best = { score: -Infinity, matchId: null, roundNumber: null, side: null };
+        for (const m of matches) {
+            for (const r of (m.rounds || [])) {
+                for (const side of ['team1', 'team2']) {
+                    const s = Number(r[side]?.score || 0);
+                    if (s > best.score) {
+                        best = { score: s, matchId: m.id, roundNumber: r.roundNumber, side };
+                    }
+                }
+            }
+        }
+        if (!isFinite(best.score)) return null;
+        return best;
+    }
+
+    function topRivalry(matches) {
+        const counts = new Map();
+        for (const m of matches) {
+            if (!isCompleted(m)) continue;
+            const [a, b] = teamIdsOf(m).slice().sort();
+            const key = `${a}|${b}`;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        }
+        let best = null;
+        for (const [key, count] of counts) {
+            if (!best || count > best.count) {
+                const [team1Id, team2Id] = key.split('|');
+                best = { team1Id, team2Id, count };
+            }
+        }
+        return best;
+    }
+
     function matchSummary(match) {
         const rounds = Array.isArray(match.rounds) ? match.rounds : [];
         let blinds = 0, overExtensions = 0;
@@ -266,6 +328,7 @@ const StatsUtils = (() => {
         kpis, leaderboard, recentForm, teamSide, opponentId, isBlindSide,
         cumulativeSeries, roundOutcome, matchSummary,
         teamProfile, headToHead, teamScoreSeries, teamPromiseActualPoints, teamMatches,
+        currentStreak, hottestStreak, topRoundScore, topRivalry,
     };
 })();
 

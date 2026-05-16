@@ -32,6 +32,23 @@ elements.viewTeams.addEventListener('click', () => showSection('teams'));
 elements.viewMatches.addEventListener('click', () => showSection('matches'));
 elements.viewStats.addEventListener('click', () => showSection('stats'));
 
+document.querySelectorAll('.sticky-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        showSection(btn.dataset.target);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+(function setupStickyNav() {
+    const sticky = document.getElementById('stickyNav');
+    if (!sticky) return;
+    const onScroll = () => {
+        sticky.classList.toggle('visible', window.scrollY > 180);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
+
 // Recalculate Stats Button
 elements.recalculateStatsBtn.addEventListener('click', recalculateStats);
 
@@ -417,10 +434,13 @@ async function showMatchRoundModal(matchId) {
 
 // Helper Functions
 function showSection(section) {
-    // Update navigation buttons
+    // Update navigation buttons (both top + sticky)
     elements.viewTeams.classList.toggle('active', section === 'teams');
     elements.viewMatches.classList.toggle('active', section === 'matches');
     elements.viewStats.classList.toggle('active', section === 'stats');
+    document.querySelectorAll('.sticky-nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.target === section);
+    });
 
     // Show selected section
     elements.teamsSection.classList.toggle('active', section === 'teams');
@@ -466,10 +486,94 @@ function showNotification(message, type = 'success') {
 }
 
 // Refresh Functions
+const _firstLoad = { teams: true, matches: true, stats: true };
+
+function skeletonCards(n = 3) {
+    let html = '';
+    for (let i = 0; i < n; i++) html += `
+        <div class="skeleton skeleton-card">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-short"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+        </div>`;
+    return html;
+}
+
+function skeletonRows(n = 4) {
+    let html = '';
+    for (let i = 0; i < n; i++) html += `<div class="skeleton skeleton-row"></div>`;
+    return html;
+}
+
+function emptyState({ icon, title, sub, cta }) {
+    const ctaHtml = cta ? `<button class="action-btn" data-empty-cta="${cta.target}">${cta.label}</button>` : '';
+    return `
+        <div class="empty-state">
+            <div class="empty-icon">${icon}</div>
+            <h3 class="empty-title">${title}</h3>
+            <p class="empty-sub">${sub}</p>
+            ${ctaHtml}
+        </div>
+    `;
+}
+
+function wireEmptyStateCtas(container) {
+    container.querySelectorAll('[data-empty-cta]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.emptyCta;
+            if (target === 'addTeam') document.getElementById('addTeamBtn')?.click();
+            else if (target === 'addMatch') document.getElementById('addMatchBtn')?.click();
+            else if (target === 'matchesSection') showSection('matches');
+        });
+    });
+}
+
+function renderHotStrip(teams, matches) {
+    const el = document.getElementById('hotStrip');
+    if (!el) return;
+    const items = [];
+
+    const streak = StatsUtils.hottestStreak(teams, matches, 3);
+    if (streak && streak.type === 'W') {
+        items.push(`<span class="hot-chip hot-streak">🔥 ${streak.name} on a ${streak.count}-game win streak</span>`);
+    }
+
+    const top = StatsUtils.topRoundScore(matches);
+    if (top && top.score > 0) {
+        items.push(`<span class="hot-chip hot-round">⭐ Highest round: +${top.score} (R${top.roundNumber})</span>`);
+    }
+
+    const rivalry = StatsUtils.topRivalry(matches);
+    if (rivalry && rivalry.count >= 3) {
+        const t1 = teams.find(t => String(t.id) === rivalry.team1Id)?.name || rivalry.team1Id;
+        const t2 = teams.find(t => String(t.id) === rivalry.team2Id)?.name || rivalry.team2Id;
+        items.push(`<span class="hot-chip hot-rivalry">⚔️ Top rivalry: ${t1} vs ${t2} (${rivalry.count})</span>`);
+    }
+
+    el.innerHTML = items.join('');
+    el.style.display = items.length ? '' : 'none';
+}
+
 async function refreshTeamsList() {
+    if (_firstLoad.teams) {
+        elements.teamsList.innerHTML = skeletonCards(3);
+        _firstLoad.teams = false;
+    }
     const teams = await teamService.getAllTeams();
     console.log('Teams retrieved:', teams);
-    
+
+    if (!teams.length) {
+        elements.teamsList.innerHTML = emptyState({
+            icon: '🃏',
+            title: 'No teams yet',
+            sub: 'Add your first team to start the tournament.',
+            cta: { label: '+ Add New Team', target: 'addTeam' },
+        });
+        wireEmptyStateCtas(elements.teamsList);
+        return;
+    }
+
     elements.teamsList.innerHTML = teams.map(team => {
         // Ensure stats object exists and has default values
         const stats = team.stats || {
@@ -568,6 +672,44 @@ function renderScorecard(match, team1, team2) {
     `;
 }
 
+function mountSparklines() {
+    const css = getComputedStyle(document.documentElement);
+    const c1 = css.getPropertyValue('--primary-color').trim() || '#6366f1';
+    const c2 = css.getPropertyValue('--accent-color').trim() || '#10b981';
+    const dpr = window.devicePixelRatio || 1;
+
+    document.querySelectorAll('canvas.sparkline').forEach(async (canvas) => {
+        const matchId = canvas.dataset.matchId;
+        const match = (await matchService.getAllMatches()).find(m => String(m.id) === String(matchId));
+        if (!match) return;
+        const { team1, team2 } = StatsUtils.cumulativeSeries(match);
+        const w = canvas.clientWidth || 120, h = canvas.clientHeight || 28;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+        const all = team1.concat(team2);
+        const min = Math.min(...all), max = Math.max(...all);
+        const range = max - min || 1;
+        const stepX = w / Math.max(1, team1.length - 1);
+        const yOf = v => h - 2 - ((v - min) / range) * (h - 4);
+        const drawLine = (series, color) => {
+            ctx.beginPath();
+            series.forEach((v, i) => {
+                const x = i * stepX, y = yOf(v);
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        };
+        drawLine(team1, c1);
+        drawLine(team2, c2);
+    });
+}
+
 function mountWormCharts() {
     for (const [, chart] of _wormCharts) chart.destroy();
     _wormCharts.clear();
@@ -649,11 +791,32 @@ function mountWormCharts() {
 }
 
 async function refreshMatchesList() {
+    if (_firstLoad.matches) {
+        elements.matchesList.innerHTML = skeletonCards(2);
+        _firstLoad.matches = false;
+    }
     const matches = await matchService.getAllMatches();
     const teams = await teamService.getAllTeams();
-    
+
     if (teams.length === 0) {
-        elements.matchesList.innerHTML = '<div class="notification error">No teams found. Please create teams first.</div>';
+        elements.matchesList.innerHTML = emptyState({
+            icon: '🃏',
+            title: 'No teams yet',
+            sub: 'Create at least two teams before starting a match.',
+            cta: { label: '+ Add New Team', target: 'addTeam' },
+        });
+        wireEmptyStateCtas(elements.matchesList);
+        return;
+    }
+
+    if (!matches.length) {
+        elements.matchesList.innerHTML = emptyState({
+            icon: '🎯',
+            title: 'No matches yet',
+            sub: 'Pick two teams and start the first match.',
+            cta: { label: '+ New Match', target: 'addMatch' },
+        });
+        wireEmptyStateCtas(elements.matchesList);
         return;
     }
 
@@ -675,6 +838,7 @@ async function refreshMatchesList() {
             <div class="card match-card">
                 <div class="match-header">
                     <span class="match-date">${DateUtils.formatDate(match.date)}</span>
+                    ${rounds.length > 0 ? `<canvas class="sparkline" data-match-id="${match.id}" width="120" height="28"></canvas>` : ''}
                     <span class="match-status ${status}">${status}</span>
                 </div>
                 <div class="match-teams">
@@ -776,6 +940,7 @@ async function refreshMatchesList() {
         `;
     }).join('');
 
+    mountSparklines();
     mountWormCharts();
 }
 
@@ -844,9 +1009,15 @@ function wireLeaderboardSort() {
 }
 
 async function refreshStats() {
+    if (_firstLoad.stats) {
+        document.getElementById('leaderboardBody').innerHTML = skeletonRows(5);
+        elements.recentActivity.innerHTML = skeletonRows(3);
+        _firstLoad.stats = false;
+    }
     const teams = await teamService.getAllTeams();
     const matches = await matchService.getAllMatches();
 
+    renderHotStrip(teams, matches);
     renderKpiTiles(StatsUtils.kpis(matches));
     const rows = StatsUtils.leaderboard(teams, matches);
     const form = StatsUtils.recentForm(teams, matches, 5);
@@ -854,6 +1025,16 @@ async function refreshStats() {
     wireLeaderboardSort();
 
     const recentMatches = await matchService.getRecentMatches();
+    if (!recentMatches.length) {
+        elements.recentActivity.innerHTML = emptyState({
+            icon: '📊',
+            title: 'No activity yet',
+            sub: 'Stats appear once a match is started or completed.',
+            cta: { label: 'Go to Matches', target: 'matchesSection' },
+        });
+        wireEmptyStateCtas(elements.recentActivity);
+        return;
+    }
     elements.recentActivity.innerHTML = recentMatches.map(match => {
         const team1 = teams.find(t => t.id === match.team1Id);
         const team2 = teams.find(t => t.id === match.team2Id);
