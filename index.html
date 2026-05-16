@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.27/build/spline-viewer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <!-- Spline Background Container -->
@@ -58,18 +59,38 @@
                     <h2>Tournament Statistics</h2>
                     <button id="recalculateStatsBtn" class="action-btn">🔄 Recalculate Stats</button>
                 </div>
-                <div class="stats-container">
-                    <div class="stats-card">
-                        <h3>🏆 Team Rankings</h3>
-                        <div id="teamRankings" class="rankings-list">
-                            <!-- Rankings will be dynamically added here -->
-                        </div>
+
+                <div id="kpiTiles" class="kpi-tiles">
+                    <!-- KPI tiles injected here -->
+                </div>
+
+                <div class="stats-card leaderboard-card">
+                    <h3>🏆 Leaderboard</h3>
+                    <div class="leaderboard-scroll">
+                        <table id="leaderboardTable" class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th data-sort="rank">#</th>
+                                    <th data-sort="name">Team</th>
+                                    <th data-sort="played">P</th>
+                                    <th data-sort="wins">W</th>
+                                    <th data-sort="losses">L</th>
+                                    <th data-sort="winPct">Win %</th>
+                                    <th data-sort="points">Pts</th>
+                                    <th data-sort="totalScore">Total</th>
+                                    <th data-sort="avgScore">Avg</th>
+                                    <th>Form</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody"></tbody>
+                        </table>
                     </div>
-                    <div class="stats-card">
-                        <h3>📈 Recent Activity</h3>
-                        <div id="recentActivity" class="activity-list">
-                            <!-- Recent activity will be dynamically added here -->
-                        </div>
+                </div>
+
+                <div class="stats-card">
+                    <h3>📈 Recent Activity</h3>
+                    <div id="recentActivity" class="activity-list">
+                        <!-- Recent activity will be dynamically added here -->
                     </div>
                 </div>
             </section>
@@ -90,6 +111,7 @@
     <script src="js/utils/env.js"></script>
     <script src="js/utils/firebaseConfig.js"></script>
     <script src="js/utils/dateUtils.js"></script>
+    <script src="js/utils/stats.js"></script>
     <script src="js/services/firebaseService.js"></script>
     <script src="js/services/migrationService.js"></script>
     <script src="js/models/Team.js"></script>
