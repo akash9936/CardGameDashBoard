@@ -36,9 +36,11 @@ function createTestMatch(team1Id = 'team-1', team2Id = 'team-2') {
     return match;
 }
 
-// Helper function to calculate expected score using game rules
+// Locked rules — CLAUDE.md §4 (non-Blind only)
 function calculateExpectedScore(promise, actual) {
-    return Math.abs(promise - actual) * 10;
+    if (actual < promise) return -(promise * 10);
+    if (actual >= promise * 2) return -(promise * 10);
+    return (promise * 10) + (actual - promise);
 }
 
 describe('Actual Hand Validation Tests (Section 3.2)', () => {
@@ -153,28 +155,18 @@ describe('Actual Hand Validation Tests (Section 3.2)', () => {
         expect(match.currentRound).toBe(0);
     });
     
-    // TC_R014: Negative actual hands (T1: -1, T2: 14)
+    // TC_R014: Negative actual hands (T1: -1, T2: 14) — CLAUDE.md §3.2
     test('TC_R014: Negative actual hands (T1: -1, T2: 14)', () => {
-        // Arrange
         const team1Promise = 8;
         const team2Promise = 9;
-        const team1Actual = -1;  // Negative value ✗ (sum = -1 + 14 = 13 but negative not allowed)
+        const team1Actual = -1;
         const team2Actual = 14;
-        const team1Score = calculateExpectedScore(team1Promise, team1Actual);
-        const team2Score = calculateExpectedScore(team2Promise, team2Actual);
-        
-        // Act & Assert
-        // Note: Current implementation only checks sum = 13, not non-negative constraint
-        // This test documents current behavior vs. expected behavior
+
         expect(() => {
-            match.addRound(team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
-        }).not.toThrow(); // Current implementation allows negative values that sum to 13
-        
-        // IMPLEMENTATION GAP: Should add validation for non-negative actual hands
-        // TODO: Add to Match.js before sum validation:
-        // if (team1Actual < 0 || team2Actual < 0) {
-        //     throw new Error('Actual hands cannot be negative');
-        // }
+            match.addRound(team1Promise, team1Actual, team2Promise, team2Actual);
+        }).toThrow('Actual hands cannot be negative');
+
+        expect(match.rounds).toHaveLength(0);
     });
     
     // Additional comprehensive actual hand validation tests
@@ -338,18 +330,13 @@ describe('Actual Hand Validation Tests (Section 3.2)', () => {
     
     // Test edge cases and boundary conditions
     describe('Actual Hand Edge Cases', () => {
-        test('Should handle very large actual values that sum to 13', () => {
+        test('Should reject negative actual values even when they sum to 13', () => {
+            // CLAUDE.md §3.2: actuals must be >= 0.
             const testMatch = createTestMatch();
-            
-            // Use smaller scores to avoid hitting the 200 score limit
+
             expect(() => {
-                testMatch.addRound(8, 1000, 5, -987, 50, 50); // Sum = 13, total score = 100 < 200
-            }).not.toThrow(); // Current implementation only checks sum
-            
-            // Document that extreme scores will hit other validation limits
-            expect(() => {
-                testMatch.addRound(8, 1000, 5, -987, 9920, 9920); // Exceeds score limit
-            }).toThrow('Total score cannot be greater than 200');
+                testMatch.addRound(8, 1000, 5, -987, 50, 50);
+            }).toThrow('Actual hands cannot be negative');
         });
         
         test('Should handle floating point precision issues', () => {

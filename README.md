@@ -1,122 +1,183 @@
-# Claude Context Documentation
+# Card Game Dashboard
 
-This folder contains comprehensive documentation for the Card Game Dashboard project, created specifically to provide Claude with detailed context about the project structure, implementation, and functionality.
+A web-based dashboard for tracking a card game where two teams compete to reach **500 points** through rounds of promise-and-actual gameplay. Built with vanilla JavaScript on the frontend and Firebase Firestore on the backend.
 
-## Documentation Files
+> **Game rules are locked.** See [`CLAUDE.md`](./CLAUDE.md) for the authoritative rules (teams, rounds, scoring, blind, win condition). Any rule change must follow the change-control protocol in that file.
 
-### 📋 [Project Overview](./project-overview.md)
-Complete project description, technology stack, architecture patterns, and feature overview. Essential starting point for understanding the application.
+---
 
-### 🏗️ [Architecture Overview](./architecture-overview.md)
-Detailed system architecture, design patterns, component relationships, and scalability considerations. Covers MVC pattern, service layer, and data flow.
+## Tech Stack
 
-### 📚 [API Documentation](./api-documentation.md)
-Comprehensive API documentation for all services, methods, parameters, and return types. Includes Firebase service, team service, and match service APIs.
+- **Frontend:** Vanilla JavaScript, HTML5, CSS3
+- **Backend:** Firebase Firestore + Firebase Authentication
+- **3D Graphics:** Spline 3D viewer
+- **Testing:** Jest 30
+- **Hosting:** Firebase Hosting / GitHub Pages
 
-### 🎮 [Game Rules and Conditions](./game-rules-and-conditions.md)
-Complete documentation of game rules, validation conditions, scoring mechanisms, and business logic. Essential for understanding the card game implementation.
+There is **no build step** — the app runs directly from `index.html` against the bundled `js/` modules.
 
-### 🗄️ [Database Schema](./database-schema.md)
-Detailed Firestore database schema, document structures, relationships, and data validation rules. Includes performance optimization and scaling considerations.
+---
 
-### 🚀 [Setup and Development](./setup-and-development.md)
-Complete setup guide, development workflow, testing strategies, debugging tips, and deployment procedures. Everything needed to run and develop the application.
+## Prerequisites
 
-## Quick Reference
+| Tool | Version |
+|---|---|
+| Node.js | ≥ 18 (for Jest + Firebase CLI) |
+| npm | ≥ 9 |
+| Firebase CLI (optional, for deploy) | latest — `npm i -g firebase-tools` |
+| A modern browser | Chrome / Firefox / Safari / Edge |
 
-### Key Technologies
-- **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **Backend**: Firebase Firestore, Firebase Authentication
-- **3D Graphics**: Spline 3D viewer
-- **Deployment**: Firebase Hosting, GitHub Pages
+---
 
-### Main Components
-- **Models**: `Team.js`, `Match.js` - Business logic and data structures
-- **Services**: `firebaseService.js`, `teamService.js`, `matchService.js` - API and business operations
-- **Utils**: `dateUtils.js`, `storage.js`, `env.js` - Helper functions and utilities
-- **Controller**: `app.js` - Main application logic and UI management
+## Installation
 
-### Core Features
-1. **Team Management** - Create teams, track statistics, manage members
-2. **Match System** - Head-to-head matches with round-by-round scoring
-3. **Game Rules** - Promise vs actual hand validation, 500-point win condition
-4. **Real-time Updates** - Firebase listeners for live data synchronization
-5. **Statistics** - Comprehensive team rankings and performance metrics
-6. **Authentication** - Key-based authentication for administrative actions
+```bash
+# 1. Clone the repo
+git clone <repo-url>
+cd CardGame
 
-### Game Rules Summary
-- **Teams**: 2 teams per match, multiple members per team
-- **Rounds**: Promise 4-13 hands, actual hands must sum to 13
-- **Scoring**: `Score = |Promise - Actual| × 10` (lower is better)
-- **Win Condition**: First team to 500 points wins
-- **Statistics**: Wins/losses, points, rounds won/lost, match history
+# 2. Install dependencies (Firebase SDK + Jest)
+npm install
+```
 
-### Database Collections
-- **teams**: Team data, statistics, and match history
-- **matches**: Match details, rounds, scores, and audit trail
+---
 
-### Environment Variables
-- `FIREBASE_API_KEY`: Firebase project API key
-- `AUTH_KEY`: Administrative authentication key
+## Configuration
 
-## Using This Documentation
+The app reads two environment variables from a local `.env` file. Copy the example and fill in your values:
 
-### For Feature Development
-1. Review **Game Rules** for business logic requirements
-2. Check **API Documentation** for available methods
-3. Consult **Database Schema** for data structures
-4. Reference **Architecture Overview** for design patterns
+```bash
+cp env.example .env
+```
 
-### For Bug Fixes
-1. Check **Game Rules** for validation logic
-2. Review **API Documentation** for method signatures
-3. Consult **Database Schema** for data relationships
-4. Use **Setup Guide** for debugging techniques
+Edit `.env`:
 
-### For System Understanding
-1. Start with **Project Overview** for general context
-2. Read **Architecture Overview** for system design
-3. Study **Database Schema** for data modeling
-4. Review **API Documentation** for implementation details
+```
+# Firebase Web API key — Firebase Console → Project Settings → General → Your apps
+FIREBASE_API_KEY=your_firebase_api_key_here
 
-### For Deployment/Setup
-1. Follow **Setup and Development** guide step by step
-2. Reference **Database Schema** for Firebase configuration
-3. Check **Project Overview** for environment requirements
+# Admin auth key required for creating teams, starting matches, adding rounds
+AUTH_KEY=your_authentication_key_here
+```
 
-## Context Usage Guidelines
+**Firebase project setup (one-time):**
 
-When working with this project:
+1. Create a Firebase project at <https://console.firebase.google.com>.
+2. Enable **Cloud Firestore** (Native mode).
+3. Add a **Web App** in Project Settings → copy the API key into `FIREBASE_API_KEY`.
+4. Update `.firebaserc` with your Firebase project ID.
+5. Deploy security rules: `firebase deploy --only firestore:rules`.
 
-1. **Always validate against game rules** - The scoring system and validation rules are complex
-2. **Maintain data consistency** - Team statistics must stay synchronized with match data
-3. **Handle authentication properly** - Administrative actions require key-based auth
-4. **Consider real-time updates** - UI should reflect Firebase changes automatically
-5. **Follow established patterns** - Use existing service layer and model patterns
-6. **Validate user inputs** - All inputs have specific validation requirements
-7. **Test thoroughly** - Game rules have many edge cases and validation scenarios
+> **Security:** `.env` is gitignored. Do **not** commit credentials. Only the API key lives in env; the rest of the Firebase config is in `js/utils/firebaseConfig.js`.
 
-## File Locations Quick Reference
+---
 
-### Models
-- `js/models/Team.js` - Team entity and statistics
-- `js/models/Match.js` - Match entity and game rules
+## Running the Project
 
-### Services
-- `js/services/firebaseService.js` - Database operations
-- `js/services/teamService.js` - Team business logic
-- `js/services/matchService.js` - Match management
-- `js/services/migrationService.js` - Data migration
+The app is static — serve the repo root over HTTP (do **not** open `index.html` via `file://`, Firebase SDK won't initialize correctly).
 
-### Utils
-- `js/utils/firebaseConfig.js` - Firebase configuration
-- `js/utils/dateUtils.js` - Date handling utilities
-- `js/utils/storage.js` - Local storage management
-- `js/utils/env.js` - Environment variable loading
+### Option 1 — Firebase Hosting (recommended for parity with prod)
 
-### Configuration
-- `firebase.json` - Firebase project configuration
-- `firestore.rules` - Database security rules
-- `.env` - Environment variables (local development)
+```bash
+firebase serve --only hosting
+# → http://localhost:5000
+```
 
-This documentation provides comprehensive context for understanding and working with the Card Game Dashboard project. Each file contains detailed information about specific aspects of the system, enabling informed development and maintenance decisions.
+### Option 2 — Any static server
+
+```bash
+# Python
+python3 -m http.server 8000
+# → http://localhost:8000
+
+# Node
+npx serve .
+```
+
+Open the printed URL in your browser. Use the `AUTH_KEY` from your `.env` to unlock administrative actions (creating teams, starting matches, adding rounds).
+
+---
+
+## Running Tests
+
+The test suite uses **Jest** and lives in `tests/`. Test files cover team creation, match state transitions, promise/actual validation, the scoring system, win conditions, and statistics.
+
+| Command | Purpose |
+|---|---|
+| `npm test` | Run the full Jest suite once |
+| `npm run test:watch` | Re-run tests on file changes |
+| `npm run test:coverage` | Run with a coverage report (HTML output in `coverage/`) |
+
+### Running a specific test file
+
+```bash
+npx jest tests/scoring-system.test.js
+```
+
+### Running tests matching a name
+
+```bash
+npx jest -t "promise hand"
+```
+
+### Coverage thresholds
+
+Configured in `jest.config.js` — global minimum **80%** for branches, functions, lines, and statements. Failing this threshold fails the test run.
+
+---
+
+## Project Layout
+
+```
+CardGame/
+├── CLAUDE.md                  # Locked game rules (authoritative)
+├── index.html                 # Entry point
+├── css/                       # Styles
+├── js/
+│   ├── app.js                 # Main controller / UI wiring
+│   ├── models/                # Team, Match
+│   ├── services/              # firebaseService, teamService, matchService, migrationService
+│   ├── utils/                 # firebaseConfig, dateUtils, storage, env
+│   └── components/            # UI components
+├── tests/                     # Jest tests + setup.js
+├── claude/                    # Detailed project documentation
+├── firebase.json              # Firebase Hosting config
+├── firestore.rules            # Firestore security rules
+├── jest.config.js             # Jest configuration
+├── package.json
+└── env.example                # Template for .env
+```
+
+---
+
+## Documentation
+
+Detailed docs live in [`claude/`](./claude/):
+
+- [`project-overview.md`](./claude/project-overview.md) — high-level project description
+- [`architecture-overview.md`](./claude/architecture-overview.md) — system design
+- [`api-documentation.md`](./claude/api-documentation.md) — service APIs
+- [`game-rules-and-conditions.md`](./claude/game-rules-and-conditions.md) — extended rules + implementation notes (rules themselves are locked in [`CLAUDE.md`](./CLAUDE.md))
+- [`database-schema.md`](./claude/database-schema.md) — Firestore schema
+- [`setup-and-development.md`](./claude/setup-and-development.md) — extended setup guide
+
+---
+
+## Deployment
+
+```bash
+# Deploy hosting + rules
+firebase deploy
+
+# Hosting only
+firebase deploy --only hosting
+
+# Firestore rules only
+firebase deploy --only firestore:rules
+```
+
+---
+
+## License
+
+ISC — see [`LICENSE`](./LICENSE).

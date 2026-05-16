@@ -14,7 +14,10 @@ global.DateUtils = {
     safeDate: (date) => date ? new Date(date) : new Date()
 };
 
-eval(fs.readFileSync(matchPath, 'utf8'));
+// Load Match via require so it's a proper module, then mirror to global so
+// matchService.js (loaded via eval) can resolve it without re-requiring.
+const Match = require(matchPath);
+global.Match = Match;
 eval(fs.readFileSync(matchServicePath, 'utf8'));
 
 // Make MatchService globally available for testing

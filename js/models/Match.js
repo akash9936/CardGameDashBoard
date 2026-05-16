@@ -37,38 +37,67 @@ class Match {
         return this.roundStats;
     }
 
-    // Add a new round
-    addRound(team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score) {
+    // Score for a single team for a single round.
+    // Rules locked in CLAUDE.md §4; evaluated in §4.6 priority order.
+    static computeScore(promise, actual, options = {}) {
+        const blind = !!options.blind;
+
+        if (blind) {
+            return actual >= 7 ? 140 : -70;
+        }
+        if (actual < promise) {
+            return -(promise * 10);
+        }
+        if (actual >= promise * 2) {
+            return -(promise * 10);
+        }
+        return (promise * 10) + (actual - promise);
+    }
+
+    // Add a new round.
+    // The 6th/7th score args are optional — when omitted, scores are derived
+    // from the locked rules via Match.computeScore. Pass `options.team1Blind`
+    // / `options.team2Blind` to force a Blind bid (promise fixed at 7).
+    addRound(team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score, options = {}) {
         if (this.status !== 'in_progress') {
             throw new Error('Match must be in progress to add rounds');
         }
 
-        // Validate actual hands must equal 13
+        const team1Blind = !!options.team1Blind;
+        const team2Blind = !!options.team2Blind;
+
+        // Blind locks promise to 7 (CLAUDE.md §4.4)
+        if (team1Blind) team1Promise = 7;
+        if (team2Blind) team2Promise = 7;
+
+        // Actuals must be non-negative integers (CLAUDE.md §3.2)
+        if (team1Actual < 0 || team2Actual < 0) {
+            throw new Error('Actual hands cannot be negative');
+        }
+
+        // Actual hands must sum to 13 (CLAUDE.md §3.2)
         if (team1Actual + team2Actual !== 13) {
             throw new Error('Actual hands of both teams must equal 13');
         }
 
-        // Validate promise hands must be between 4 and 13
-        if (team1Promise < 4 || team1Promise > 13) {
+        // Promise validation (CLAUDE.md §3.1) — skipped for Blind
+        if (!team1Blind && (team1Promise < 4 || team1Promise > 13)) {
             throw new Error('Team 1 promise hand must be between 4 and 13');
         }
-        if (team2Promise < 4 || team2Promise > 13) {
+        if (!team2Blind && (team2Promise < 4 || team2Promise > 13)) {
             throw new Error('Team 2 promise hand must be between 4 and 13');
         }
 
-        // Validate total score limits
-        const totalScore = team1Score + team2Score;
-        if (totalScore > 200) {
-            throw new Error('Total score cannot be greater than 200');
+        // Derive scores from locked rules when caller did not supply them.
+        if (team1Score === undefined || team1Score === null) {
+            team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
         }
-        if (totalScore < -100) {
-            throw new Error('Total score cannot be less than -100');
+        if (team2Score === undefined || team2Score === null) {
+            team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
         }
 
-        // Get current stats safely
         const stats = this.getRoundStats();
-        
-        // Update round statistics based on scores
+
         if (team1Score > team2Score) {
             stats.team1.won = (stats.team1.won || 0) + 1;
             stats.team2.lost = (stats.team2.lost || 0) + 1;
@@ -77,34 +106,30 @@ class Match {
             stats.team1.lost = (stats.team1.lost || 0) + 1;
         }
 
-        // Add round data
         this.rounds.push({
             roundNumber: this.currentRound + 1,
-            team1: { promise: team1Promise, actual: team1Actual, score: team1Score },
-            team2: { promise: team2Promise, actual: team2Actual, score: team2Score }
+            team1: { promise: team1Promise, actual: team1Actual, score: team1Score, blind: team1Blind },
+            team2: { promise: team2Promise, actual: team2Actual, score: team2Score, blind: team2Blind }
         });
 
-        // Update final scores
         this.finalScore = {
             team1: (this.finalScore?.team1 || 0) + team1Score,
             team2: (this.finalScore?.team2 || 0) + team2Score
         };
 
-        // Check for winner
         if (this.finalScore.team1 >= 500 || this.finalScore.team2 >= 500) {
             this.complete();
         }
 
         this.currentRound++;
 
-        // Add to history
         this.history.push({
             timestamp: new Date(),
             action: 'round_added',
             details: {
                 roundNumber: this.currentRound,
-                team1: { promise: team1Promise, actual: team1Actual, score: team1Score },
-                team2: { promise: team2Promise, actual: team2Actual, score: team2Score }
+                team1: { promise: team1Promise, actual: team1Actual, score: team1Score, blind: team1Blind },
+                team2: { promise: team2Promise, actual: team2Actual, score: team2Score, blind: team2Blind }
             }
         });
     }

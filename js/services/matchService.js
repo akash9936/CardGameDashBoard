@@ -1,3 +1,10 @@
+// In the browser Match is a global from <script src="js/models/Match.js">.
+// In Node (Jest), require it and stash on globalThis so the class below
+// sees `Match` as a free identifier without redeclaring it.
+if (typeof globalThis.Match === 'undefined' && typeof require !== 'undefined') {
+    globalThis.Match = require('../models/Match.js');
+}
+
 class MatchService {
     constructor(firebaseService) {
         this.firebaseService = firebaseService;
@@ -93,7 +100,7 @@ class MatchService {
         return matches.slice(0, limit);
     }
 
-    async addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score) {
+    async addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score, options = {}) {
         const match = await this.firebaseService.getMatch(matchId);
         if (!match) {
             throw new Error('Match not found');
@@ -103,37 +110,49 @@ class MatchService {
             throw new Error('Match must be in progress to add rounds');
         }
 
-        // Validate inputs
-        if (team1Promise < 0 || team1Actual < 0 || team2Promise < 0 || team2Actual < 0) {
-            throw new Error('Promise and actual values cannot be negative');
+        const team1Blind = !!options.team1Blind;
+        const team2Blind = !!options.team2Blind;
+
+        // Blind locks promise to 7 (CLAUDE.md §4.4)
+        if (team1Blind) team1Promise = 7;
+        if (team2Blind) team2Promise = 7;
+
+        // Actuals must be non-negative (CLAUDE.md §3.2)
+        if (team1Actual < 0 || team2Actual < 0) {
+            throw new Error('Actual hands cannot be negative');
+        }
+        if (!team1Blind && team1Promise < 0) {
+            throw new Error('Promise values cannot be negative');
+        }
+        if (!team2Blind && team2Promise < 0) {
+            throw new Error('Promise values cannot be negative');
         }
 
-        // Validate actual hands must equal 13
+        // Actual hands must sum to 13 (CLAUDE.md §3.2)
         if (team1Actual + team2Actual !== 13) {
             throw new Error('Actual hands of both teams must equal 13');
         }
 
-        // Validate promise hands must be between 4 and 13
-        if (team1Promise < 4 || team1Promise > 13) {
+        // Promise validation (CLAUDE.md §3.1) — skipped for Blind
+        if (!team1Blind && (team1Promise < 4 || team1Promise > 13)) {
             throw new Error('Team 1 promise hand must be between 4 and 13');
         }
-        if (team2Promise < 4 || team2Promise > 13) {
+        if (!team2Blind && (team2Promise < 4 || team2Promise > 13)) {
             throw new Error('Team 2 promise hand must be between 4 and 13');
         }
 
-        // Validate total score limits
-        const totalScore = team1Score + team2Score;
-        if (totalScore > 200) {
-            throw new Error('Total score cannot be greater than 200');
+        // Derive scores from locked rules when caller did not supply them.
+        if (team1Score === undefined || team1Score === null) {
+            team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
         }
-        if (totalScore < -100) {
-            throw new Error('Total score cannot be less than -100');
+        if (team2Score === undefined || team2Score === null) {
+            team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
         }
 
         const newRound = {
             roundNumber: match.currentRound + 1,
-            team1: { promise: team1Promise, actual: team1Actual, score: team1Score },
-            team2: { promise: team2Promise, actual: team2Actual, score: team2Score }
+            team1: { promise: team1Promise, actual: team1Actual, score: team1Score, blind: team1Blind },
+            team2: { promise: team2Promise, actual: team2Actual, score: team2Score, blind: team2Blind }
         };
 
         const updatedRounds = [...match.rounds, newRound];

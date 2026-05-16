@@ -360,10 +360,10 @@ async function showMatchRoundModal(matchId) {
                     const team2Promise = parseInt(document.getElementById('team2Promise').value);
                     const team2Actual = parseInt(document.getElementById('team2Actual').value);
                     
-                    // Calculate scores based on promise vs actual
-                    const team1Score = Math.abs(team1Promise - team1Actual) * 10;
-                    const team2Score = Math.abs(team2Promise - team2Actual) * 10;
-                    
+                    // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
+                    const team1Score = Match.computeScore(team1Promise, team1Actual);
+                    const team2Score = Match.computeScore(team2Promise, team2Actual);
+
                     matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score)
                         .then(async () => {
                             const updatedMatch = await matchService.getMatchDetails(matchId);
@@ -391,10 +391,10 @@ async function showMatchRoundModal(matchId) {
             const team2Actual = parseInt(document.getElementById('team2Actual').value);
 
             try {
-                // Calculate scores based on promise vs actual
-                const team1Score = Math.abs(team1Promise - team1Actual) * 10;
-                const team2Score = Math.abs(team2Promise - team2Actual) * 10;
-                
+                // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
+                const team1Score = Match.computeScore(team1Promise, team1Actual);
+                const team2Score = Match.computeScore(team2Promise, team2Actual);
+
                 await matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
                 const updatedMatch = await matchService.getMatchDetails(matchId);
                 
@@ -562,48 +562,61 @@ async function refreshMatchesList() {
                 ${status === 'in_progress' ? `
                     <div class="match-round-input">
                         <h4>Round ${currentRound + 1}</h4>
-                        <form onsubmit="submitRound(event, '${match.id}')" class="round-form">
+                        <form onsubmit="submitRound(event, '${match.id}')" class="round-form" oninput="recalcRoundScores('${match.id}')">
                             <div class="round-inputs">
                                 <div class="team-inputs">
                                     <h5>${team1.name}</h5>
                                     <div class="form-group">
-                                        <label for="team1Promise${match.id}">Promise Hand</label>
+                                        <label for="team1Promise${match.id}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                            <span>Promise Hand</span>
+                                            <label style="font-weight: normal; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                                <input type="checkbox" id="team1Blind${match.id}" onchange="recalcRoundScores('${match.id}')">
+                                                Blind (auto 7)
+                                            </label>
+                                        </label>
                                         <input type="number" id="team1Promise${match.id}" min="4" max="13" required>
-                                        <div class="validation-hint">Must be between 4 and 13</div>
+                                        <div class="validation-hint">Must be between 4 and 13 (or check Blind for fixed 7)</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team1Actual${match.id}">Actual Hand</label>
-                                        <input type="number" id="team1Actual${match.id}" min="0" required>
+                                        <input type="number" id="team1Actual${match.id}" min="0" max="13" required>
                                         <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="team1Score${match.id}">Score</label>
-                                        <input type="number" id="team1Score${match.id}" required>
+                                        <label for="team1Score${match.id}">Score (auto)</label>
+                                        <input type="number" id="team1Score${match.id}" readonly tabindex="-1">
                                     </div>
                                 </div>
                                 <div class="team-inputs">
                                     <h5>${team2.name}</h5>
                                     <div class="form-group">
-                                        <label for="team2Promise${match.id}">Promise Hand</label>
+                                        <label for="team2Promise${match.id}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                            <span>Promise Hand</span>
+                                            <label style="font-weight: normal; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                                <input type="checkbox" id="team2Blind${match.id}" onchange="recalcRoundScores('${match.id}')">
+                                                Blind (auto 7)
+                                            </label>
+                                        </label>
                                         <input type="number" id="team2Promise${match.id}" min="4" max="13" required>
-                                        <div class="validation-hint">Must be between 4 and 13</div>
+                                        <div class="validation-hint">Must be between 4 and 13 (or check Blind for fixed 7)</div>
                                     </div>
                                     <div class="form-group">
                                         <label for="team2Actual${match.id}">Actual Hand</label>
-                                        <input type="number" id="team2Actual${match.id}" min="0" required>
+                                        <input type="number" id="team2Actual${match.id}" min="0" max="13" required>
                                         <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="team2Score${match.id}">Score</label>
-                                        <input type="number" id="team2Score${match.id}" required>
+                                        <label for="team2Score${match.id}">Score (auto)</label>
+                                        <input type="number" id="team2Score${match.id}" readonly tabindex="-1">
                                     </div>
                                 </div>
                             </div>
                             <div class="validation-hint" style="margin-bottom: 20px;">
-                                <strong>Validation Rules:</strong><br>
-                                • Promise hands must be between 4 and 13 for each team<br>
-                                • Actual hands of both teams must equal 13<br>
-                                • Total score cannot exceed 200 or be less than -100
+                                <strong>Scoring rules (CLAUDE.md §4):</strong><br>
+                                • Under-promise (Actual &lt; Promise) → −(Promise × 10)<br>
+                                • Over-extension (Actual ≥ Promise × 2) → −(Promise × 10)<br>
+                                • Met with extras (Promise ≤ Actual &lt; Promise × 2) → (Promise × 10) + extras<br>
+                                • Blind (fixed promise 7): Actual ≥ 7 → +140; Actual &lt; 7 → −70
                             </div>
                             <button type="submit" class="action-btn">Submit Round</button>
                             <button type="button" onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel Match</button>
@@ -789,19 +802,23 @@ async function submitRound(event, matchId) {
         return;
     }
 
-    const team1Promise = parseInt(document.getElementById(`team1Promise${matchId}`).value);
-    const team1Actual = parseInt(document.getElementById(`team1Actual${matchId}`).value);
-    const team1Score = parseInt(document.getElementById(`team1Score${matchId}`).value);
-    const team2Promise = parseInt(document.getElementById(`team2Promise${matchId}`).value);
-    const team2Actual = parseInt(document.getElementById(`team2Actual${matchId}`).value);
-    const team2Score = parseInt(document.getElementById(`team2Score${matchId}`).value);
+    const team1Blind = !!document.getElementById(`team1Blind${matchId}`)?.checked;
+    const team2Blind = !!document.getElementById(`team2Blind${matchId}`)?.checked;
 
-    // Validate inputs
-    if (isNaN(team1Promise) || isNaN(team1Actual) || isNaN(team2Promise) || isNaN(team2Actual) || 
-        isNaN(team1Score) || isNaN(team2Score)) {
+    // Blind locks promise to 7 (CLAUDE.md §4.4).
+    const team1Promise = team1Blind ? 7 : parseInt(document.getElementById(`team1Promise${matchId}`).value);
+    const team1Actual = parseInt(document.getElementById(`team1Actual${matchId}`).value);
+    const team2Promise = team2Blind ? 7 : parseInt(document.getElementById(`team2Promise${matchId}`).value);
+    const team2Actual = parseInt(document.getElementById(`team2Actual${matchId}`).value);
+
+    if (isNaN(team1Promise) || isNaN(team1Actual) || isNaN(team2Promise) || isNaN(team2Actual)) {
         showNotification('Please enter valid numbers for all fields', 'error');
         return;
     }
+
+    // Scores are derived from CLAUDE.md §4 — never trust the (read-only) DOM value.
+    const team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
+    const team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
 
     try {
         await matchService.addRound(
@@ -810,8 +827,9 @@ async function submitRound(event, matchId) {
             team1Actual,
             team2Promise,
             team2Actual,
-            team1Score,  // Use the manually entered score
-            team2Score   // Use the manually entered score
+            team1Score,
+            team2Score,
+            { team1Blind, team2Blind }
         );
         await refreshMatchesList();
         await refreshStats();
@@ -960,3 +978,35 @@ async function initializeApp(firebaseService) {
     // Initial load
     showSection('teams');
 }
+
+// Live-recalculate the read-only Score fields whenever Promise/Actual/Blind
+// changes in the per-match round form. Scoring follows CLAUDE.md §4.
+// When Blind is checked for a team, its promise locks to 7 and that input
+// is disabled (CLAUDE.md §4.4).
+function recalcRoundScores(matchId) {
+    for (const team of ['team1', 'team2']) {
+        const blindEl = document.getElementById(`${team}Blind${matchId}`);
+        const promiseEl = document.getElementById(`${team}Promise${matchId}`);
+        const actualEl = document.getElementById(`${team}Actual${matchId}`);
+        const scoreEl = document.getElementById(`${team}Score${matchId}`);
+        if (!blindEl || !promiseEl || !actualEl || !scoreEl) return;
+
+        const blind = blindEl.checked;
+        if (blind) {
+            promiseEl.value = 7;
+            promiseEl.disabled = true;
+        } else {
+            promiseEl.disabled = false;
+        }
+
+        const promise = parseInt(promiseEl.value, 10);
+        const actual = parseInt(actualEl.value, 10);
+        const promiseOk = blind || (Number.isFinite(promise) && promise >= 4 && promise <= 13);
+        const actualOk = Number.isFinite(actual) && actual >= 0 && actual <= 13;
+
+        scoreEl.value = (promiseOk && actualOk)
+            ? Match.computeScore(blind ? 7 : promise, actual, { blind })
+            : '';
+    }
+}
+window.recalcRoundScores = recalcRoundScores;
