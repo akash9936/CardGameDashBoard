@@ -946,6 +946,12 @@ async function recalculateTeamStats() {
 }
 
 // Initialize the application
+document.addEventListener('wheel', (e) => {
+    if (e.target instanceof HTMLInputElement && e.target.type === 'number' && document.activeElement === e.target) {
+        e.target.blur();
+    }
+}, { passive: true });
+
 document.addEventListener('DOMContentLoaded', async () => {
     const firebaseService = new FirebaseService();
     const migrationService = new MigrationService(storage, firebaseService);
