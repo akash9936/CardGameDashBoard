@@ -1036,7 +1036,7 @@ function renderLeaderboard(rows, form, accuracy, teams) {
             : `<td class="acc-cell"><span class="form-empty">—</span></td>`;
         const totalPct = Math.min(100, Math.round(Math.abs(r.totalScore) / maxTotal * 100));
         const avgPct   = Math.min(100, Math.round(Math.abs(r.avgScore)   / maxAvg   * 100));
-        const totalCell = `<td class="lb-bar-cell">
+        const totalCell = `<td class="lb-bar-cell lb-col-total">
             <div class="lb-bar" style="--bar-pct:${totalPct}%; --bar-color:${tc}"></div>
             <span class="lb-bar-num">${r.totalScore}</span>
         </td>`;
@@ -1060,8 +1060,8 @@ function renderLeaderboard(rows, form, accuracy, teams) {
                 <td class="num neg lb-col-losses">${r.losses}</td>
                 <td>${r.winPct.toFixed(1)}%</td>
                 <td class="pts">${r.points}</td>
-                <td class="lb-col-total">${totalCell}</td>
-                <td>${avgCell}</td>
+                ${totalCell}
+                ${avgCell}
                 ${accCell}
                 <td class="form-cell">${formChips || '<span class="form-empty">—</span>'}</td>
                 ${sparkCell}
