@@ -1,0 +1,90 @@
+[
+  {
+    "id": "1",
+    "name": "Coke",
+    "members": [],
+    "createdAt": "2025-05-23T15:37:47.673Z",
+    "updatedAt": "2026-05-16T13:20:01.763Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "2",
+    "name": "Sprite",
+    "members": [],
+    "createdAt": "2025-05-23T15:38:12.964Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "3",
+    "name": "AlphaStark",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "4",
+    "name": "SkySage",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "5",
+    "name": "Gaurav/Akash",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "6",
+    "name": "Alegeus stars",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "6RMhZRyFxyjL0YpHfp9U",
+    "name": "Gaurav/ Palash",
+    "members": [
+      "Gaurav Palash"
+    ],
+    "createdAt": "2026-02-08T04:05:32.102Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "7",
+    "name": "KorbaGang",
+    "members": [],
+    "createdAt": "2025-07-12T17:50:56.697Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "Df3wbNNOeAmzivJB8Cu8",
+    "name": "K2-G",
+    "members": [
+      "Gaurav",
+      "Kritagya"
+    ],
+    "createdAt": "2026-05-16T07:54:45.747Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  },
+  {
+    "id": "I2bXAsPQWuSIhjbaVC9H",
+    "name": "Sky/K2",
+    "members": [
+      "Akash",
+      "k2"
+    ],
+    "createdAt": "2026-04-18T17:59:17.933Z",
+    "updatedAt": "2026-05-16T13:20:01.764Z",
+    "schemaVersion": 2
+  }
+]

@@ -1,0 +1,287 @@
+class Match {
+    constructor(id, team1Id, team2Id, date = new Date()) {
+        this.id = id;
+        this.team1Id = team1Id;
+        this.team2Id = team2Id;
+        this.date = date;
+        this.status = 'pending'; // pending, in_progress, completed, cancelled
+        this.currentRound = 0;
+        this.rounds = []; // Array of round data
+        this.finalScore = { team1: 0, team2: 0 };
+        this.winnerId = null;
+        this.history = [{
+            timestamp: new Date(),
+            action: 'match_created',
+            details: { team1Id, team2Id }
+        }];
+        // Initialize roundStats with default values
+        this.resetRoundStats();
+    }
+
+    // Helper method to reset roundStats to default values
+    resetRoundStats() {
+        this.roundStats = {
+            team1: { won: 0, lost: 0 },
+            team2: { won: 0, lost: 0 }
+        };
+    }
+
+    // Helper method to safely get round stats
+    getRoundStats() {
+        if (!this.roundStats) {
+            this.resetRoundStats();
+        }
+        if (!this.roundStats.team1 || !this.roundStats.team2) {
+            this.resetRoundStats();
+        }
+        return this.roundStats;
+    }
+
+    // Score for a single team for a single round.
+    // Rules locked in CLAUDE.md §4; evaluated in §4.6 priority order.
+    static computeScore(promise, actual, options = {}) {
+        const blind = !!options.blind;
+
+        if (blind) {
+            return actual >= 7 ? 140 : -70;
+        }
+        if (actual < promise) {
+            return -(promise * 10);
+        }
+        if (actual >= promise * 2) {
+            return -(promise * 10);
+        }
+        return (promise * 10) + (actual - promise);
+    }
+
+    // Add a new round.
+    // The 6th/7th score args are optional — when omitted, scores are derived
+    // from the locked rules via Match.computeScore. Pass `options.team1Blind`
+    // / `options.team2Blind` to force a Blind bid (promise fixed at 7).
+    addRound(team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score, options = {}) {
+        if (this.status !== 'in_progress') {
+            throw new Error('Match must be in progress to add rounds');
+        }
+
+        const team1Blind = !!options.team1Blind;
+        const team2Blind = !!options.team2Blind;
+
+        // Blind locks promise to 7 (CLAUDE.md §4.4)
+        if (team1Blind) team1Promise = 7;
+        if (team2Blind) team2Promise = 7;
+
+        // Actuals must be non-negative integers (CLAUDE.md §3.2)
+        if (team1Actual < 0 || team2Actual < 0) {
+            throw new Error('Actual hands cannot be negative');
+        }
+
+        // Actual hands must sum to 13 (CLAUDE.md §3.2)
+        if (team1Actual + team2Actual !== 13) {
+            throw new Error('Actual hands of both teams must equal 13');
+        }
+
+        // Promise validation (CLAUDE.md §3.1) — skipped for Blind
+        if (!team1Blind && (team1Promise < 4 || team1Promise > 13)) {
+            throw new Error('Team 1 promise hand must be between 4 and 13');
+        }
+        if (!team2Blind && (team2Promise < 4 || team2Promise > 13)) {
+            throw new Error('Team 2 promise hand must be between 4 and 13');
+        }
+
+        // Derive scores from locked rules when caller did not supply them.
+        if (team1Score === undefined || team1Score === null) {
+            team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
+        }
+        if (team2Score === undefined || team2Score === null) {
+            team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
+        }
+
+        const stats = this.getRoundStats();
+
+        if (team1Score > team2Score) {
+            stats.team1.won = (stats.team1.won || 0) + 1;
+            stats.team2.lost = (stats.team2.lost || 0) + 1;
+        } else if (team2Score > team1Score) {
+            stats.team2.won = (stats.team2.won || 0) + 1;
+            stats.team1.lost = (stats.team1.lost || 0) + 1;
+        }
+
+        this.rounds.push({
+            roundNumber: this.currentRound + 1,
+            team1: { promise: team1Promise, actual: team1Actual, score: team1Score, blind: team1Blind },
+            team2: { promise: team2Promise, actual: team2Actual, score: team2Score, blind: team2Blind }
+        });
+
+        this.finalScore = {
+            team1: (this.finalScore?.team1 || 0) + team1Score,
+            team2: (this.finalScore?.team2 || 0) + team2Score
+        };
+
+        if (this.finalScore.team1 >= 500 || this.finalScore.team2 >= 500) {
+            this.complete();
+        }
+
+        this.currentRound++;
+
+        this.history.push({
+            timestamp: new Date(),
+            action: 'round_added',
+            details: {
+                roundNumber: this.currentRound,
+                team1: { promise: team1Promise, actual: team1Actual, score: team1Score, blind: team1Blind },
+                team2: { promise: team2Promise, actual: team2Actual, score: team2Score, blind: team2Blind }
+            }
+        });
+    }
+
+    // Start the match
+    start() {
+        if (this.status !== 'pending') {
+            throw new Error('Match must be in pending status to start');
+        }
+
+        this.status = 'in_progress';
+        this.history.push({
+            timestamp: new Date(),
+            action: 'match_started'
+        });
+    }
+
+    // Complete the match
+    complete() {
+        if (this.status !== 'in_progress') {
+            throw new Error('Match must be in progress to complete');
+        }
+
+        this.status = 'completed';
+        
+        // Determine winner: if both teams crossed 500 in the same round,
+        // the higher total wins; team1 wins an exact tie (deterministic fallback)
+        if (this.finalScore.team1 >= 500 && this.finalScore.team2 >= 500) {
+            this.winnerId = this.finalScore.team2 > this.finalScore.team1 ? this.team2Id : this.team1Id;
+        } else if (this.finalScore.team1 >= 500) {
+            this.winnerId = this.team1Id;
+        } else if (this.finalScore.team2 >= 500) {
+            this.winnerId = this.team2Id;
+        } else {
+            this.winnerId = null; // Draw
+        }
+
+        this.history.push({
+            timestamp: new Date(),
+            action: 'match_completed',
+            details: {
+                finalScore: this.finalScore,
+                winnerId: this.winnerId
+            }
+        });
+    }
+
+    // Cancel the match
+    cancel(reason) {
+        if (this.status === 'completed') {
+            throw new Error('Cannot cancel a completed match');
+        }
+
+        this.status = 'cancelled';
+        this.history.push({
+            timestamp: new Date(),
+            action: 'match_cancelled',
+            details: { reason }
+        });
+    }
+
+    // Get match result for a specific team
+    getResultForTeam(teamId) {
+        if (this.status !== 'completed') {
+            return null;
+        }
+
+        if (this.winnerId === teamId) {
+            return 'win';
+        } else if (this.winnerId === null) {
+            return 'draw';
+        } else {
+            return 'loss';
+        }
+    }
+
+    // Get match summary
+    getSummary() {
+        return {
+            id: this.id,
+            date: this.date,
+            status: this.status,
+            currentRound: this.currentRound,
+            finalScore: this.finalScore,
+            rounds: this.rounds,
+            winnerId: this.winnerId
+        };
+    }
+
+    // Convert match to JSON
+    toJSON() {
+        return {
+            id: this.id,
+            team1Id: this.team1Id,
+            team2Id: this.team2Id,
+            date: this.date,
+            status: this.status,
+            currentRound: this.currentRound,
+            rounds: this.rounds,
+            roundStats: this.roundStats,
+            finalScore: this.finalScore,
+            winnerId: this.winnerId,
+            history: this.history
+        };
+    }
+
+    // Create match from JSON
+    static fromJSON(json) {
+        const match = new Match(
+            json.id,
+            json.team1Id,
+            json.team2Id,
+            DateUtils.safeDate(json.date)
+        );
+        
+        match.status = json.status || 'pending';
+        match.currentRound = json.currentRound || 0;
+        match.rounds = Array.isArray(json.rounds) ? json.rounds : [];
+        
+        // Reset roundStats to ensure proper structure
+        match.resetRoundStats();
+        
+        // If we have valid roundStats in the JSON, update them
+        if (json.roundStats && json.roundStats.team1 && json.roundStats.team2) {
+            match.roundStats.team1.won = parseInt(json.roundStats.team1.won) || 0;
+            match.roundStats.team1.lost = parseInt(json.roundStats.team1.lost) || 0;
+            match.roundStats.team2.won = parseInt(json.roundStats.team2.won) || 0;
+            match.roundStats.team2.lost = parseInt(json.roundStats.team2.lost) || 0;
+        }
+        
+        match.finalScore = {
+            team1: parseInt(json.finalScore?.team1) || 0,
+            team2: parseInt(json.finalScore?.team2) || 0
+        };
+        match.winnerId = json.winnerId || null;
+        match.history = Array.isArray(json.history) ? json.history.map(entry => ({
+            ...entry,
+            timestamp: DateUtils.safeDate(entry.timestamp)
+        })) : [{
+            timestamp: new Date(),
+            action: 'match_created',
+            details: {
+                team1Id: json.team1Id,
+                team2Id: json.team2Id
+            }
+        }];
+        
+        return match;
+    }
+}
+
+// Export for Node.js environment (testing)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Match;
+} 

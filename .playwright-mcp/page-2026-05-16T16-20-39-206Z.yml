@@ -1,0 +1,173 @@
+- generic [ref=e1]:
+  - link [ref=e20] [cursor=pointer]:
+    - /url: https://spline.design/?utm_source=spline-viewer&utm_campaign=spline-logo
+    - img [ref=e22]
+  - generic [ref=e6]:
+    - banner [ref=e7]:
+      - heading "🃏 Card Game Dashboard" [level=1] [ref=e8]
+      - navigation [ref=e9]:
+        - button "🏆 Teams" [ref=e10] [cursor=pointer]
+        - button "⚔️ Matches" [ref=e11] [cursor=pointer]
+        - button "📊 Statistics" [ref=e12] [cursor=pointer]
+    - generic [ref=e164]:
+      - generic [ref=e165]: 🎮 Card Game
+      - generic [ref=e166]:
+        - button "Teams" [ref=e167] [cursor=pointer]
+        - button "Matches" [ref=e168] [cursor=pointer]
+        - button "Stats" [ref=e169] [cursor=pointer]
+    - main [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - heading "Teams Management" [level=2] [ref=e16]
+          - generic [ref=e17]:
+            - button "+ Add New Team" [active] [ref=e18] [cursor=pointer]
+            - button "🔧 Fix Stats" [ref=e19] [cursor=pointer]
+        - generic [ref=e24]:
+          - generic [ref=e170]:
+            - heading "Coke" [level=3] [ref=e171]
+            - generic [ref=e172]:
+              - paragraph [ref=e173]: "Matches: 0"
+              - paragraph [ref=e174]: "Wins: 0"
+              - paragraph [ref=e175]: "Losses: 0"
+              - paragraph [ref=e176]: "Draws: 0"
+              - paragraph [ref=e177]: "Points: 0"
+              - paragraph [ref=e178]: "Total Score: 0"
+              - paragraph [ref=e179]: "Rounds Won: 0"
+              - paragraph [ref=e180]: "Rounds Lost: 0"
+              - paragraph [ref=e181]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e182] [cursor=pointer]
+          - generic [ref=e183]:
+            - heading "Sprite" [level=3] [ref=e184]
+            - generic [ref=e185]:
+              - paragraph [ref=e186]: "Matches: 0"
+              - paragraph [ref=e187]: "Wins: 0"
+              - paragraph [ref=e188]: "Losses: 0"
+              - paragraph [ref=e189]: "Draws: 0"
+              - paragraph [ref=e190]: "Points: 0"
+              - paragraph [ref=e191]: "Total Score: 0"
+              - paragraph [ref=e192]: "Rounds Won: 0"
+              - paragraph [ref=e193]: "Rounds Lost: 0"
+              - paragraph [ref=e194]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e195] [cursor=pointer]
+          - generic [ref=e196]:
+            - heading "AlphaStark" [level=3] [ref=e197]
+            - generic [ref=e198]:
+              - paragraph [ref=e199]: "Matches: 0"
+              - paragraph [ref=e200]: "Wins: 0"
+              - paragraph [ref=e201]: "Losses: 0"
+              - paragraph [ref=e202]: "Draws: 0"
+              - paragraph [ref=e203]: "Points: 0"
+              - paragraph [ref=e204]: "Total Score: 0"
+              - paragraph [ref=e205]: "Rounds Won: 0"
+              - paragraph [ref=e206]: "Rounds Lost: 0"
+              - paragraph [ref=e207]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e208] [cursor=pointer]
+          - generic [ref=e209]:
+            - heading "SkySage" [level=3] [ref=e210]
+            - generic [ref=e211]:
+              - paragraph [ref=e212]: "Matches: 0"
+              - paragraph [ref=e213]: "Wins: 0"
+              - paragraph [ref=e214]: "Losses: 0"
+              - paragraph [ref=e215]: "Draws: 0"
+              - paragraph [ref=e216]: "Points: 0"
+              - paragraph [ref=e217]: "Total Score: 0"
+              - paragraph [ref=e218]: "Rounds Won: 0"
+              - paragraph [ref=e219]: "Rounds Lost: 0"
+              - paragraph [ref=e220]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e221] [cursor=pointer]
+          - generic [ref=e222]:
+            - heading "Gaurav/Akash" [level=3] [ref=e223]
+            - generic [ref=e224]:
+              - paragraph [ref=e225]: "Matches: 5"
+              - paragraph [ref=e226]: "Wins: 2"
+              - paragraph [ref=e227]: "Losses: 3"
+              - paragraph [ref=e228]: "Draws: 0"
+              - paragraph [ref=e229]: "Points: 6"
+              - paragraph [ref=e230]: "Total Score: 1723"
+              - paragraph [ref=e231]: "Rounds Won: 21"
+              - paragraph [ref=e232]: "Rounds Lost: 23"
+              - paragraph [ref=e233]: "Win Rate: 40.0%"
+            - button "View Details" [ref=e234] [cursor=pointer]
+          - generic [ref=e235]:
+            - heading "Alegeus stars" [level=3] [ref=e236]
+            - generic [ref=e237]:
+              - paragraph [ref=e238]: "Matches: 1"
+              - paragraph [ref=e239]: "Wins: 0"
+              - paragraph [ref=e240]: "Losses: 1"
+              - paragraph [ref=e241]: "Draws: 0"
+              - paragraph [ref=e242]: "Points: 0"
+              - paragraph [ref=e243]: "Total Score: -60"
+              - paragraph [ref=e244]: "Rounds Won: 2"
+              - paragraph [ref=e245]: "Rounds Lost: 6"
+              - paragraph [ref=e246]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e247] [cursor=pointer]
+          - generic [ref=e248]:
+            - heading "Gaurav/ Palash" [level=3] [ref=e249]
+            - generic [ref=e251]: Gaurav Palash
+            - generic [ref=e252]:
+              - paragraph [ref=e253]: "Matches: 0"
+              - paragraph [ref=e254]: "Wins: 0"
+              - paragraph [ref=e255]: "Losses: 0"
+              - paragraph [ref=e256]: "Draws: 0"
+              - paragraph [ref=e257]: "Points: 0"
+              - paragraph [ref=e258]: "Total Score: 0"
+              - paragraph [ref=e259]: "Rounds Won: 0"
+              - paragraph [ref=e260]: "Rounds Lost: 0"
+              - paragraph [ref=e261]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e262] [cursor=pointer]
+          - generic [ref=e263]:
+            - heading "KorbaGang" [level=3] [ref=e264]
+            - generic [ref=e265]:
+              - paragraph [ref=e266]: "Matches: 5"
+              - paragraph [ref=e267]: "Wins: 3"
+              - paragraph [ref=e268]: "Losses: 2"
+              - paragraph [ref=e269]: "Draws: 0"
+              - paragraph [ref=e270]: "Points: 9"
+              - paragraph [ref=e271]: "Total Score: 2247"
+              - paragraph [ref=e272]: "Rounds Won: 23"
+              - paragraph [ref=e273]: "Rounds Lost: 21"
+              - paragraph [ref=e274]: "Win Rate: 60.0%"
+            - button "View Details" [ref=e275] [cursor=pointer]
+          - generic [ref=e276]:
+            - heading "K2-G" [level=3] [ref=e277]
+            - generic [ref=e278]:
+              - generic [ref=e279]: Gaurav
+              - generic [ref=e280]: Kritagya
+            - generic [ref=e281]:
+              - paragraph [ref=e282]: "Matches: 1"
+              - paragraph [ref=e283]: "Wins: 1"
+              - paragraph [ref=e284]: "Losses: 0"
+              - paragraph [ref=e285]: "Draws: 0"
+              - paragraph [ref=e286]: "Points: 3"
+              - paragraph [ref=e287]: "Total Score: 519"
+              - paragraph [ref=e288]: "Rounds Won: 6"
+              - paragraph [ref=e289]: "Rounds Lost: 2"
+              - paragraph [ref=e290]: "Win Rate: 100.0%"
+            - button "View Details" [ref=e291] [cursor=pointer]
+          - generic [ref=e292]:
+            - heading "Sky/K2" [level=3] [ref=e293]
+            - generic [ref=e294]:
+              - generic [ref=e295]: Akash
+              - generic [ref=e296]: k2
+            - generic [ref=e297]:
+              - paragraph [ref=e298]: "Matches: 0"
+              - paragraph [ref=e299]: "Wins: 0"
+              - paragraph [ref=e300]: "Losses: 0"
+              - paragraph [ref=e301]: "Draws: 0"
+              - paragraph [ref=e302]: "Points: 0"
+              - paragraph [ref=e303]: "Total Score: 0"
+              - paragraph [ref=e304]: "Rounds Won: 0"
+              - paragraph [ref=e305]: "Rounds Lost: 0"
+              - paragraph [ref=e306]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e307] [cursor=pointer]
+    - generic [ref=e309]:
+      - generic [ref=e310] [cursor=pointer]: ×
+      - generic [ref=e311]:
+        - heading "🔐 Authentication Required" [level=2] [ref=e312]
+        - paragraph [ref=e313]: You need to enter the authentication key to add teams.
+        - generic [ref=e314]:
+          - generic [ref=e315]:
+            - generic [ref=e316]: Authentication Key
+            - textbox "Authentication Key" [ref=e317]:
+              - /placeholder: Enter authentication key
+          - button "Authenticate" [ref=e318] [cursor=pointer]

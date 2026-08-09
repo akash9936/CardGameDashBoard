@@ -1,0 +1,175 @@
+- generic [active] [ref=e1]:
+  - link [ref=e20] [cursor=pointer]:
+    - /url: https://spline.design/?utm_source=spline-viewer&utm_campaign=spline-logo
+    - img [ref=e22]
+  - generic [ref=e6]:
+    - banner [ref=e7]:
+      - heading "🃏 Card Game Dashboard" [level=1] [ref=e8]
+      - navigation [ref=e9]:
+        - button "🏆 Teams" [ref=e10] [cursor=pointer]
+        - button "⚔️ Matches" [ref=e11] [cursor=pointer]
+        - button "📊 Statistics" [ref=e12] [cursor=pointer]
+    - generic [ref=e164]:
+      - generic [ref=e165]: 🎮 Card Game
+      - generic [ref=e166]:
+        - button "Teams" [ref=e167] [cursor=pointer]
+        - button "Matches" [ref=e168] [cursor=pointer]
+        - button "Stats" [ref=e169] [cursor=pointer]
+    - main [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - heading "Teams Management" [level=2] [ref=e16]
+          - generic [ref=e17]:
+            - button "+ Add New Team" [ref=e18] [cursor=pointer]
+            - button "🔧 Fix Stats" [ref=e19] [cursor=pointer]
+        - generic [ref=e24]:
+          - generic [ref=e595]:
+            - heading "Coke" [level=3] [ref=e596]
+            - generic [ref=e597]:
+              - paragraph [ref=e598]: "Matches: 0"
+              - paragraph [ref=e599]: "Wins: 0"
+              - paragraph [ref=e600]: "Losses: 0"
+              - paragraph [ref=e601]: "Draws: 0"
+              - paragraph [ref=e602]: "Points: 0"
+              - paragraph [ref=e603]: "Total Score: 0"
+              - paragraph [ref=e604]: "Rounds Won: 0"
+              - paragraph [ref=e605]: "Rounds Lost: 0"
+              - paragraph [ref=e606]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e607] [cursor=pointer]
+          - generic [ref=e608]:
+            - heading "Sprite" [level=3] [ref=e609]
+            - generic [ref=e610]:
+              - paragraph [ref=e611]: "Matches: 0"
+              - paragraph [ref=e612]: "Wins: 0"
+              - paragraph [ref=e613]: "Losses: 0"
+              - paragraph [ref=e614]: "Draws: 0"
+              - paragraph [ref=e615]: "Points: 0"
+              - paragraph [ref=e616]: "Total Score: 0"
+              - paragraph [ref=e617]: "Rounds Won: 0"
+              - paragraph [ref=e618]: "Rounds Lost: 0"
+              - paragraph [ref=e619]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e620] [cursor=pointer]
+          - generic [ref=e621]:
+            - heading "AlphaStark" [level=3] [ref=e622]
+            - generic [ref=e623]:
+              - paragraph [ref=e624]: "Matches: 5"
+              - paragraph [ref=e625]: "Wins: 3"
+              - paragraph [ref=e626]: "Losses: 2"
+              - paragraph [ref=e627]: "Draws: 0"
+              - paragraph [ref=e628]: "Points: 9"
+              - paragraph [ref=e629]: "Total Score: 2015"
+              - paragraph [ref=e630]: "Rounds Won: 25"
+              - paragraph [ref=e631]: "Rounds Lost: 23"
+              - paragraph [ref=e632]: "Win Rate: 60.0%"
+            - button "View Details" [ref=e633] [cursor=pointer]
+          - generic [ref=e634]:
+            - heading "SkySage" [level=3] [ref=e635]
+            - generic [ref=e636]:
+              - paragraph [ref=e637]: "Matches: 5"
+              - paragraph [ref=e638]: "Wins: 2"
+              - paragraph [ref=e639]: "Losses: 3"
+              - paragraph [ref=e640]: "Draws: 0"
+              - paragraph [ref=e641]: "Points: 6"
+              - paragraph [ref=e642]: "Total Score: 1856"
+              - paragraph [ref=e643]: "Rounds Won: 23"
+              - paragraph [ref=e644]: "Rounds Lost: 25"
+              - paragraph [ref=e645]: "Win Rate: 40.0%"
+            - button "View Details" [ref=e646] [cursor=pointer]
+          - generic [ref=e647]:
+            - heading "Gaurav/Akash" [level=3] [ref=e648]
+            - generic [ref=e649]:
+              - paragraph [ref=e650]: "Matches: 20"
+              - paragraph [ref=e651]: "Wins: 11"
+              - paragraph [ref=e652]: "Losses: 9"
+              - paragraph [ref=e653]: "Draws: 0"
+              - paragraph [ref=e654]: "Points: 33"
+              - paragraph [ref=e655]: "Total Score: 7300"
+              - paragraph [ref=e656]: "Rounds Won: 83"
+              - paragraph [ref=e657]: "Rounds Lost: 100"
+              - paragraph [ref=e658]: "Win Rate: 55.0%"
+            - button "View Details" [ref=e659] [cursor=pointer]
+          - generic [ref=e660]:
+            - heading "Alegeus stars" [level=3] [ref=e661]
+            - generic [ref=e662]:
+              - paragraph [ref=e663]: "Matches: 2"
+              - paragraph [ref=e664]: "Wins: 1"
+              - paragraph [ref=e665]: "Losses: 1"
+              - paragraph [ref=e666]: "Draws: 0"
+              - paragraph [ref=e667]: "Points: 3"
+              - paragraph [ref=e668]: "Total Score: 532"
+              - paragraph [ref=e669]: "Rounds Won: 7"
+              - paragraph [ref=e670]: "Rounds Lost: 10"
+              - paragraph [ref=e671]: "Win Rate: 50.0%"
+            - button "View Details" [ref=e672] [cursor=pointer]
+          - generic [ref=e673]:
+            - heading "Gaurav/ Palash" [level=3] [ref=e674]
+            - generic [ref=e676]: Gaurav Palash
+            - generic [ref=e677]:
+              - paragraph [ref=e678]: "Matches: 1"
+              - paragraph [ref=e679]: "Wins: 0"
+              - paragraph [ref=e680]: "Losses: 1"
+              - paragraph [ref=e681]: "Draws: 0"
+              - paragraph [ref=e682]: "Points: 0"
+              - paragraph [ref=e683]: "Total Score: 36"
+              - paragraph [ref=e684]: "Rounds Won: 3"
+              - paragraph [ref=e685]: "Rounds Lost: 5"
+              - paragraph [ref=e686]: "Win Rate: 0.0%"
+            - button "View Details" [ref=e687] [cursor=pointer]
+          - generic [ref=e688]:
+            - heading "KorbaGang" [level=3] [ref=e689]
+            - generic [ref=e690]:
+              - paragraph [ref=e691]: "Matches: 19"
+              - paragraph [ref=e692]: "Wins: 8"
+              - paragraph [ref=e693]: "Losses: 11"
+              - paragraph [ref=e694]: "Draws: 0"
+              - paragraph [ref=e695]: "Points: 24"
+              - paragraph [ref=e696]: "Total Score: 7460"
+              - paragraph [ref=e697]: "Rounds Won: 95"
+              - paragraph [ref=e698]: "Rounds Lost: 79"
+              - paragraph [ref=e699]: "Win Rate: 42.1%"
+            - button "View Details" [ref=e700] [cursor=pointer]
+          - generic [ref=e701]:
+            - heading "K2-G" [level=3] [ref=e702]
+            - generic [ref=e703]:
+              - generic [ref=e704]: Gaurav
+              - generic [ref=e705]: Kritagya
+            - generic [ref=e706]:
+              - paragraph [ref=e707]: "Matches: 1"
+              - paragraph [ref=e708]: "Wins: 1"
+              - paragraph [ref=e709]: "Losses: 0"
+              - paragraph [ref=e710]: "Draws: 0"
+              - paragraph [ref=e711]: "Points: 3"
+              - paragraph [ref=e712]: "Total Score: 519"
+              - paragraph [ref=e713]: "Rounds Won: 6"
+              - paragraph [ref=e714]: "Rounds Lost: 2"
+              - paragraph [ref=e715]: "Win Rate: 100.0%"
+            - button "View Details" [ref=e716] [cursor=pointer]
+          - generic [ref=e717]:
+            - heading "Sky/K2" [level=3] [ref=e718]
+            - generic [ref=e719]:
+              - generic [ref=e720]: Akash
+              - generic [ref=e721]: k2
+            - generic [ref=e722]:
+              - paragraph [ref=e723]: "Matches: 1"
+              - paragraph [ref=e724]: "Wins: 1"
+              - paragraph [ref=e725]: "Losses: 0"
+              - paragraph [ref=e726]: "Draws: 0"
+              - paragraph [ref=e727]: "Points: 3"
+              - paragraph [ref=e728]: "Total Score: 552"
+              - paragraph [ref=e729]: "Rounds Won: 5"
+              - paragraph [ref=e730]: "Rounds Lost: 3"
+              - paragraph [ref=e731]: "Win Rate: 100.0%"
+            - button "View Details" [ref=e732] [cursor=pointer]
+    - generic [ref=e309]:
+      - generic [ref=e310] [cursor=pointer]: ×
+      - generic [ref=e311]:
+        - heading "Add New Team" [level=2] [ref=e733]
+        - generic [ref=e734]:
+          - generic [ref=e735]:
+            - generic [ref=e736]: Team Name
+            - textbox "Team Name" [ref=e737]
+          - generic [ref=e738]:
+            - generic [ref=e739]: Team Members (one per line)
+            - textbox "Team Members (one per line)" [ref=e740]
+          - button "Create Team" [ref=e741] [cursor=pointer]
+  - generic [ref=e742]: Authentication successful!
