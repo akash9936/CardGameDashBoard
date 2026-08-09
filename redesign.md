@@ -122,15 +122,7 @@ Proposed by personas during review, adopted into the backlog:
 57. **Pin/upgrade dependencies** *(Engineer)* — upgrade off Firebase 8.6.1 compat; add SRI + CSP for remaining CDN assets (or vendor them).
 58. **Deploy an allowlist, not the repo root** *(Engineer)* — publish only `index.html`, `css/`, `js/` to gh-pages; removes `db-dump/`, `tests/`, `scripts/`, `claude/` from the public site.
 
-59. **Ghost Seat — remote player via photo hand** *(user-requested)* — the game stays physical, but one absent player plays remotely:
-    - Match setup marks one player as **remote** for that match; they log in as that player from wherever they are.
-    - After each deal, a player at the table taps "Capture hand", fans the absent player's 13 cards, and photographs them in-app. The preview hides immediately after upload; the capturer is logged for accountability (trust is social — it's an office league).
-    - The photo is stored in Firebase Storage, readable **only by the remote player's authenticated UID** (enforced by Storage rules, not UI).
-    - The remote player reads their hand from the photo, submits their promise (4–13 or Blind) in-app; it appears on the table's live match view.
-    - Each trick, the remote player picks a card from a suit-grouped 52-card picker → it displays large on the table's live match screen ("▶ Q♠") and their teammate physically plays it. Picked cards grey out client-side.
-    - New deal → new photo; photos auto-delete when the round ends.
-    - The app never parses cards and never adjudicates play — the photo is the hand, the table keeps play honest, and the locked CLAUDE.md rules are untouched.
-    - **Hard prerequisites:** #41 extended to *player-level* Firebase Auth (photo secrecy must be a database/storage rule) and #24 live listeners (delivery channel for promise + played card). Chosen over a data-entry "digital hand" for near-zero mid-game entry cost.
+59. **Ghost Seat — remote player via photo hand** *(user-requested)* — full spec lives in its own doc: [`ghost-seat.md`](ghost-seat.md).
 
 ## Priority Tiers (v2 — post-debate)
 
@@ -141,7 +133,7 @@ Proposed by personas during review, adopted into the backlog:
 #32 replace Spline · #29 mobile-first entry (+ #51 preview) · #30 leaderboard cards with information diet (+ #35 rank arrows) · #18 round undo · #4 streak chips · #43 rules.js · #52 state-aware landing (+ #56 derived stats)
 
 **P2 — Release 2: "Make it live":**
-#24 live match spectating · **#59 Ghost Seat (remote player, photo hand — builds directly on #24 + P0 auth)** · #14 "what do I need" widget · #47 keyboard-first entry · #48 correction workflow · #13 shareable stat cards · #53 Slack webhook · #54 rematch · #55 visit digest · #6 records page
+#24 live match spectating · #59 Ghost Seat (see [`ghost-seat.md`](ghost-seat.md)) · #14 "what do I need" widget · #47 keyboard-first entry · #48 correction workflow · #13 shareable stat cards · #53 Slack webhook · #54 rematch · #55 visit digest · #6 records page
 
 **P3 — Later (valuable, not now):**
 #9 seasons (only after P0; all-time records must survive) · #16 badges (after icon system) · #36 accessibility pass · #33 design tokens · #34 skeletons · #38 reduced-motion · #31 light theme · #10 rivalry pages · #2 calibration scatter · #3 blind ROI · #1 match timeline · #17 MVP moments · #19 trajectory page · #12 heatmap · #7/#8 clutch & comeback · #37 empty states · #44 offline queue · #45 E2E tests · #39 app.js split (incremental) · #22 win polish (skippable) · #49 scheduler · #25 QR invite
