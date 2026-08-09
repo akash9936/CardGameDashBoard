@@ -128,6 +128,7 @@ Evaluate cases in order; the first match wins:
 #### Win Conditions
 - **Primary Condition**: First team to accumulate 500 or more points wins
 - **Immediate Termination**: Match ends as soon as any team reaches 500 points
+- **Simultaneous 500**: If both teams reach 500+ in the same round, the team with the higher total score wins (team1 on an exact tie)
 - **No Draws**: The 500-point threshold ensures a definitive winner
 
 #### Round Statistics
@@ -337,7 +338,7 @@ Teams are ranked by:
    - Solution: Check calculation logic and input values
 
 ### Edge Cases Handled
-- **Simultaneous 500 Points**: First team processed wins
+- **Simultaneous 500 Points**: Higher total score wins; team1 wins on an exact tie
 - **Negative Scores**: Prevented by validation rules
 - **Empty Teams**: Prevented by creation validation
 - **Duplicate Team Names**: Prevented by uniqueness check

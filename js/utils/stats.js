@@ -309,6 +309,80 @@ const StatsUtils = (() => {
         return TEAM_PALETTE[hash % TEAM_PALETTE.length];
     }
 
+    // ─── §3b.5 Team Theme Pack ───────────────────────────────────────────────
+    // 24 curated unicode glyphs (no emoji — single-shape Symbol-block chars
+    // that render consistently across Mac/Win/Linux/Android sans color font).
+    const ICON_SET = [
+        { key: 'spade',    glyph: '♠' },
+        { key: 'club',     glyph: '♣' },
+        { key: 'heart',    glyph: '♥' },
+        { key: 'diamond',  glyph: '♦' },
+        { key: 'star',     glyph: '★' },
+        { key: 'shamrock', glyph: '☘' },
+        { key: 'comet',    glyph: '☄' },
+        { key: 'anchor',   glyph: '⚓' },
+        { key: 'swords',   glyph: '⚔' },
+        { key: 'bolt',     glyph: '⚡' },
+        { key: 'atom',     glyph: '⚛' },
+        { key: 'fleur',    glyph: '⚜' },
+        { key: 'knight',   glyph: '♞' },
+        { key: 'rhomb',    glyph: '◆' },
+        { key: 'tri',      glyph: '▲' },
+        { key: 'disc',     glyph: '●' },
+        { key: 'sparkle',  glyph: '✦' },
+        { key: 'circled',  glyph: '✪' },
+        { key: 'arrow',    glyph: '➤' },
+        { key: 'gear',     glyph: '⚙' },
+        { key: 'crown',    glyph: '♛' },
+        { key: 'tower',    glyph: '♜' },
+        { key: 'hammer',   glyph: '⚒' },
+        { key: 'ankh',     glyph: '☥' },
+    ];
+
+    const PATTERN_SET = [
+        { key: 'dot' },
+        { key: 'stripe-up' },     // diagonal ↗
+        { key: 'stripe-h' },      // horizontal
+        { key: 'stripe-down' },   // diagonal ↘
+        { key: 'chevron' },
+        { key: 'hatch' },         // cross-hatch
+    ];
+
+    function _hashIndex(seed, modulo) {
+        const s = String(seed);
+        let h = 0;
+        for (let i = 0; i < s.length; i++) {
+            h = (h * 41 + s.charCodeAt(i)) >>> 0;
+        }
+        return h % modulo;
+    }
+
+    // Resolve the icon spec for a team. Accepts either a team object (with
+    // optional .theme.iconKey) or a bare id (deterministic fallback).
+    function teamIcon(team) {
+        const id = team && typeof team === 'object' ? team.id : team;
+        const overrideKey = team && typeof team === 'object'
+            ? team.theme?.iconKey
+            : null;
+        if (overrideKey) {
+            const hit = ICON_SET.find(i => i.key === overrideKey);
+            if (hit) return hit;
+        }
+        return ICON_SET[_hashIndex(id, ICON_SET.length)];
+    }
+
+    function teamPattern(team) {
+        const id = team && typeof team === 'object' ? team.id : team;
+        const overrideKey = team && typeof team === 'object'
+            ? team.theme?.patternKey
+            : null;
+        if (overrideKey) {
+            const hit = PATTERN_SET.find(p => p.key === overrideKey);
+            if (hit) return hit;
+        }
+        return PATTERN_SET[_hashIndex(id, PATTERN_SET.length)];
+    }
+
     function headToHeadMatrix(teams, matches) {
         const ranked = leaderboard(teams, matches);
         const ids = ranked.map(r => r.id);
@@ -363,12 +437,246 @@ const StatsUtils = (() => {
         return { blinds, overExtensions, biggestSwing, totalRounds: rounds.length };
     }
 
+    // ─── Moment Reel (§4.0) ──────────────────────────────────────────────────
+    // Returns up to three turning points: biggest swing, best blind, worst call.
+    // Each entry is { key, label, roundNumber, sideId, score, delta }, or null
+    // if no qualifying round exists (and no fallback applies).
+    //
+    // Selection rules:
+    //   1. BIGGEST SWING — round with the largest |team1.score − team2.score|.
+    //   2. BEST BLIND    — highest positive score on a blind side. Fallback:
+    //                      highest single positive round score (any side).
+    //   3. WORST CALL    — most-negative score caused by over-extension (non-blind).
+    //                      Fallback: most-negative score from under-promise.
+    //
+    // If two slots resolve to the same round, slot 2 / slot 3 try their
+    // fallback to keep all three distinct when possible.
+    function momentReel(match) {
+        const rounds = Array.isArray(match?.rounds) ? match.rounds : [];
+        if (!rounds.length) return { biggestSwing: null, bestBlind: null, worstCall: null };
+
+        const t1Id = match.team1Id, t2Id = match.team2Id;
+        const enriched = rounds.map(r => {
+            const s1 = Number(r.team1?.score || 0);
+            const s2 = Number(r.team2?.score || 0);
+            return { r, s1, s2, delta: Math.abs(s1 - s2) };
+        });
+
+        // 1. Biggest swing — guaranteed to exist if rounds.length > 0.
+        const swing = enriched.slice().sort((a, b) => b.delta - a.delta)[0];
+        const swingWinner = swing.s1 >= swing.s2 ? 'team1' : 'team2';
+        const biggestSwing = {
+            key: 'biggestSwing',
+            label: 'BIGGEST SWING',
+            roundNumber: swing.r.roundNumber,
+            sideId: swingWinner === 'team1' ? t1Id : t2Id,
+            score: swingWinner === 'team1' ? swing.s1 : swing.s2,
+            delta: swing.delta,
+        };
+
+        // 2. Best blind, with fallback to best single positive round.
+        let bestBlind = null;
+        let bestBlindScore = -Infinity;
+        for (const { r } of enriched) {
+            for (const side of ['team1', 'team2']) {
+                if (isBlindSide(r[side])) {
+                    const s = Number(r[side].score || 0);
+                    if (s > bestBlindScore && s > 0) {
+                        bestBlindScore = s;
+                        bestBlind = {
+                            key: 'bestBlind',
+                            label: 'BEST BLIND',
+                            roundNumber: r.roundNumber,
+                            sideId: side === 'team1' ? t1Id : t2Id,
+                            score: s,
+                            delta: null,
+                        };
+                    }
+                }
+            }
+        }
+        if (!bestBlind) {
+            // Fallback — highest positive round score on any side.
+            let topScore = -Infinity, top = null;
+            for (const { r } of enriched) {
+                for (const side of ['team1', 'team2']) {
+                    const s = Number(r[side]?.score || 0);
+                    if (s > topScore && s > 0) {
+                        topScore = s;
+                        top = {
+                            key: 'bestBlind',
+                            label: 'HIGHEST SCORE',
+                            roundNumber: r.roundNumber,
+                            sideId: side === 'team1' ? t1Id : t2Id,
+                            score: s,
+                            delta: null,
+                        };
+                    }
+                }
+            }
+            bestBlind = top;
+        }
+
+        // 3. Worst call — over-extension first, then under-promise as fallback.
+        let worstOver = null, worstOverScore = Infinity;
+        let worstUnder = null, worstUnderScore = Infinity;
+        for (const { r } of enriched) {
+            for (const side of ['team1', 'team2']) {
+                const v = r[side];
+                if (!v) continue;
+                if (isBlindSide(v)) continue;
+                const promise = Number(v.promise || 0);
+                const actual = Number(v.actual || 0);
+                const score = Number(v.score || 0);
+                if (promise > 0 && actual >= promise * 2 && score < worstOverScore) {
+                    worstOverScore = score;
+                    worstOver = {
+                        key: 'worstCall',
+                        label: 'WORST CALL',
+                        roundNumber: r.roundNumber,
+                        sideId: side === 'team1' ? t1Id : t2Id,
+                        score, delta: null,
+                    };
+                } else if (actual < promise && score < worstUnderScore) {
+                    worstUnderScore = score;
+                    worstUnder = {
+                        key: 'worstCall',
+                        label: 'BIGGEST MISS',
+                        roundNumber: r.roundNumber,
+                        sideId: side === 'team1' ? t1Id : t2Id,
+                        score, delta: null,
+                    };
+                }
+            }
+        }
+        let worstCall = worstOver || worstUnder;
+
+        // De-duplicate the worst-call slot only.
+        //
+        // Rationale: a +140 blind that *was* also the biggest swing is the
+        // headline of the match, not a conflict to resolve — let the swing and
+        // best-blind share a round when that's the truth. But a negative round
+        // showing up next to its own positive twin is just noise, so we move
+        // worst-call to a different round when an alternative exists.
+        if (worstCall && (worstCall.roundNumber === biggestSwing.roundNumber
+                       || (bestBlind && worstCall.roundNumber === bestBlind.roundNumber))) {
+            const taken = new Set([biggestSwing.roundNumber, bestBlind?.roundNumber].filter(Boolean));
+            let alt = null, altScore = Infinity;
+            for (const { r } of enriched) {
+                if (taken.has(r.roundNumber)) continue;
+                for (const side of ['team1', 'team2']) {
+                    const v = r[side];
+                    if (!v || isBlindSide(v)) continue;
+                    const s = Number(v.score || 0);
+                    if (s < altScore && s < 0) {
+                        altScore = s;
+                        alt = { ...worstCall, roundNumber: r.roundNumber, sideId: side === 'team1' ? t1Id : t2Id, score: s };
+                    }
+                }
+            }
+            if (alt) worstCall = alt;
+        }
+
+        return { biggestSwing, bestBlind, worstCall };
+    }
+
+    // ─── Promise Accuracy (§4.1) ─────────────────────────────────────────────
+    // A side "met" their promise when:
+    //   blind:  actual >= 7
+    //   normal: actual >= promise && actual < promise * 2
+    // Both promises in a round count toward the bid total (blind included).
+    function promiseAccuracy(teams, matches) {
+        const perTeam = new Map();
+        for (const t of (teams || [])) {
+            perTeam.set(String(t.id), { bid: 0, met: 0, rate: 0 });
+        }
+        let totalBid = 0, totalMet = 0;
+
+        for (const m of (matches || [])) {
+            for (const r of (Array.isArray(m.rounds) ? m.rounds : [])) {
+                for (const sideKey of ['team1', 'team2']) {
+                    const side = r[sideKey];
+                    if (!side) continue;
+                    const tid = String(sideKey === 'team1' ? m.team1Id : m.team2Id);
+                    const stats = perTeam.get(tid) || { bid: 0, met: 0, rate: 0 };
+                    const blind = isBlindSide(side);
+                    const actual = Number(side.actual || 0);
+                    const promise = Number(side.promise || 0);
+                    const met = blind
+                        ? actual >= 7
+                        : (promise > 0 && actual >= promise && actual < promise * 2);
+                    stats.bid++;
+                    if (met) stats.met++;
+                    perTeam.set(tid, stats);
+                    totalBid++;
+                    if (met) totalMet++;
+                }
+            }
+        }
+
+        const byTeam = {};
+        for (const [id, s] of perTeam) {
+            s.rate = s.bid ? s.met / s.bid : 0;
+            byTeam[id] = s;
+        }
+        return {
+            byTeam,
+            tournament: {
+                bid: totalBid,
+                met: totalMet,
+                rate: totalBid ? totalMet / totalBid : 0,
+            },
+        };
+    }
+
+    // ─── Blind Economy (§4.2) ────────────────────────────────────────────────
+    // Tracks how the +140 / −70 sword cuts both ways.
+    function blindEconomy(matches) {
+        const perTeam = new Map();
+        let called = 0, successes = 0, failures = 0;
+
+        for (const m of (matches || [])) {
+            for (const r of (Array.isArray(m.rounds) ? m.rounds : [])) {
+                for (const sideKey of ['team1', 'team2']) {
+                    const side = r[sideKey];
+                    if (!side || !isBlindSide(side)) continue;
+                    const tid = String(sideKey === 'team1' ? m.team1Id : m.team2Id);
+                    const s = perTeam.get(tid) || { called: 0, successes: 0, failures: 0, netEV: 0 };
+                    s.called++;
+                    if (Number(side.score || 0) > 0) s.successes++;
+                    else s.failures++;
+                    s.netEV = s.successes * 140 + s.failures * -70;
+                    perTeam.set(tid, s);
+
+                    called++;
+                    if (Number(side.score || 0) > 0) successes++;
+                    else failures++;
+                }
+            }
+        }
+
+        const byTeam = {};
+        for (const [id, s] of perTeam) byTeam[id] = s;
+        return {
+            byTeam,
+            tournament: {
+                called,
+                successes,
+                failures,
+                successRate: called ? successes / called : 0,
+                netEV: successes * 140 + failures * -70,
+            },
+        };
+    }
+
     return {
         kpis, leaderboard, recentForm, teamSide, opponentId, isBlindSide,
-        cumulativeSeries, roundOutcome, matchSummary,
+        cumulativeSeries, roundOutcome, matchSummary, momentReel,
+        promiseAccuracy, blindEconomy,
         teamProfile, headToHead, teamScoreSeries, teamPromiseActualPoints, teamMatches,
         currentStreak, hottestStreak, topRoundScore, topRivalry,
         headToHeadMatrix, teamColor, TEAM_PALETTE,
+        teamIcon, teamPattern, ICON_SET, PATTERN_SET,
     };
 })();
 

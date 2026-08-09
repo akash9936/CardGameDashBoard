@@ -107,7 +107,8 @@ This document provides comprehensive test cases to validate all game rules, cond
 | TC_W001 | Team 1 reaches exactly 500 | 500 | 450 | Team 1 wins, match completes | Win threshold |
 | TC_W002 | Team 2 reaches exactly 500 | 450 | 500 | Team 2 wins, match completes | Win threshold |
 | TC_W003 | Team 1 exceeds 500 | 520 | 450 | Team 1 wins, match completes | Win threshold |
-| TC_W004 | Both teams reach 500 simultaneously | 500 | 500 | First processed wins | Simultaneous handling |
+| TC_W004 | Both teams reach 500 simultaneously | 505 | 523 | Higher score (Team 2) wins | Simultaneous handling |
+| TC_W004b | Both reach 500 with equal totals | 510 | 510 | Team 1 wins (exact-tie fallback) | Simultaneous tie-break |
 | TC_W005 | Score just below 500 | 499 | 450 | Match continues | Threshold enforcement |
 
 #### 5.2 Round Win/Loss Tracking

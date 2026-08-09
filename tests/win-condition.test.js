@@ -164,20 +164,37 @@ describe('Win Condition Tests (Section 5)', () => {
             expect(completionEvent).toBeDefined();
         });
         
-        // TC_W004: Both teams reach 500 simultaneously  
-        test('TC_W004: Both teams reach 500 simultaneously', () => {
-            // Arrange - Build match where both teams reach 500 in the same round
+        // TC_W004: Both teams reach 500 simultaneously — higher total wins
+        test('TC_W004: Both teams reach 500 simultaneously, higher score wins', () => {
+            // Arrange - Build match where both teams cross 500 in the same round
             const match = buildMatchToScores(450, 450);
-            
-            // Add a round that brings both to 500
+
+            // Add a round that brings team1 to 505 and team2 to 523
+            addRoundWithScores(match, 55, 73);
+
+            // Assert - Team 2 should win with the higher total
+            expect(match.status).toBe('completed');
+            expect(match.finalScore.team1).toBe(505);
+            expect(match.finalScore.team2).toBe(523);
+            expect(match.winnerId).toBe(match.team2Id); // Higher total wins
+
+            const completionEvent = match.history.find(h => h.action === 'match_completed');
+            expect(completionEvent.details.winnerId).toBe(match.team2Id);
+        });
+
+        // TC_W004b: Both teams reach 500 with equal totals — team1 wins (deterministic fallback)
+        test('TC_W004b: Both teams reach 500 with equal totals', () => {
+            // Arrange - Build match where both teams land on exactly 500
+            const match = buildMatchToScores(450, 450);
+
             addRoundWithScores(match, 50, 50);
-            
-            // Assert - Team 1 should win as it's processed first
+
+            // Assert - Team 1 wins the exact tie
             expect(match.status).toBe('completed');
             expect(match.finalScore.team1).toBe(500);
             expect(match.finalScore.team2).toBe(500);
-            expect(match.winnerId).toBe(match.team1Id); // First processed wins
-            
+            expect(match.winnerId).toBe(match.team1Id); // Exact-tie fallback
+
             const completionEvent = match.history.find(h => h.action === 'match_completed');
             expect(completionEvent.details.winnerId).toBe(match.team1Id);
         });
@@ -421,8 +438,9 @@ describe('Win Condition Tests (Section 5)', () => {
             const scenarios = [
                 { t1Score: 500, t2Score: 499, expectedWinner: 'team1' },
                 { t1Score: 499, t2Score: 500, expectedWinner: 'team2' },
-                { t1Score: 501, t2Score: 500, expectedWinner: 'team1' },
-                { t1Score: 500, t2Score: 501, expectedWinner: 'team1' }
+                { t1Score: 501, t2Score: 500, expectedWinner: 'team1' }, // both ≥500, team1 higher
+                { t1Score: 500, t2Score: 501, expectedWinner: 'team2' }, // both ≥500, team2 higher
+                { t1Score: 500, t2Score: 500, expectedWinner: 'team1' }  // exact tie → team1 fallback
             ];
             
             scenarios.forEach(({ t1Score, t2Score, expectedWinner }) => {
@@ -498,7 +516,8 @@ Expected Test Results Summary:
 ✓ TC_W001: Team 1 reaches exactly 500 - PASS
 ✓ TC_W002: Team 2 reaches exactly 500 - PASS
 ✓ TC_W003: Team 1 exceeds 500 - PASS
-✓ TC_W004: Both teams reach 500 simultaneously - PASS (Team 1 wins as first processed)
+✓ TC_W004: Both teams reach 500 simultaneously - PASS (higher total wins)
+✓ TC_W004b: Both reach 500 with equal totals - PASS (Team 1 wins exact tie)
 ✓ TC_W005: Score just below 500 - PASS (Match continues)
 ✓ TC_W006: Team 1 wins round (lower score) - PASS
 ✓ TC_W007: Team 2 wins round (lower score) - PASS  
@@ -523,7 +542,7 @@ Key game rules validated:
 4. ✅ Tied rounds don't award wins to either team
 5. ✅ Match history tracks completion events properly
 6. ✅ No rounds can be added after completion
-7. ✅ Simultaneous 500 handling (first processed wins)
+7. ✅ Simultaneous 500 handling (higher total wins; team1 on exact tie)
 
 Learning from previous mistakes applied:
 1. ✅ Proper class loading and unique test data

@@ -453,7 +453,9 @@ function showSection(section) {
             refreshTeamsList();
             break;
         case 'matches':
-            refreshMatchesList();
+            refreshMatchesList().then(() => {
+                if (typeof Walkthrough !== 'undefined') Walkthrough.maybeAutoStart();
+            });
             break;
         case 'stats':
             refreshStats();
@@ -535,11 +537,15 @@ function renderH2hMatrix(teams, matches) {
     if (teams.length < 2) { tbl.innerHTML = ''; return; }
 
     const m = StatsUtils.headToHeadMatrix(teams, matches);
+    const teamsById = new Map(teams.map(t => [String(t.id), t]));
+    const mark = (id) => (typeof TeamMark !== 'undefined')
+        ? TeamMark.render(teamsById.get(String(id)) || { id, name: m.namesById.get(id) }, { size: 'sm' })
+        : `<span class="team-dot" style="background:${StatsUtils.teamColor(id)}"></span>`;
     const head = `
         <thead>
             <tr>
                 <th class="h2h-corner"></th>
-                ${m.ids.map(id => `<th class="h2h-colhead" title="${m.namesById.get(id)}"><span class="team-dot" style="background:${StatsUtils.teamColor(id)}"></span>${m.namesById.get(id)}</th>`).join('')}
+                ${m.ids.map(id => `<th class="h2h-colhead" title="${m.namesById.get(id)}">${mark(id)}${m.namesById.get(id)}</th>`).join('')}
             </tr>
         </thead>
     `;
@@ -558,7 +564,7 @@ function renderH2hMatrix(teams, matches) {
                 </td>
             `;
         }).join('');
-        return `<tr><th class="h2h-rowhead"><span class="team-dot" style="background:${StatsUtils.teamColor(rowId)}"></span>${m.namesById.get(rowId)}</th>${cells}</tr>`;
+        return `<tr><th class="h2h-rowhead">${mark(rowId)}${m.namesById.get(rowId)}</th>${cells}</tr>`;
     }).join('');
     tbl.innerHTML = head + `<tbody>${rows}</tbody>`;
 
@@ -629,9 +635,13 @@ async function refreshTeamsList() {
         
         console.log(`Team ${team.name} stats:`, stats);
         
+        const mark = (typeof TeamMark !== 'undefined')
+            ? TeamMark.render(team, { size: 'md' })
+            : '';
         return `
-            <div class="card team-card">
-                <h3>${team.name}</h3>
+            <div class="card team-card" data-team-id="${team.id}">
+                <button type="button" class="tc-edit-theme" data-edit-theme="${team.id}" title="Edit theme" aria-label="Edit theme">✎</button>
+                <div class="tc-head">${mark}<h3>${team.name}</h3></div>
                 <div class="team-members">
                     ${team.members.map(member => `<span class="member">${member}</span>`).join('')}
                 </div>
@@ -650,6 +660,17 @@ async function refreshTeamsList() {
             </div>
         `;
     }).join('');
+
+    document.querySelectorAll('[data-edit-theme]').forEach(btn => {
+        if (btn.dataset.wired) return;
+        btn.dataset.wired = '1';
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.editTheme;
+            const target = teams.find(t => String(t.id) === String(id));
+            if (target && typeof ThemePicker !== 'undefined') ThemePicker.open(target);
+        });
+    });
 }
 
 const _wormCharts = new Map();
@@ -684,6 +705,9 @@ function renderScorecard(match, team1, team2) {
     if (summary.blinds) summaryBits.push(`<span class="chip chip-gold">${summary.blinds} blind${summary.blinds > 1 ? 's' : ''}</span>`);
     if (summary.overExtensions) summaryBits.push(`<span class="chip chip-purple">${summary.overExtensions} over-extension${summary.overExtensions > 1 ? 's' : ''}</span>`);
     if (summary.biggestSwing.round) summaryBits.push(`<span class="chip">Biggest swing: R${summary.biggestSwing.round} (Δ${summary.biggestSwing.delta})</span>`);
+    if (match.status === 'completed' && rounds.length > 0) {
+        summaryBits.push(`<button type="button" class="chip chip-replay" data-replay-match="${match.id}" title="Replay every round, paced at 0.7s each">▶ Replay All</button>`);
+    }
 
     return `
         <div class="scorecard">
@@ -871,24 +895,42 @@ async function refreshMatchesList() {
         const status = match.status || 'pending';
         const finalScore = match.finalScore || { team1: 0, team2: 0 };
         const rounds = Array.isArray(match.rounds) ? match.rounds : [];
-        const currentRound = match.currentRound || 0;
-        
+
+        // Broadcast Strip (§3b.1) — only for live or completed matches.
+        const broadcast = (status === 'in_progress' || status === 'completed')
+            ? BroadcastStrip.render(match, teams)
+            : '';
+
+        const c1 = StatsUtils.teamColor(team1.id);
+        const c2 = StatsUtils.teamColor(team2.id);
+        const summary = (status === 'completed' || status === 'in_progress')
+            ? StatsUtils.matchSummary(match)
+            : null;
+        const chipStrip = (status === 'completed') ? renderMatchChips(summary) : '';
+        const t1WinClass = match.winnerId === match.team1Id ? 'winner' : (status === 'completed' ? 'loser' : '');
+        const t2WinClass = match.winnerId === match.team2Id ? 'winner' : (status === 'completed' ? 'loser' : '');
+
         return `
-            <div class="card match-card">
+            <div class="card match-card" data-match-id="${match.id}"
+                 style="--band-1:${c1}; --band-2:${c2}">
+                <span class="match-bands" aria-hidden="true">
+                    <span></span><span></span>
+                </span>
+                ${broadcast}
                 <div class="match-header">
                     <span class="match-date">${DateUtils.formatDate(match.date)}</span>
                     ${rounds.length > 0 ? `<canvas class="sparkline" data-match-id="${match.id}" width="120" height="28"></canvas>` : ''}
                     <span class="match-status ${status}">${status}</span>
                 </div>
                 <div class="match-teams">
-                    <div class="team ${match.winnerId === match.team1Id ? 'winner' : ''}">
+                    <div class="team ${t1WinClass}">
                         <h3>${team1.name}</h3>
                         <div class="team-members">
                             ${team1.members.map(member => `<span class="member">${member}</span>`).join('')}
                         </div>
                         <span class="score">${finalScore.team1}</span>
                     </div>
-                    <div class="team ${match.winnerId === match.team2Id ? 'winner' : ''}">
+                    <div class="team ${t2WinClass}">
                         <h3>${team2.name}</h3>
                         <div class="team-members">
                             ${team2.members.map(member => `<span class="member">${member}</span>`).join('')}
@@ -896,76 +938,14 @@ async function refreshMatchesList() {
                         <span class="score">${finalScore.team2}</span>
                     </div>
                 </div>
+                ${chipStrip}
                 ${status === 'pending' ? `
                     <div class="match-actions">
                         <button onclick="startMatch('${match.id}')" class="action-btn">Start Match</button>
                         <button onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel</button>
                     </div>
                 ` : ''}
-                ${status === 'in_progress' ? `
-                    <div class="match-round-input">
-                        <h4>Round ${currentRound + 1}</h4>
-                        <form onsubmit="submitRound(event, '${match.id}')" class="round-form" oninput="recalcRoundScores('${match.id}')">
-                            <div class="round-inputs">
-                                <div class="team-inputs">
-                                    <h5>${team1.name}</h5>
-                                    <div class="form-group">
-                                        <label for="team1Promise${match.id}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                            <span>Promise Hand</span>
-                                            <label style="font-weight: normal; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-                                                <input type="checkbox" id="team1Blind${match.id}" onchange="recalcRoundScores('${match.id}')">
-                                                Blind (auto 7)
-                                            </label>
-                                        </label>
-                                        <input type="number" id="team1Promise${match.id}" min="4" max="13" required>
-                                        <div class="validation-hint">Must be between 4 and 13 (or check Blind for fixed 7)</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="team1Actual${match.id}">Actual Hand</label>
-                                        <input type="number" id="team1Actual${match.id}" min="0" max="13" required>
-                                        <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="team1Score${match.id}">Score (auto)</label>
-                                        <input type="number" id="team1Score${match.id}" readonly tabindex="-1">
-                                    </div>
-                                </div>
-                                <div class="team-inputs">
-                                    <h5>${team2.name}</h5>
-                                    <div class="form-group">
-                                        <label for="team2Promise${match.id}" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                            <span>Promise Hand</span>
-                                            <label style="font-weight: normal; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-                                                <input type="checkbox" id="team2Blind${match.id}" onchange="recalcRoundScores('${match.id}')">
-                                                Blind (auto 7)
-                                            </label>
-                                        </label>
-                                        <input type="number" id="team2Promise${match.id}" min="4" max="13" required>
-                                        <div class="validation-hint">Must be between 4 and 13 (or check Blind for fixed 7)</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="team2Actual${match.id}">Actual Hand</label>
-                                        <input type="number" id="team2Actual${match.id}" min="0" max="13" required>
-                                        <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="team2Score${match.id}">Score (auto)</label>
-                                        <input type="number" id="team2Score${match.id}" readonly tabindex="-1">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="validation-hint" style="margin-bottom: 20px;">
-                                <strong>Scoring rules (CLAUDE.md §4):</strong><br>
-                                • Under-promise (Actual &lt; Promise) → −(Promise × 10)<br>
-                                • Over-extension (Actual ≥ Promise × 2) → −(Promise × 10)<br>
-                                • Met with extras (Promise ≤ Actual &lt; Promise × 2) → (Promise × 10) + extras<br>
-                                • Blind (fixed promise 7): Actual ≥ 7 → +140; Actual &lt; 7 → −70
-                            </div>
-                            <button type="submit" class="action-btn">Submit Round</button>
-                            <button type="button" onclick="cancelMatch('${match.id}')" class="action-btn danger">Cancel Match</button>
-                        </form>
-                    </div>
-                ` : ''}
+                ${status === 'in_progress' ? GameBoard.renderInline(match, team1, team2) : ''}
                 ${rounds.length > 0 ? renderScorecard(match, team1, team2) : ''}
                 ${status === 'cancelled' ? `
                     <div class="match-summary">
@@ -981,52 +961,155 @@ async function refreshMatchesList() {
 
     mountSparklines();
     mountWormCharts();
+
+    // Wire the Game Board for every in-progress match now that its
+    // markup is in the DOM. wire() is idempotent.
+    if (typeof GameBoard !== 'undefined') {
+        matches.filter(m => m.status === 'in_progress')
+               .forEach(m => GameBoard.wire(m.id));
+    }
 }
 
 let _leaderboardSort = { key: 'rank', dir: 'asc' };
 
-function renderKpiTiles(kpis) {
+function renderKpiTiles(kpis, accuracy, blinds) {
+    const pct = v => `${Math.round((v || 0) * 100)}%`;
+    const signed = v => (v > 0 ? `+${v}` : String(v));
+
+    const accSub = accuracy?.tournament?.bid
+        ? `${accuracy.tournament.met}/${accuracy.tournament.bid} promises met`
+        : 'No rounds yet';
+    const blindSub = blinds?.tournament?.called
+        ? `${blinds.tournament.successes}/${blinds.tournament.called} hit · Net ${signed(blinds.tournament.netEV)}`
+        : 'No blinds called';
+
     const tiles = [
-        { label: 'Matches', value: kpis.totalMatches, accent: 'primary' },
-        { label: 'Rounds Played', value: kpis.totalRounds, accent: 'info' },
-        { label: 'Highest Round', value: kpis.highestRoundScore, accent: 'success' },
-        { label: 'Blinds Called', value: kpis.blindsCalled, accent: 'warning' },
+        { label: 'Matches', value: kpis.totalMatches, sub: `${kpis.totalRounds} rounds`, accent: 'primary' },
+        { label: 'Promise Accuracy', value: pct(accuracy?.tournament?.rate), sub: accSub, accent: 'info' },
+        { label: 'Highest Round', value: kpis.highestRoundScore, sub: 'best single round', accent: 'success' },
+        { label: 'Blinds Called', value: kpis.blindsCalled, sub: blindSub, accent: 'warning' },
     ];
     document.getElementById('kpiTiles').innerHTML = tiles.map(t => `
         <div class="kpi-tile kpi-${t.accent}">
             <div class="kpi-value">${t.value}</div>
             <div class="kpi-label">${t.label}</div>
+            ${t.sub ? `<div class="kpi-sub">${t.sub}</div>` : ''}
         </div>
     `).join('');
 }
 
-function renderLeaderboard(rows, form) {
+let _leaderboardCompact = false;
+
+function renderLeaderboard(rows, form, accuracy, teams) {
     const { key, dir } = _leaderboardSort;
-    const sorted = rows.slice().sort((a, b) => {
+    const compact = _leaderboardCompact;
+    const teamsById = new Map((teams || []).map(t => [String(t.id), t]));
+    // Hydrate rows with accuracy so the table can sort on it.
+    const enriched = rows.map(r => {
+        const a = accuracy?.byTeam?.[r.id];
+        return { ...r, accRate: a?.rate ?? 0, accMet: a?.met ?? 0, accBid: a?.bid ?? 0 };
+    });
+    const sorted = enriched.slice().sort((a, b) => {
         const av = a[key], bv = b[key];
         const cmp = typeof av === 'string' ? av.localeCompare(bv) : av - bv;
         return dir === 'asc' ? cmp : -cmp;
     });
+
+    const maxTotal = Math.max(1, ...sorted.map(r => Math.abs(r.totalScore)));
+    const maxAvg   = Math.max(1, ...sorted.map(r => Math.abs(r.avgScore)));
+
+    const table = document.getElementById('leaderboardTable');
+    if (table) table.classList.toggle('is-compact', compact);
+
     document.getElementById('leaderboardBody').innerHTML = sorted.map(r => {
         const rankClass = r.rank <= 3 ? `rank-${r.rank}` : '';
+        const tc = StatsUtils.teamColor(r.id);
         const formChips = (form.get(r.id) || []).map(o =>
             `<span class="form-chip form-${o.toLowerCase()}">${o}</span>`
         ).join('');
+        const accPct = Math.round(r.accRate * 100);
+        const accCell = r.accBid > 0
+            ? `<td class="acc-cell" title="${r.accMet} of ${r.accBid} promises met">
+                  <div class="acc-bar" style="--acc-pct: ${accPct}%"></div>
+                  <span class="acc-num">${accPct}%</span>
+               </td>`
+            : `<td class="acc-cell"><span class="form-empty">—</span></td>`;
+        const totalPct = Math.min(100, Math.round(Math.abs(r.totalScore) / maxTotal * 100));
+        const avgPct   = Math.min(100, Math.round(Math.abs(r.avgScore)   / maxAvg   * 100));
+        const totalCell = `<td class="lb-bar-cell">
+            <div class="lb-bar" style="--bar-pct:${totalPct}%; --bar-color:${tc}"></div>
+            <span class="lb-bar-num">${r.totalScore}</span>
+        </td>`;
+        const avgCell = `<td class="lb-bar-cell">
+            <div class="lb-bar" style="--bar-pct:${avgPct}%; --bar-color:${tc}"></div>
+            <span class="lb-bar-num">${r.avgScore.toFixed(0)}</span>
+        </td>`;
+        const rankBadge = r.rank <= 3
+            ? `<span class="rank-badge rank-badge-${r.rank}">${r.rank}</span>`
+            : `<span class="rank-plain">${r.rank}</span>`;
+        const sparkCell = `<td class="lb-spark-cell">
+            <canvas class="lb-spark" data-team-id="${r.id}" width="80" height="24" aria-hidden="true"></canvas>
+        </td>`;
+
         return `
-            <tr class="${rankClass}">
-                <td class="rank-cell">${r.rank}</td>
-                <td class="team-cell"><span class="team-dot" style="background:${StatsUtils.teamColor(r.id)}"></span>${r.name}</td>
-                <td>${r.played}</td>
-                <td class="num pos">${r.wins}</td>
-                <td class="num neg">${r.losses}</td>
+            <tr class="${rankClass}" style="--team-color:${tc}">
+                <td class="rank-cell">${rankBadge}</td>
+                <td class="team-cell">${(typeof TeamMark !== 'undefined') ? TeamMark.render(teamsById.get(r.id) || { id: r.id, name: r.name }, { size: 'sm' }) : `<span class="team-dot" style="background:${tc}"></span>`}${r.name}</td>
+                <td class="lb-col-played">${r.played}</td>
+                <td class="num pos lb-col-wins">${r.wins}</td>
+                <td class="num neg lb-col-losses">${r.losses}</td>
                 <td>${r.winPct.toFixed(1)}%</td>
                 <td class="pts">${r.points}</td>
-                <td>${r.totalScore}</td>
-                <td>${r.avgScore.toFixed(0)}</td>
+                <td class="lb-col-total">${totalCell}</td>
+                <td>${avgCell}</td>
+                ${accCell}
                 <td class="form-cell">${formChips || '<span class="form-empty">—</span>'}</td>
+                ${sparkCell}
             </tr>
         `;
     }).join('');
+
+    mountLeaderboardSparklines();
+}
+
+async function mountLeaderboardSparklines() {
+    const canvases = document.querySelectorAll('canvas.lb-spark');
+    if (!canvases.length) return;
+    const matches = await matchService.getAllMatches();
+    const dpr = window.devicePixelRatio || 1;
+    canvases.forEach(canvas => {
+        const teamId = canvas.dataset.teamId;
+        const series = StatsUtils.teamScoreSeries(teamId, matches).slice(-5);
+        const color = StatsUtils.teamColor(teamId);
+        const w = canvas.clientWidth || 80, h = canvas.clientHeight || 24;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+        if (series.length < 2) {
+            ctx.fillStyle = 'rgba(148,163,184,0.35)';
+            ctx.font = '11px -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('—', w / 2, h / 2);
+            return;
+        }
+        const ys = series.map(p => p.y);
+        const min = Math.min(...ys), max = Math.max(...ys);
+        const range = max - min || 1;
+        const stepX = w / (series.length - 1);
+        const yOf = v => h - 2 - ((v - min) / range) * (h - 4);
+        ctx.beginPath();
+        series.forEach((p, i) => {
+            const x = i * stepX, y = yOf(p.y);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+    });
 }
 
 function wireLeaderboardSort() {
@@ -1045,6 +1128,17 @@ function wireLeaderboardSort() {
             refreshStats();
         });
     });
+
+    const compactBtn = document.getElementById('leaderboardCompactToggle');
+    if (compactBtn && !compactBtn.dataset.wired) {
+        compactBtn.dataset.wired = '1';
+        compactBtn.addEventListener('click', () => {
+            _leaderboardCompact = !_leaderboardCompact;
+            compactBtn.setAttribute('aria-pressed', String(_leaderboardCompact));
+            compactBtn.classList.toggle('is-on', _leaderboardCompact);
+            refreshStats();
+        });
+    }
 }
 
 async function refreshStats() {
@@ -1057,12 +1151,15 @@ async function refreshStats() {
     const matches = await matchService.getAllMatches();
 
     renderHotStrip(teams, matches);
-    renderKpiTiles(StatsUtils.kpis(matches));
+    const accuracy = StatsUtils.promiseAccuracy(teams, matches);
+    const blinds = StatsUtils.blindEconomy(matches);
+    renderKpiTiles(StatsUtils.kpis(matches), accuracy, blinds);
     const rows = StatsUtils.leaderboard(teams, matches);
     const form = StatsUtils.recentForm(teams, matches, 5);
-    renderLeaderboard(rows, form);
+    renderLeaderboard(rows, form, accuracy, teams);
     wireLeaderboardSort();
     renderH2hMatrix(teams, matches);
+    if (typeof ScoringLegend !== 'undefined') ScoringLegend.mount();
 
     const recentMatches = await matchService.getRecentMatches();
     if (!recentMatches.length) {
@@ -1079,26 +1176,110 @@ async function refreshStats() {
         const team1 = teams.find(t => t.id === match.team1Id);
         const team2 = teams.find(t => t.id === match.team2Id);
         if (!team1 || !team2) return '';
-        
-        let activity = '';
-        switch (match.status) {
-            case 'completed':
-                activity = `Match completed: ${team1.name} ${match.finalScore.team1} - ${match.finalScore.team2} ${team2.name}`;
-                break;
-            case 'cancelled':
-                activity = `Match cancelled: ${team1.name} vs ${team2.name}`;
-                break;
-            default:
-                activity = `Match started: ${team1.name} vs ${team2.name}`;
-        }
-        
-        return `
-            <div class="activity-item">
-                <span class="activity-time">${DateUtils.formatDateTime(match.date)}</span>
-                <span class="activity-action">${activity}</span>
-            </div>
-        `;
+        return renderActivityCard(match, team1, team2);
     }).join('');
+    wireActivityCards();
+}
+
+function renderActivityCard(match, team1, team2) {
+    const c1 = StatsUtils.teamColor(team1.id);
+    const c2 = StatsUtils.teamColor(team2.id);
+    const status = match.status || 'pending';
+    const rounds = Array.isArray(match.rounds) ? match.rounds.length : 0;
+    const final = match.finalScore || { team1: 0, team2: 0 };
+
+    let scoreLine;
+    if (status === 'completed') {
+        const t1Win = String(match.winnerId) === String(team1.id);
+        const winName = t1Win ? team1.name : team2.name;
+        const loseName = t1Win ? team2.name : team1.name;
+        const winScore = t1Win ? final.team1 : final.team2;
+        const loseScore = t1Win ? final.team2 : final.team1;
+        scoreLine = `
+            <span class="winner-name">${escapeHtml(winName)}</span>
+            <span class="score-num">${winScore}</span>
+            <span class="score-sep">–</span>
+            <span class="score-num loser-name">${loseScore}</span>
+            <span class="loser-name">${escapeHtml(loseName)}</span>
+        `;
+    } else if (status === 'in_progress') {
+        scoreLine = `
+            <span>${escapeHtml(team1.name)}</span>
+            <span class="score-num">${final.team1}</span>
+            <span class="score-sep">–</span>
+            <span class="score-num">${final.team2}</span>
+            <span>${escapeHtml(team2.name)}</span>
+        `;
+    } else {
+        scoreLine = `
+            <span>${escapeHtml(team1.name)}</span>
+            <span class="activity-vs">vs</span>
+            <span>${escapeHtml(team2.name)}</span>
+        `;
+    }
+
+    const statusLabel = status.replace('_', ' ');
+    const meta = [
+        `<span class="activity-chip activity-chip-status-${status}">${statusLabel}</span>`,
+        rounds ? `<span class="activity-chip">${rounds} ${rounds === 1 ? 'round' : 'rounds'}</span>` : '',
+    ].filter(Boolean).join('');
+
+    return `
+        <button type="button" class="activity-card" data-match-id="${match.id}"
+                style="--band-1:${c1}; --band-2:${c2}">
+            <span class="activity-band" style="--band-color:${c1}"></span>
+            <span class="activity-band" style="--band-color:${c2}"></span>
+            <span class="activity-body">
+                <span class="activity-score-line">${scoreLine}</span>
+                <span class="activity-meta">${meta}</span>
+            </span>
+            <span class="activity-date">${DateUtils.formatDateTime(match.date)}</span>
+        </button>
+    `;
+}
+
+function renderMatchChips(summary) {
+    if (!summary || !summary.totalRounds) return '';
+    const chips = [];
+    chips.push(`<span class="mc-chip">${summary.totalRounds} ${summary.totalRounds === 1 ? 'round' : 'rounds'}</span>`);
+    if (summary.blinds > 0) {
+        chips.push(`<span class="mc-chip mc-chip-blinds">★ ${summary.blinds} blind${summary.blinds === 1 ? '' : 's'}</span>`);
+    }
+    if (summary.overExtensions > 0) {
+        chips.push(`<span class="mc-chip mc-chip-over">${summary.overExtensions} over-ext</span>`);
+    }
+    if (summary.biggestSwing && summary.biggestSwing.delta > 0) {
+        chips.push(`<span class="mc-chip mc-chip-swing">swing ${summary.biggestSwing.delta} (R${summary.biggestSwing.round})</span>`);
+    }
+    return `<div class="match-chips">${chips.join('')}</div>`;
+}
+
+function escapeHtml(s) {
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function wireActivityCards() {
+    document.querySelectorAll('.activity-card[data-match-id]').forEach(card => {
+        if (card.dataset.wired) return;
+        card.dataset.wired = '1';
+        card.addEventListener('click', () => {
+            const id = card.dataset.matchId;
+            showSection('matches');
+            requestAnimationFrame(() => {
+                const target = document.querySelector(`.match-card[data-match-id="${id}"]`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.classList.add('match-card-flash');
+                    setTimeout(() => target.classList.remove('match-card-flash'), 1600);
+                }
+            });
+        });
+    });
 }
 
 const _teamCharts = new Map();
@@ -1339,10 +1520,16 @@ async function viewTeamDetails(teamId, opponentId) {
         ? renderTeamMatchesTab(profile, allTeams, String(opponentId))
         : renderTeamOverview(profile, allTeams, matches);
 
+    const fullTeam = allTeams.find(t => String(t.id) === String(profile.id)) || { id: profile.id, name: profile.name };
+    const tdMark = (typeof TeamMark !== 'undefined')
+        ? TeamMark.render(fullTeam, { size: 'md' })
+        : `<span class="team-dot" style="background:${StatsUtils.teamColor(profile.id)}"></span>`;
     showModal(`
         <div class="team-details-modal">
             <div class="td-header" style="border-left: 4px solid ${StatsUtils.teamColor(profile.id)}; padding-left: 14px;">
-                <h2><span class="team-dot" style="background:${StatsUtils.teamColor(profile.id)}"></span>${profile.name}</h2>
+                <h2 style="display:flex; align-items:center; gap:12px;">${tdMark}<span>${profile.name}</span>
+                    <button type="button" id="tdEditTheme" class="action-btn secondary" style="margin-left:auto; font-size:12px; padding:6px 12px;">✎ Theme</button>
+                </h2>
                 <div class="td-meta">
                     ${profile.members.length ? profile.members.map(m => `<span class="td-member">${m}</span>`).join('') : '<span class="td-empty">No members listed</span>'}
                 </div>
@@ -1357,6 +1544,11 @@ async function viewTeamDetails(teamId, opponentId) {
     `);
 
     wireTeamTabs(profile, allTeams, matches, opponentId ? String(opponentId) : null);
+
+    const themeBtn = document.getElementById('tdEditTheme');
+    if (themeBtn && typeof ThemePicker !== 'undefined') {
+        themeBtn.addEventListener('click', () => ThemePicker.open(fullTeam));
+    }
 }
 
 async function formatActivity(activity) {
@@ -1402,8 +1594,15 @@ async function submitRound(event, matchId) {
         return;
     }
 
-    const team1Blind = !!document.getElementById(`team1Blind${matchId}`)?.checked;
-    const team2Blind = !!document.getElementById(`team2Blind${matchId}`)?.checked;
+    // Blind state comes from a checkbox in the legacy modal form but a hidden
+    // input (value "1"/"0") on the Game Board — .checked is always false there.
+    const readBlind = (team) => {
+        const el = document.getElementById(`${team}Blind${matchId}`);
+        if (!el) return false;
+        return el.type === 'checkbox' ? el.checked : el.value === '1';
+    };
+    const team1Blind = readBlind('team1');
+    const team2Blind = readBlind('team2');
 
     // Blind locks promise to 7 (CLAUDE.md §4.4).
     const team1Promise = team1Blind ? 7 : parseInt(document.getElementById(`team1Promise${matchId}`).value);
@@ -1431,9 +1630,24 @@ async function submitRound(event, matchId) {
             team2Score,
             { team1Blind, team2Blind }
         );
+
+        // Reveal: pull the now-updated match so we narrate from the latest
+        // round and have the right completed-status to trigger the winner moment.
+        const updated = await matchService.getMatchDetails(matchId);
+        const teams = [updated.teams?.team1, updated.teams?.team2].filter(Boolean);
+
+        if (typeof RoundReveal !== 'undefined') {
+            await RoundReveal.show(updated, teams);
+        }
+
         await refreshMatchesList();
         await refreshStats();
-        showNotification('Round added successfully!');
+
+        if (updated.status === 'completed' && typeof WinnerMoment !== 'undefined') {
+            WinnerMoment.show(updated, teams);
+        } else {
+            showNotification('Round added successfully!');
+        }
     } catch (error) {
         showNotification(error.message, 'error');
     }
@@ -1525,7 +1739,10 @@ async function recalculateTeamStats() {
                 'stats.points': 0,
                 'stats.totalScore': 0,
                 'stats.roundsWon': 0,
-                'stats.roundsLost': 0
+                'stats.roundsLost': 0,
+                // matchHistory must be cleared too: updateTeamStats re-appends an
+                // entry per match, so leaving it duplicates history on every recalc
+                'matchHistory': []
             };
             await teamService.firebaseService.updateTeam(team.id, resetStats);
         }
@@ -1558,6 +1775,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeTeamService(firebaseService);
     initializeMatchService(firebaseService);
 
+    if (typeof SpectatorPass !== 'undefined') SpectatorPass.init();
+
     await initializeApp(firebaseService);
 });
 
@@ -1580,10 +1799,12 @@ async function initializeApp(firebaseService) {
     showSection('teams');
 }
 
-// Live-recalculate the read-only Score fields whenever Promise/Actual/Blind
-// changes in the per-match round form. Scoring follows CLAUDE.md §4.
-// When Blind is checked for a team, its promise locks to 7 and that input
-// is disabled (CLAUDE.md §4.4).
+// Legacy live-recalculate for the older modal round form. The current
+// per-match Game Board (js/components/gameBoard.js) owns its own scoring
+// preview and writes hidden-input values directly, so this function should
+// be a no-op there. We detect the Game Board case by checking whether the
+// Blind input is a checkbox (legacy) vs a hidden input (Game Board).
+// Scoring follows CLAUDE.md §4.
 function recalcRoundScores(matchId) {
     for (const team of ['team1', 'team2']) {
         const blindEl = document.getElementById(`${team}Blind${matchId}`);
@@ -1591,6 +1812,8 @@ function recalcRoundScores(matchId) {
         const actualEl = document.getElementById(`${team}Actual${matchId}`);
         const scoreEl = document.getElementById(`${team}Score${matchId}`);
         if (!blindEl || !promiseEl || !actualEl || !scoreEl) return;
+        // Game Board owns these fields — bail out so we don't clobber them.
+        if (blindEl.type !== 'checkbox') return;
 
         const blind = blindEl.checked;
         if (blind) {
