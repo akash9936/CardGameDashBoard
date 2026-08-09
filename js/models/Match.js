@@ -155,8 +155,11 @@ class Match {
 
         this.status = 'completed';
         
-        // Determine winner
-        if (this.finalScore.team1 >= 500) {
+        // Determine winner: if both teams crossed 500 in the same round,
+        // the higher total wins; team1 wins an exact tie (deterministic fallback)
+        if (this.finalScore.team1 >= 500 && this.finalScore.team2 >= 500) {
+            this.winnerId = this.finalScore.team2 > this.finalScore.team1 ? this.team2Id : this.team1Id;
+        } else if (this.finalScore.team1 >= 500) {
             this.winnerId = this.team1Id;
         } else if (this.finalScore.team2 >= 500) {
             this.winnerId = this.team2Id;

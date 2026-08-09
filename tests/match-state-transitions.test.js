@@ -267,7 +267,7 @@ describe('Match State Transition Tests', () => {
             expect(match.status).toBe('cancelled');
         });
 
-        test('Simultaneous winner scenario - first to 500 wins', () => {
+        test('Only team 1 crosses 500 - team 1 wins', () => {
             match.start();
             
             // Build up scores close to 500

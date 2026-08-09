@@ -190,7 +190,12 @@ class MatchService {
 
         if (updatedFinalScore.team1 >= 500 || updatedFinalScore.team2 >= 500) {
             updates.status = 'completed';
-            updates.winnerId = updatedFinalScore.team1 >= 500 ? match.team1Id : match.team2Id;
+            // Simultaneous 500: higher total wins; team1 wins an exact tie
+            if (updatedFinalScore.team1 >= 500 && updatedFinalScore.team2 >= 500) {
+                updates.winnerId = updatedFinalScore.team2 > updatedFinalScore.team1 ? match.team2Id : match.team1Id;
+            } else {
+                updates.winnerId = updatedFinalScore.team1 >= 500 ? match.team1Id : match.team2Id;
+            }
             
             // Update team statistics when match is completed
             await this.updateTeamStats(match.team1Id, match.team2Id, { ...updates, id: matchId });

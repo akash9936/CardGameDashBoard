@@ -48,7 +48,7 @@ These rules are **locked**. Treat them as a contract.
 | Draws | **Not possible** (500-point rule guarantees a winner) |
 | Match states | `pending` → `in_progress` → `completed` / `cancelled` |
 | Cancellation | Allowed from any state; requires a reason |
-| Simultaneous 500 | First team processed wins (deterministic) |
+| Simultaneous 500 | **Higher total score wins**; if totals are exactly equal, team1 (first team processed) wins (deterministic) |
 
 ---
 
@@ -177,7 +177,7 @@ Evaluate cases in this order; the first match wins:
 | Round history | Full record of every round (promises, actuals, scores, timestamp) |
 | Running totals | Cumulative score tracked per team |
 | Round won/lost | The team with the **higher** round score wins that round (scoring is "higher is better") |
-| Win check | Performed after each round; first team to **≥ 500** wins immediately |
+| Win check | Performed after each round; first team to **≥ 500** wins immediately. If both teams reach ≥ 500 in the same round, the team with the **higher total score** wins (team1 on an exact tie) |
 
 ---
 
