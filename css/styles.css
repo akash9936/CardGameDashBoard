@@ -3485,3 +3485,279 @@ body.spectator-pass .team-mark-lg { width: 144px; height: 144px; font-size: 144p
     margin: var(--s-2) 0 var(--s-3);
     filter: drop-shadow(0 6px 16px rgb(0 0 0 / 0.45));
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   AI Commentary layer (ai-commentary.md) — pundit line, win meter, ticker,
+   settings dialog. Presentation-only; degrades to nothing without a key.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Pundit line — the 4th broadcast-strip line, fades in on arrival ─────── */
+.broadcast-strip .bs-pundit {
+    animation: aiPunditIn var(--dur-emph) var(--ease-out) both;
+}
+
+.broadcast-strip .bs-pundit .bs-text {
+    color: var(--blind-gold);
+    font-weight: 500;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.broadcast-strip .bs-pundit .bs-label {
+    color: var(--blind-gold);
+    opacity: 0.75;
+}
+
+@keyframes aiPunditIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ─── Win-probability meter (live match cards) ─────────────────────────────── */
+.win-meter {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-2) var(--s-4);
+    margin-bottom: var(--s-3);
+    background: var(--bg-glass);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-2);
+}
+
+.win-meter .wm-pct {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.win-meter .wm-bar {
+    display: flex;
+    height: 8px;
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    background: var(--border-strong);
+}
+
+.win-meter .wm-fill {
+    height: 100%;
+    transition: width var(--dur-emph) var(--ease-out-expo);
+}
+
+.win-meter .wm-caption {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--fg-dim);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ─── Fun-facts ticker (Statistics page) ───────────────────────────────────── */
+.ai-ticker {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    margin-bottom: var(--s-4);
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur-soft));
+    -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-2);
+    min-height: 46px;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .ai-ticker { background: var(--bg-panel); }
+}
+
+.ai-ticker-icon {
+    flex: 0 0 auto;
+    font-size: 18px;
+}
+
+.ai-ticker-text {
+    color: var(--fg-muted-2);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.ai-ticker-fade {
+    animation: aiTickerFade 400ms var(--ease-out) both;
+}
+
+@keyframes aiTickerFade {
+    from { opacity: 0; transform: translateY(3px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ─── AI settings dialog ───────────────────────────────────────────────────── */
+.ai-settings h2 { margin-bottom: var(--s-3); }
+
+.ai-settings .ai-settings-sub {
+    color: var(--fg-muted-2);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: var(--s-3);
+}
+
+.ai-settings .ai-settings-sub a { color: var(--info); }
+
+.ai-settings .ai-settings-status {
+    font-size: 13px;
+    margin-bottom: var(--s-3);
+}
+
+.ai-settings .ai-settings-error {
+    color: var(--danger-2);
+    font-size: 13px;
+    margin-bottom: var(--s-3);
+}
+
+.ai-settings .ai-settings-row {
+    display: flex;
+    gap: var(--s-2);
+}
+
+.ai-settings .ai-settings-row input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--s-2) var(--s-3);
+    background: var(--bg-panel);
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-1);
+    font-family: monospace;
+    font-size: 13px;
+}
+
+@media (max-width: 640px) {
+    .win-meter { gap: var(--s-2); padding: var(--s-2) var(--s-3); }
+    .ai-ticker-text { font-size: 13px; }
+}
+
+/* ─── Voice controls inside the AI settings dialog ─────────────────────────── */
+.ai-voice-panel { margin-bottom: var(--s-4); }
+
+.ai-voice-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-bottom: var(--s-2);
+}
+
+.ai-voice-head h3 { margin: 0; font-size: 15px; }
+
+.ai-switch {
+    flex: 0 0 auto;
+    padding: 4px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-pill);
+    background: var(--bg-panel);
+    color: var(--fg-muted-2);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+}
+
+.ai-switch.on {
+    background: var(--success);
+    border-color: var(--success);
+    color: #04231a;
+}
+
+.ai-field {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    margin-bottom: var(--s-3);
+}
+
+.ai-field > span {
+    flex: 0 0 80px;
+    color: var(--fg-muted-2);
+    font-size: 13px;
+}
+
+.ai-field select,
+.ai-field input[type="range"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.ai-field select {
+    padding: var(--s-2) var(--s-3);
+    background: var(--bg-panel);
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-1);
+    font-size: 13px;
+}
+
+.ai-field output {
+    flex: 0 0 46px;
+    color: var(--fg);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.ai-field-block { align-items: flex-start; }
+
+.ai-field-hint {
+    margin: -8px 0 var(--s-3) 92px;
+    color: var(--fg-dim);
+    font-size: 12px;
+}
+
+.ai-mood-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+}
+
+.ai-mood {
+    padding: 6px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-pill);
+    background: var(--bg-panel);
+    color: var(--fg-muted-2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-out);
+}
+
+.ai-mood:hover { border-color: var(--info); }
+
+.ai-mood.active {
+    background: var(--info);
+    border-color: var(--info);
+    color: #05131f;
+    font-weight: 600;
+}
+
+.ai-preview-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+}
+
+.ai-divider {
+    border: 0;
+    border-top: 1px solid var(--border-strong);
+    margin: var(--s-4) 0;
+}
+
+.ai-settings h3 { font-size: 15px; margin: 0 0 var(--s-2); }
+
+@media (max-width: 560px) {
+    .ai-field { flex-wrap: wrap; }
+    .ai-field > span { flex-basis: 100%; }
+    .ai-field-hint { margin-left: 0; }
+}

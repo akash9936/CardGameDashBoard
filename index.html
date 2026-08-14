@@ -58,7 +58,11 @@
             <section id="matchesSection" class="dashboard-section">
                 <div class="section-header">
                     <h2>Match History</h2>
-                    <button id="addMatchBtn" class="action-btn">+ New Match</button>
+                    <div class="header-buttons">
+                        <button id="audioToggleBtn" class="action-btn secondary" title="Turn spoken commentary on or off" aria-pressed="false">🔇 Audio</button>
+                        <button id="aiSettingsBtn" class="action-btn secondary" title="Commentary settings — language, voice, speed, mood">🎙️ AI</button>
+                        <button id="addMatchBtn" class="action-btn">+ New Match</button>
+                    </div>
                 </div>
                 <div id="matchesList" class="list-container">
                     <!-- Matches will be dynamically added here -->
@@ -73,6 +77,8 @@
                 </div>
 
                 <div id="hotStrip" class="hot-strip"></div>
+
+                <div id="aiFactsTicker"></div>
 
                 <div id="kpiTiles" class="kpi-tiles">
                     <!-- KPI tiles injected here -->
@@ -146,6 +152,7 @@
     <script src="js/utils/dateUtils.js"></script>
     <script src="js/utils/stats.js"></script>
     <script src="js/utils/narrate.js"></script>
+    <script src="js/utils/factsEngine.js"></script>
     <script src="js/utils/animate.js"></script>
     <script src="js/services/firebaseService.js"></script>
     <script src="js/services/migrationService.js"></script>
@@ -154,7 +161,10 @@
     <script src="js/utils/storage.js"></script>
     <script src="js/services/teamService.js"></script>
     <script src="js/services/matchService.js"></script>
+    <script src="js/services/groqService.js"></script>
     <script src="js/components/broadcastStrip.js"></script>
+    <script src="js/components/aiCommentary.js"></script>
+    <script src="js/components/audioCommentary.js"></script>
     <script src="js/components/roundReveal.js"></script>
     <script src="js/components/winnerMoment.js"></script>
     <script src="js/components/gameBoard.js"></script>

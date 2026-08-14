@@ -51,6 +51,32 @@ document.querySelectorAll('.sticky-nav-btn').forEach(btn => {
 
 // Recalculate Stats Button
 elements.recalculateStatsBtn.addEventListener('click', recalculateStats);
+document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
+    if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
+});
+
+// 🔊 Audio toggle — spoken commentary (ai-commentary.md § Spoken commentary).
+function syncAudioToggleButton() {
+    const btn = document.getElementById('audioToggleBtn');
+    if (!btn || typeof AudioCommentary === 'undefined') return;
+    if (!AudioCommentary.isSupported()) {
+        btn.style.display = 'none';
+        return;
+    }
+    const on = AudioCommentary.isEnabled();
+    btn.textContent = on ? '🔊 Audio' : '🔇 Audio';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('audio-on', on);
+}
+document.getElementById('audioToggleBtn')?.addEventListener('click', () => {
+    if (typeof AudioCommentary === 'undefined') return;
+    AudioCommentary.toggle();
+    syncAudioToggleButton();
+    showNotification(AudioCommentary.isEnabled()
+        ? 'Commentary on.'
+        : 'Commentary off.');
+});
+syncAudioToggleButton();
 
 // Fix Stats Button
 elements.fixStatsBtn.addEventListener('click', recalculateStats);
@@ -968,6 +994,12 @@ async function refreshMatchesList() {
         matches.filter(m => m.status === 'in_progress')
                .forEach(m => GameBoard.wire(m.id));
     }
+
+    // AI Commentary layer (ai-commentary.md): win meters on live cards
+    // (always) + pundit lines on the broadcast strips (when a key is set).
+    if (typeof AICommentary !== 'undefined') {
+        AICommentary.decorateMatchCards(matches, teams);
+    }
 }
 
 let _leaderboardSort = { key: 'rank', dir: 'asc' };
@@ -1151,6 +1183,10 @@ async function refreshStats() {
     const matches = await matchService.getAllMatches();
 
     renderHotStrip(teams, matches);
+    // Fun-facts ticker (ai-commentary.md) — computed nuggets, no LLM needed.
+    if (typeof AICommentary !== 'undefined') {
+        AICommentary.mountTicker(teams, matches);
+    }
     const accuracy = StatsUtils.promiseAccuracy(teams, matches);
     const blinds = StatsUtils.blindEconomy(matches);
     renderKpiTiles(StatsUtils.kpis(matches), accuracy, blinds);
@@ -1619,6 +1655,14 @@ async function submitRound(event, matchId) {
     const team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
     const team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
 
+    // Snapshot the pre-round state so the audio layer can tell what this round
+    // changed (lead flips, match point crossed) — ai-commentary.md § Spoken.
+    let beforeRound = null;
+    if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+        try { beforeRound = await matchService.getMatchDetails(matchId); }
+        catch (e) { beforeRound = null; }
+    }
+
     try {
         await matchService.addRound(
             matchId,
@@ -1638,6 +1682,14 @@ async function submitRound(event, matchId) {
 
         if (typeof RoundReveal !== 'undefined') {
             await RoundReveal.show(updated, teams);
+        }
+
+        // Narrate the round. Fire-and-forget: the table shouldn't wait on
+        // speech synthesis, and audio never blocks the round submission.
+        if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+            matchService.getAllMatches()
+                .then(all => AudioCommentary.announceRound(updated, beforeRound, teams, all))
+                .catch(() => { /* audio never blocks the round */ });
         }
 
         await refreshMatchesList();
@@ -1665,6 +1717,17 @@ async function startMatch(matchId) {
     
     try {
         await matchService.startMatch(matchId);
+
+        // Opening line — sets the scene from head-to-head, streaks and odds.
+        if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+            Promise.all([matchService.getMatchDetails(matchId), matchService.getAllMatches()])
+                .then(([detail, all]) => {
+                    const teams = [detail.teams?.team1, detail.teams?.team2].filter(Boolean);
+                    return AudioCommentary.announceMatchStart(detail, teams, all);
+                })
+                .catch(() => { /* audio never blocks the match */ });
+        }
+
         await refreshMatchesList();
         showNotification('Match started successfully!');
     } catch (error) {
