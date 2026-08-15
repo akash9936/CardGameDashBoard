@@ -4120,3 +4120,12 @@ body.spectator-pass .team-mark-lg { width: 144px; height: 144px; font-size: 144p
     .personality-card { padding: 18px; }
     .pc-grid { grid-template-columns: 1fr; }
 }
+
+/* When the deck of facts next turns over. */
+.sf-rotate-note {
+    text-align: center;
+    margin: 10px 0 0;
+    font-size: 0.76rem;
+    font-style: italic;
+    color: var(--text-muted);
+}

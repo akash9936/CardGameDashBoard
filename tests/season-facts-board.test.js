@@ -79,8 +79,11 @@ describe('facts are fixed, tails are not', () => {
         const { Board, state } = load();
         Board.mount(); const a = factsIn(state.html);
         Board.mount(); const b = factsIn(state.html);
+        // Which 8 lead depends on the 2-hour slot, but two mounts inside the
+        // same slot must be identical — only the tails reroll.
         expect(a).toEqual(b);
-        expect(a[0]).toBe('Deterministic fact number 0.');
+        expect(a).toHaveLength(Board.PAGE_SIZE);
+        for (const text of a) expect(text).toMatch(/^Deterministic fact number \d+\.$/);
     });
 
     test('tails change between mounts — a fresh joke each reload', () => {
@@ -164,5 +167,82 @@ describe('degradation and settings', () => {
             expect(mild.every(p => p.intensity <= 1)).toBe(true);
             expect(Board.roastIntensity()).toBe(1);
         }
+    });
+});
+
+describe('the deck re-deals every 2 hours', () => {
+    const HOUR = 60 * 60 * 1000;
+    const lead = (Board, facts, slot) =>
+        Board.rotatedFacts(facts, slot).slice(0, Board.PAGE_SIZE).map(f => f.id);
+
+    test('the rotation window is two hours', () => {
+        const { Board } = load();
+        expect(Board.ROTATE_MS).toBe(2 * HOUR);
+    });
+
+    test('the slot only advances on the 2-hour boundary', () => {
+        const { Board } = load();
+        const base = Date.parse('2026-08-15T10:00:00.000Z');
+        expect(Board.currentSlot(base)).toBe(Board.currentSlot(base + 30 * 60000));
+        expect(Board.currentSlot(base)).toBe(Board.currentSlot(base + 119 * 60000));
+        expect(Board.currentSlot(base + 2 * HOUR)).toBe(Board.currentSlot(base) + 1);
+    });
+
+    test('the same slot always deals the same board', () => {
+        const { Board } = load();
+        const facts = global.SeasonFacts.facts;
+        expect(lead(Board, facts, 500)).toEqual(lead(Board, facts, 500));
+    });
+
+    test('a later slot leads with a different set', () => {
+        const { Board } = load();
+        const facts = global.SeasonFacts.facts;
+        // Across a handful of consecutive windows the lead set must move —
+        // identical leads everywhere would mean the seed is being ignored.
+        const seen = new Set();
+        for (let s = 0; s < 6; s++) seen.add(lead(Board, facts, s).join('|'));
+        expect(seen.size).toBeGreaterThan(1);
+    });
+
+    test('rotation reorders without ever losing or duplicating a fact', () => {
+        const { Board } = load();
+        const facts = global.SeasonFacts.facts;
+        for (const slot of [0, 1, 42, 9999]) {
+            const out = Board.rotatedFacts(facts, slot);
+            expect(out).toHaveLength(facts.length);
+            expect(new Set(out.map(f => f.id)).size).toBe(facts.length);
+        }
+    });
+
+    test('the pack itself is never mutated', () => {
+        const { Board } = load();
+        const facts = global.SeasonFacts.facts;
+        const before = facts.map(f => f.id);
+        Board.rotatedFacts(facts, 7);
+        expect(facts.map(f => f.id)).toEqual(before);
+    });
+
+    test('every fact still reaches the lead position across enough windows', () => {
+        // A shuffle that never surfaces some facts would defeat the point.
+        const { Board } = load();
+        const facts = global.SeasonFacts.facts;
+        const surfaced = new Set();
+        for (let s = 0; s < 200; s++) for (const id of lead(Board, facts, s)) surfaced.add(id);
+        expect(surfaced.size).toBe(facts.length);
+    });
+
+    test('the countdown reads in plain Hinglish and never goes negative', () => {
+        const { Board } = load();
+        const base = Date.parse('2026-08-15T10:00:00.000Z');
+        expect(Board.msUntilNextSlot(base + 30 * 60000)).toBeGreaterThan(0);
+        expect(Board.untilPhrase(base + 119 * 60000)).toMatch(/minute mein/);
+        expect(Board.untilPhrase(base + 5 * 60000)).toMatch(/ghante mein/);
+    });
+
+    test('the board tells the reader when the deck turns over', () => {
+        const { Board, state } = load();
+        Board.mount();
+        expect(state.html).toMatch(/sf-rotate-note/);
+        expect(state.html).toMatch(/Naye facts/);
     });
 });

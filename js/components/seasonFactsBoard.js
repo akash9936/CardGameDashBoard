@@ -34,6 +34,63 @@ const SeasonFactsBoard = (() => {
     // rest of the page off-screen — the first batch has to earn the click.
     const PAGE_SIZE = 8;
 
+    // ─── Rotating which facts lead ───────────────────────────────────────────
+    // The pack holds ~28 facts but only PAGE_SIZE are visible without a click,
+    // so the same 8 would greet you forever. Every ROTATE_MS the deck is
+    // re-dealt: the facts themselves never change (they are records), but a
+    // different subset leads.
+    //
+    // The order is a DETERMINISTIC shuffle seeded by the slot number, not
+    // Math.random. That matters for three reasons:
+    //   - everyone opening the page in the same window sees the same board,
+    //     so "did you see the tilt one?" works across the table;
+    //   - reloading twice inside a window is stable — only the tails reroll,
+    //     which is the contract set when tails moved to render time;
+    //   - it needs no storage and no server.
+    const ROTATE_MS = 2 * 60 * 60 * 1000;      // 2 hours
+
+    function currentSlot(now = Date.now()) {
+        return Math.floor(now / ROTATE_MS);
+    }
+
+    // mulberry32 — same generator the tests and the facts script use.
+    function seededRng(seed) {
+        let a = (seed >>> 0) || 1;
+        return function () {
+            a |= 0; a = (a + 0x6D2B79F5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+
+    // Fisher-Yates against the seeded stream. Returns a new array; the pack is
+    // never mutated, so `facts` stays in generation order for anything else
+    // reading it.
+    function rotatedFacts(facts, slot = currentSlot()) {
+        const out = facts.slice();
+        const rng = seededRng(slot + 1);
+        for (let i = out.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [out[i], out[j]] = [out[j], out[i]];
+        }
+        return out;
+    }
+
+    // "in about 40 minutes" — so the footer can say when the deck turns over.
+    function msUntilNextSlot(now = Date.now()) {
+        return ROTATE_MS - (now % ROTATE_MS);
+    }
+
+    // Human phrasing for that countdown. Rounded, never a live ticker — the
+    // exact second is noise, and a ticking clock on a stats page is a nuisance.
+    function untilPhrase(now = Date.now()) {
+        const mins = Math.max(1, Math.round(msUntilNextSlot(now) / 60000));
+        if (mins >= 90) return 'do ghante mein';
+        if (mins >= 60) return 'ek ghante mein';
+        return `${mins} minute mein`;
+    }
+
     // ─── Fresh tails on every load ───────────────────────────────────────────
     // The FACTS are fixed — they are records, and a record that changes is a
     // bug. The Hinglish tail is not a fact, so it is re-picked at render time:
@@ -120,7 +177,8 @@ const SeasonFactsBoard = (() => {
             data.generatedAt ? `updated ${formatDate(data.generatedAt)}` : '',
         ].filter(Boolean).join(' · ');
 
-        const facts = data.facts;
+        // Re-dealt every ROTATE_MS so a different 8 lead the board.
+        const facts = rotatedFacts(data.facts);
         // A fresh ledger per mount: this render's 28 tails are distinct from
         // each other, but unrelated to the last render's.
         _ledger = null;
@@ -145,6 +203,7 @@ const SeasonFactsBoard = (() => {
                             Aur Dikhao Bhai, Majaa aa raha h — ${facts.length - PAGE_SIZE} baaki
                         </button>
                     </div>
+                    <p class="sf-rotate-note">Naye facts ${escape(untilPhrase())}.</p>
                 ` : ''}
             </div>
         `;
@@ -207,6 +266,9 @@ const SeasonFactsBoard = (() => {
         // sharpness without a rebuild: SeasonFactsBoard.setRoastIntensity(3).
         roastIntensity, setRoastIntensity,
         freshTail,
+        // Rotation internals — exposed for tests and for a console peek at
+        // which slot is live: SeasonFactsBoard.currentSlot().
+        rotatedFacts, currentSlot, msUntilNextSlot, untilPhrase, ROTATE_MS,
     };
 })();
 
