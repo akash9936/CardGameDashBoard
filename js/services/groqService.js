@@ -223,6 +223,23 @@ const GroqService = (() => {
     function keys() { return _readKeys(); }
     function keyCount() { return _readKeys().length; }
 
+    // Per-key status, for the settings dialog. Returned as data rather than
+    // rendered strings so the UI owns the wording — and so the dialog can never
+    // disagree with the rotation, since both read the same predicate.
+    function keyStatuses() {
+        return _readKeys().map(key => {
+            const st = _stateFor(key);
+            return {
+                key,
+                ready: _usable(key),
+                rejected: st.rejected,
+                minutesLeft: st.limitedUntil > _now()
+                    ? Math.ceil((st.limitedUntil - _now()) / 60_000)
+                    : 0,
+            };
+        });
+    }
+
     // How many keys still have quota. Drives the settings dialog's status line.
     function usableKeyCount() { return _readKeys().filter(_usable).length; }
 
@@ -570,8 +587,7 @@ const GroqService = (() => {
             }
         }
 
-        const key = getKey();
-        if (!key) return null;
+        if (!getKey()) return null;
         if (inflight.has(inflightKey)) return null;   // one at a time per match
         inflight.add(inflightKey);
 
@@ -580,37 +596,69 @@ const GroqService = (() => {
         const timer = controller ? setTimeout(() => controller.abort(), deadline) : null;
 
         try {
-            const res = await _fetch(ENDPOINT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${key}`,
-                },
-                body: JSON.stringify({
-                    model: MODEL,
-                    temperature: spoken ? 0.9 : 0.8,
-                    // Enough room to finish a sentence; length is enforced
-                    // below by trimming at a sentence boundary, because the
-                    // model treats word limits as a suggestion and a hard
-                    // token cap truncates mid-word ("plumm…"), which is worse
-                    // out loud than a long line.
-                    max_tokens: spoken ? 120 : 90,
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: JSON.stringify(packet) },
-                    ],
-                }),
-                signal: controller ? controller.signal : undefined,
-            });
+            // Try each usable key in turn. A 401 or 429 benches that key and
+            // moves to the next account rather than giving up — the whole point
+            // of holding several free-tier keys.
+            //
+            // The deadline is shared across attempts on purpose: the table is
+            // waiting on a spoken line, and three sequential 2.5s timeouts is
+            // worse than one silent round. A key that times out is not benched
+            // (the failure is the network, not the account).
+            let res = null;
+            let usedKey = null;
+            for (const candidate of _readKeys()) {
+                if (!_usable(candidate)) continue;
+                usedKey = candidate;
+                res = await _fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${candidate}`,
+                    },
+                    body: JSON.stringify({
+                        model: MODEL,
+                        temperature: spoken ? 0.9 : 0.8,
+                        // Enough room to finish a sentence; length is enforced
+                        // below by trimming at a sentence boundary, because the
+                        // model treats word limits as a suggestion and a hard
+                        // token cap truncates mid-word ("plumm…"), which is worse
+                        // out loud than a long line.
+                        max_tokens: spoken ? 120 : 90,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: JSON.stringify(packet) },
+                        ],
+                    }),
+                    signal: controller ? controller.signal : undefined,
+                });
 
-            if (!res.ok) {
-                if (res.status === 401) keyRejected = true;
-                if (res.status === 400 || res.status === 404) modelBroken = true;
-                // Quota spent: start a cooldown so the next render doesn't
-                // immediately try again, and so the UI can say why it is quiet.
-                if (res.status === 429) _noteRateLimited(res);
-                return null;   // everything else: skip this round quietly
+                if (res.ok) break;
+
+                // 401: this account's key is bad. Bench it permanently for the
+                // session and try the next one.
+                if (res.status === 401) {
+                    _stateFor(candidate).rejected = true;
+                    keyRejected = true;
+                    continue;
+                }
+                // 429: this account's quota is spent. Bench it until its reset
+                // and try the next account, which has its own quota.
+                if (res.status === 429) {
+                    _noteRateLimited(res, candidate);
+                    continue;
+                }
+                // 400/404 is the model or the request, not the key — rotating
+                // would just repeat the same failure on every account.
+                if (res.status === 400 || res.status === 404) {
+                    modelBroken = true;
+                }
+                break;   // anything else: skip this round quietly
             }
+
+            if (!res || !res.ok) return null;
+            // A key that answered is working: clear any stale rejection so a
+            // transient 401 does not bench it for the rest of the session.
+            if (usedKey) _stateFor(usedKey).rejected = false;
 
             const data = await res.json();
             let line = data?.choices?.[0]?.message?.content;
@@ -661,6 +709,7 @@ const GroqService = (() => {
     function _reset() {
         liveCache.clear();
         inflight.clear();
+        keyState.clear();
         keyRejected = false;
         modelBroken = false;
         rateLimitedUntil = 0;
@@ -669,6 +718,7 @@ const GroqService = (() => {
     return {
         commentate, getCachedRecap,
         getKey, setKey, hasKey, wasKeyRejected,
+        keys, keyCount, usableKeyCount, keyStatuses, addKey, removeKey,
         isRateLimited, rateLimitMinutesLeft,
         MODEL, ENDPOINT, TIMEOUT_MS, SPOKEN_TIMEOUT_MS, SYSTEM_PROMPT, SPOKEN_PROMPT,
         _setFetch, _setStorage, _setNow, _reset,
