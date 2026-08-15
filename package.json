@@ -38,7 +38,11 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "dump-db": "node scripts/dump-db.js",
+    "season-facts": "node scripts/season-facts.js",
+    "season-facts:preview": "node scripts/season-facts.js --dry-run",
+    "season-facts:live": "node scripts/dump-db.js && node scripts/season-facts.js"
   },
   "keywords": [],
   "author": "",
