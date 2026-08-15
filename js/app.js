@@ -92,10 +92,28 @@ function announceQuotaIfExhausted() {
     const now = Date.now();
     if (now < _quotaNoticeUntil) return;
     _quotaNoticeUntil = now + mins * 60_000;
+
+    // isRateLimited() is true only when EVERY key in the ring is spent, so
+    // reaching here means the rotation is exhausted, not just one account.
+    const total = GroqService.keyCount ? GroqService.keyCount() : 1;
+    const which = total > 1 ? `All ${total} Groq keys are` : 'Groq quota is';
     showNotification(
-        `Groq quota used up — AI lines paused ~${mins} min. Using built-in phrasing. `
-        + 'Add a new key in ✨ AI settings, or turn commentary off.',
+        `${which} used up — AI lines paused ~${mins} min. Using built-in phrasing. `
+        + 'Add another key in ✨ AI settings, or turn commentary off.',
         'error');
+
+    // Offer the key prompt directly rather than making the user go find the
+    // settings button — this is the one moment they actually need it. Delayed
+    // so the notification is readable first, and skipped if a modal is already
+    // open (a round reveal or the winner moment owns the screen).
+    setTimeout(() => {
+        if (!GroqService.isRateLimited()) return;   // a key came back meanwhile
+        // The modal is toggled via style.display, not a class — check that,
+        // and never steal the screen from a reveal or the winner moment.
+        const modal = document.getElementById('modal');
+        if (modal && modal.style.display === 'block') return;
+        if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
+    }, 2500);
 }
 
 // Fix Stats Button
@@ -497,7 +515,17 @@ async function refreshTeamsList() {
         _firstLoad.teams = false;
     }
     const teams = await teamService.getAllTeams();
-    console.log('Teams retrieved:', teams);
+    // Match history drives the derived stats below. The teams page must still
+    // render if this fails or the service is not up yet — cards then show
+    // zeros, which is what they did before deriving anything.
+    let allMatches = [];
+    try {
+        if (typeof matchService !== 'undefined' && matchService) {
+            allMatches = await matchService.getAllMatches();
+        }
+    } catch (e) {
+        console.warn('Teams page: match history unavailable, stats will read 0', e);
+    }
 
     if (!teams.length) {
         elements.teamsList.innerHTML = emptyState({
@@ -510,21 +538,38 @@ async function refreshTeamsList() {
         return;
     }
 
-    elements.teamsList.innerHTML = teams.map(team => {
-        // Ensure stats object exists and has default values
-        const stats = team.stats || {
-            matchesPlayed: 0,
-            wins: 0,
-            losses: 0,
-            draws: 0,
-            points: 0,
-            totalScore: 0,
-            roundsWon: 0,
-            roundsLost: 0
+    // Stats are DERIVED from match history, not read from team.stats
+    // (CLAUDE.md §7: "computed from match history"). The stored copies have
+    // drifted badly — KorbaGang's stored matchesPlayed reads 47 against 61
+    // actually played — which is why the cards showed zeros. Deriving on read
+    // is also what redesign.md #56 asks for.
+    const derived = new Map(
+        StatsUtils.leaderboard(teams, allMatches).map(row => [String(row.id), row])
+    );
+
+    // Busiest team first: the people who actually play should top the page.
+    // Ties break on wins, then name, so the order is stable across renders.
+    const ordered = teams.slice().sort((a, b) => {
+        const ra = derived.get(String(a.id));
+        const rb = derived.get(String(b.id));
+        return (rb ? rb.played : 0) - (ra ? ra.played : 0)
+            || (rb ? rb.wins : 0) - (ra ? ra.wins : 0)
+            || String(a.name).localeCompare(String(b.name));
+    });
+
+    elements.teamsList.innerHTML = ordered.map(team => {
+        const row = derived.get(String(team.id));
+        const stats = {
+            matchesPlayed: row ? row.played : 0,
+            wins: row ? row.wins : 0,
+            losses: row ? row.losses : 0,
+            draws: 0,                       // CLAUDE.md §2: draws are impossible
+            points: row ? row.points : 0,
+            totalScore: row ? row.totalScore : 0,
+            roundsWon: row ? row.roundsWon : 0,
+            roundsLost: row ? row.roundsLost : 0,
         };
-        
-        console.log(`Team ${team.name} stats:`, stats);
-        
+
         const mark = (typeof TeamMark !== 'undefined')
             ? TeamMark.render(team, { size: 'md' })
             : '';
