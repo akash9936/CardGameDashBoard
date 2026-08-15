@@ -1250,7 +1250,23 @@ function escapeHtml(s) {
  */
 function renderSessionHeader(group) {
     const s = group.summary;
-    const dateLabel = DateUtils.formatDate(new Date(group.matches[0].date));
+    // Label the NIGHT, not the first match's calendar date.
+    //
+    // A session runs 06:00 to 06:00, so games played after midnight belong to
+    // the evening before. Labelling from match.date therefore printed the same
+    // date on two adjacent groups — seen live on 02/08/2026, where the 00:03
+    // and 04:12 games (Saturday night) and the 20:39 game (Sunday evening) are
+    // correctly two different sessions that both fell on Aug 2 by the clock.
+    // The key already encodes which night it is, so the label comes from that.
+    //
+    // group.key is 'YYYY-MM-DD' built from local parts, so it is split rather
+    // than passed to Date(), which would read it as UTC and shift it back a day
+    // in western timezones.
+    const [ky, km, kd] = String(group.key).split('-').map(Number);
+    const keyDate = new Date(ky, (km || 1) - 1, kd || 1);
+    const dateLabel = Number.isFinite(keyDate.getTime())
+        ? DateUtils.formatDate(keyDate)
+        : DateUtils.formatDate(group.matches[0].date);
     const count = group.matches.length;
     const countLabel = count === 1 ? '1 match' : `${count} matches`;
 
