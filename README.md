@@ -158,7 +158,15 @@ Readers can dial sharpness themselves: `SeasonFactsBoard.setRoastIntensity(1|2|3
 
 Per `CLAUDE.md` §0, phrases roast the **play** — the bid, the blind, the collapse — never the person. Tests enforce that boundary.
 
-The board shows 8 cards and reveals the rest via **"Aur dikhao"**.
+The board shows 8 cards and reveals the rest via **"Aur Dikhao Bhai"**.
+
+**Which 8 lead rotates every 2 hours.** The pack holds ~28 facts, so the same eight would otherwise greet you forever. The order is a *deterministic* shuffle seeded by the 2-hour slot number — not `Math.random` — which means:
+
+- reloading twice inside a window is stable (only the tails reroll);
+- everyone who opens the page in the same window sees the same board, so "did you see the tilt one?" works across the table;
+- it needs no storage and no server.
+
+Every fact reaches the lead position across enough windows, and the pack itself is never mutated. The footer says when the deck next turns over (*"Naye facts 40 minute mein."*).
 
 ### Groq keys
 
