@@ -15,9 +15,40 @@
  * The one rule that survives is craft, not compliance — every phrase here
  * roasts a bid, a blind, or a collapse. None of them roast a person.
  *
- * Each phrase: { id, text, intent, intensity }
+ * Each phrase: { id, text, intent, intensity, profane? }
  *   intent    — the narrative situation it fits (see INTENTS)
- *   intensity — 1 mild · 2 normal banter · 3 savage
+ *   intensity — 1 mild · 2 normal banter (mild gaalis) · 3 savage (hard gaalis)
+ *   profane   — true if the line contains a gaali. Drives the rarity gate.
+ *
+ * ── Profanity (the gaali bank) ──────────────────────────────────────────────
+ *
+ * The register of the room includes swearing, and sanitising it produces worse
+ * commentary, not safer commentary (CLAUDE.md §0). So the tiers carry actual
+ * gaalis, mapped onto the intensity knob the user already controls:
+ *
+ *   1  clean       — bhai, arre, kya scene. No gaali, ever.
+ *   2  mild gaali  — saala, chomu, bakchod, kamina, nalayak, dhakkan
+ *   3  hard gaali  — chutiya, bhosdike, haramkhor + the savage tier
+ *
+ * Two rules make this funny rather than merely vulgar:
+ *
+ *   1. RARITY. The funniest Hindi banter is creative combination, not maximum
+ *      profanity. A gaali every line is noise. `candidates()` therefore rations
+ *      profane phrases — see PROFANE_RATION — instead of letting the drawer
+ *      fill with them. The hardest lines (SAVAGE_IDS) are gated further, to
+ *      genuinely catastrophic moments only.
+ *   2. TARGET. Profanity attaches to the play — the bid, the blind, the
+ *      collapse. `bhosdike, 7 bola tha` is about the bid. The same word aimed
+ *      at who someone *is* is not in this file and must never be generated.
+ *
+ * Hard boundary, and the reason the bank is a fixed list rather than a prompt
+ * instruction: NO slurs targeting caste, religion, region, ethnicity,
+ * disability, gender or sexuality; no sexual violence as a punchline; and
+ * nothing aimed at a real person's family, appearance, job or intelligence.
+ * Teams are named after real friends (CLAUDE.md §0), so this is the line that
+ * keeps a roast affectionate. Every phrase below is reviewable in a diff
+ * precisely so that boundary is enforced by code review, not by a model's
+ * judgement at generation time.
  *
  * Pure module: no DOM, no network, no state. Selection state lives in
  * CommentaryMemory; this file is a constant.
@@ -227,7 +258,67 @@ const ComedyLibrary = (() => {
         { id: 'bp10', intent: 'blind_paid_off', intensity: 1, text: 'bina dekhe bhi ban gaya' },
         { id: 'cl08', intent: 'collapse', intensity: 1, text: 'baat nahi bani' },
         { id: 'cl09', intent: 'collapse', intensity: 1, text: 'peeche reh gaye' },
+
+        // ══ Gaali bank ══════════════════════════════════════════════════════
+        // Everything below is `profane: true` and therefore rationed by
+        // candidates() — see PROFANE_RATION. Intensity 2 is the mild tier
+        // (saala/chomu/bakchod), 3 is the hard tier (chutiya/bhosdike).
+        // Every line targets the bid, the blind, or the collapse.
+
+        // ── mild gaali · level 2 ────────────────────────────────────────────
+        { id: 'gm01', intent: 'collapse', intensity: 2, profane: true, text: 'saale ki hawa nikal gayi' },
+        { id: 'gm02', intent: 'collapse', intensity: 2, profane: true, text: 'saala nipat gaya' },
+        { id: 'gm03', intent: 'collapse', intensity: 2, profane: true, text: 'bhai ne apni hi band bajayi' },
+        { id: 'gm04', intent: 'collapse', intensity: 2, profane: true, text: 'nalayak round tha ye' },
+        { id: 'gm05', intent: 'greedy_read', intensity: 2, profane: true, text: 'saale ne bid nahi ki, bakchodi ki hai' },
+        { id: 'gm06', intent: 'greedy_read', intensity: 2, profane: true, text: 'kya chomu confidence tha' },
+        { id: 'gm07', intent: 'greedy_read', intensity: 2, profane: true, text: 'bakchodi mein bid kar di' },
+        { id: 'gm08', intent: 'greedy_read', intensity: 2, profane: true, text: 'dimag kharab hai kya, itna bola' },
+        { id: 'gm09', intent: 'blind_backfired', intensity: 2, profane: true, text: 'saala king banne gaya tha, minus lekar laut aaya' },
+        { id: 'gm10', intent: 'blind_backfired', intensity: 2, profane: true, text: 'blind maara, dhakkan nikla' },
+        { id: 'gm11', intent: 'blind_backfired', intensity: 2, profane: true, text: 'kamine cards ne saath nahi diya' },
+        { id: 'gm12', intent: 'blind_paid_off', intensity: 2, profane: true, text: 'saale ne bina dekhe hi kaat diya' },
+        { id: 'gm13', intent: 'blind_paid_off', intensity: 2, profane: true, text: 'kamina lucky nikla' },
+        { id: 'gm14', intent: 'one_hand_short', intensity: 2, profane: true, text: 'saala ek haath pe atak gaya' },
+        { id: 'gm15', intent: 'cursed_hand', intensity: 2, profane: true, text: 'kamine patte chhodte hi nahi' },
+        { id: 'gm16', intent: 'domination', intensity: 2, profane: true, text: 'saale ne table hi le liya' },
+        { id: 'gm17', intent: 'verdict_loss', intensity: 2, profane: true, text: 'bakchodi karte raha poora match' },
+        { id: 'gm18', intent: 'bids_collide', intensity: 2, profane: true, text: 'dono nalayak ek hi haath maang rahe hain' },
+        { id: 'gm19', intent: 'comeback', intensity: 2, profane: true, text: 'saala wapas aa gaya' },
+
+        // ── hard gaali · level 3 ────────────────────────────────────────────
+        { id: 'gh01', intent: 'greedy_read', intensity: 3, profane: true, text: 'kya chutiya move tha ye' },
+        { id: 'gh02', intent: 'greedy_read', intensity: 3, profane: true, text: 'ye kya chutiyaapa kar diya' },
+        { id: 'gh03', intent: 'greedy_read', intensity: 3, profane: true, text: 'bhosdike, saat bola tha, chaar pe nipat gaya' },
+        { id: 'gh04', intent: 'greedy_read', intensity: 3, profane: true, text: 'haramkhor bid thi ye' },
+        { id: 'gh05', intent: 'collapse', intensity: 3, profane: true, text: 'chutiya kat gaya' },
+        { id: 'gh06', intent: 'collapse', intensity: 3, profane: true, text: 'gaand phat gayi inki' },
+        { id: 'gh07', intent: 'collapse', intensity: 3, profane: true, text: 'aukaat yaad aa gayi' },
+        { id: 'gh08', intent: 'collapse', intensity: 3, profane: true, text: 'kutte ki tarah dhoya gaya' },
+        { id: 'gh09', intent: 'blind_backfired', intensity: 3, profane: true, text: 'blind ke chakkar mein chutiya ban gaya' },
+        { id: 'gh10', intent: 'blind_backfired', intensity: 3, profane: true, text: 'bhosdike ne aankh band karke minus utha liya' },
+        { id: 'gh11', intent: 'blind_paid_off', intensity: 3, profane: true, text: 'haramkhor ne bina dekhe hi izzat utaar di' },
+        { id: 'gh12', intent: 'domination', intensity: 3, profane: true, text: 'saamne wale ki izzat utaar di' },
+        { id: 'gh13', intent: 'domination', intensity: 3, profane: true, text: 'aukaat dikha di inhone' },
+        { id: 'gh14', intent: 'verdict_loss', intensity: 3, profane: true, text: 'poora nanga kar diya inko' },
+        { id: 'gh15', intent: 'verdict_win', intensity: 3, profane: true, text: 'baaki sab chutiya bante reh gaye' },
+        { id: 'gh16', intent: 'cursed_hand', intensity: 3, profane: true, text: 'jeet ke bhi chutiya ban gaya' },
+        { id: 'gh17', intent: 'one_hand_short', intensity: 3, profane: true, text: 'ek haath pe gaand lag gayi' },
     ];
+
+    // The hardest lines in the bank. Available only when the moment genuinely
+    // earns them — see candidates(). Kept as an explicit id list rather than a
+    // fourth intensity tier so the user-facing knob stays 1-3 and the gate is
+    // about the *moment*, not the setting.
+    const SAVAGE_IDS = new Set([
+        'gh03', 'gh06', 'gh08', 'gh10', 'gh14', 'gh17',
+    ]);
+
+    // At most this many profane phrases in any candidate list. The model
+    // reaches for the first option most of the time, so rationing the drawer
+    // is what actually makes gaalis occasional rather than constant — a
+    // prompt asking for restraint is a request, this is enforcement.
+    const PROFANE_RATION = 2;
 
     // Sentence shapes. Rotating *form* is what actually creates variety:
     // the same intent said five ways beats five synonyms for the same shape
@@ -281,8 +372,9 @@ const ComedyLibrary = (() => {
     // options, not a dictionary.
     //
     // opts.usedIds   — phrase ids already spoken this match
-    // opts.maxIntensity — 1 mild · 2 normal · 3 savage (default 3)
+    // opts.maxIntensity — 1 clean · 2 mild gaali · 3 hard gaali (default 3)
     // opts.limit     — how many to offer (default 6)
+    // opts.catastrophic — this moment earned the savage tier (see SAVAGE_IDS)
     function candidates(intent, opts = {}) {
         const used = new Set(opts.usedIds || []);
         const maxIntensity = Number.isFinite(opts.maxIntensity) ? opts.maxIntensity : 3;
@@ -291,17 +383,61 @@ const ComedyLibrary = (() => {
         // maxIntensity is a hard ceiling, never traded away. A listener who
         // asked for mild humour must not be served a sharper line just because
         // the mild ones ran out — novelty is worth less than the preference.
+        // At level 1 this also means: no gaali, ever, since every profane
+        // phrase is intensity 2 or 3.
         const canonical = canonicalIntent(intent);
-        const allowed = PHRASES.filter(p => p.intent === canonical && p.intensity <= maxIntensity);
+        const allowed = PHRASES.filter(p => {
+            if (p.intent !== canonical) return false;
+            if (p.intensity > maxIntensity) return false;
+            // The hardest lines need the moment to have earned them, not just
+            // the setting to allow them.
+            if (SAVAGE_IDS.has(p.id) && !opts.catastrophic) return false;
+            return true;
+        });
 
         const unused = allowed.filter(p => !used.has(p.id));
-        if (unused.length) return unused.slice(0, limit);
-
         // Everything allowed has been used. Reopen the drawer rather than go
         // silent: repetition beats nothing, and anything long enough to exhaust
         // an intent has earned a callback. Callers needing a strict no-repeat
         // guarantee should check `usedIds` against the returned ids.
-        return allowed.slice(0, limit);
+        const pool = unused.length ? unused : allowed;
+
+        return rationProfane(pool, limit, opts.catastrophic);
+    }
+
+    // Take `limit` phrases, admitting at most PROFANE_RATION profane ones.
+    // Clean lines keep their order and fill the rest, so a gaali is a spice in
+    // the drawer rather than the whole drawer — this is what keeps the
+    // commentary funny instead of just sweary.
+    //
+    // On a catastrophic moment the profane slots go to the *hardest* available
+    // lines. Without this the ration is filled in list order, and since the
+    // gaali bank lists the mild tier first, the savage tier could never be
+    // reached — the moment gate would unlock a door nothing ever walked
+    // through.
+    function rationProfane(pool, limit, catastrophic) {
+        const profanePool = pool.filter(p => p.profane);
+        const ranked = catastrophic
+            ? profanePool.slice().sort((a, b) => b.intensity - a.intensity)
+            : profanePool;
+        const admitted = ranked.slice(0, PROFANE_RATION);
+        const admittedIds = new Set(admitted.map(p => p.id));
+
+        // The gaali bank is appended after the clean phrases, so a plain
+        // in-order take fills every slot with clean lines and the profane ones
+        // never make it into the drawer at all — the ration would cap a
+        // maximum that is never reached. Reserve their slots up front instead:
+        // the ration is the ceiling, this is the floor.
+        const clean = pool.filter(p => !p.profane);
+        const cleanSlots = Math.max(0, limit - admitted.length);
+        const keep = new Set([
+            ...clean.slice(0, cleanSlots).map(p => p.id),
+            ...admittedIds,
+        ]);
+
+        // Emit in pool order so the caller's "first option is the likely pick"
+        // assumption still favours the clean vocabulary.
+        return pool.filter(p => keep.has(p.id)).slice(0, limit);
     }
 
     function byId(id) {
@@ -310,9 +446,33 @@ const ComedyLibrary = (() => {
 
     function forms() { return FORMS.slice(); }
 
+    // Did this moment earn the savage tier? Deliberately strict — these are
+    // the "rarely" cases: a blind that cost the full -70, an over-extension
+    // that turned a promise into a penalty, a beating by 150+ in one round, or
+    // the match ending. Anything routine answers no, which is most rounds.
+    // `drama` is a FactsEngine.dramaOf result.
+    function isCatastrophic(drama) {
+        if (!drama) return false;
+        const round = drama.round || {};
+        const worst = Math.min(
+            Number(round.t1?.score ?? 0),
+            Number(round.t2?.score ?? 0),
+        );
+        // A blind that missed is the single most deserving moment in the game:
+        // -70, called with the eyes shut (CLAUDE.md §4.4).
+        if (drama.kind === 'blind-miss') return true;
+        // Over-extension: took double what they promised and lost the lot.
+        if (drama.kind === 'over-extension') return true;
+        // A genuinely brutal round for somebody.
+        if (worst <= -80) return true;
+        // The verdict — the last word of the match can land hard.
+        if (drama.kind === 'match-end') return true;
+        return false;
+    }
+
     return {
-        INTENTS, FORMS, PHRASES,
-        intentFor, candidates, byId, forms,
+        INTENTS, FORMS, PHRASES, SAVAGE_IDS, PROFANE_RATION,
+        intentFor, candidates, byId, forms, isCatastrophic,
     };
 })();
 

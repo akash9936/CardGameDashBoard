@@ -773,10 +773,10 @@ async function refreshMatchesList() {
         return;
     }
 
-    elements.matchesList.innerHTML = matches.map(match => {
+    const renderMatchCard = (match) => {
         const team1 = teams.find(t => t.id === match.team1Id);
         const team2 = teams.find(t => t.id === match.team2Id);
-        
+
         if (!team1 || !team2) {
             return ''; // Skip this match if teams are not found
         }
@@ -847,7 +847,26 @@ async function refreshMatchesList() {
                 ` : ''}
             </div>
         `;
-    }).join('');
+    };
+
+    // Group the list by night (ai-continuity.md §2). SessionArc is optional —
+    // if it failed to load, the list renders exactly as it always did.
+    if (typeof SessionArc !== 'undefined' && SessionArc.groupForDisplay) {
+        const { groups, undated } = SessionArc.groupForDisplay(matches, teams);
+        const sections = groups.map(g => {
+            const cards = g.matches.map(renderMatchCard).join('');
+            // A group whose every match was skipped (unknown teams) would
+            // otherwise leave a header floating above nothing.
+            if (!cards.trim()) return '';
+            return `<div class="session-group">${renderSessionHeader(g)}${cards}</div>`;
+        }).join('');
+        // Undated matches cannot be placed in a night, so they keep their own
+        // trailing group rather than vanishing from the UI.
+        const rest = undated.map(renderMatchCard).join('');
+        elements.matchesList.innerHTML = sections + rest;
+    } else {
+        elements.matchesList.innerHTML = matches.map(renderMatchCard).join('');
+    }
 
     mountSparklines();
     mountWormCharts();
@@ -1172,6 +1191,63 @@ function escapeHtml(s) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+/**
+ * Header for one night of matches (ai-continuity.md §2).
+ *
+ * The table plays nights, not matches: 18 of 54 sessions in the archive hold
+ * more than one match and one holds eight, but the list rendered them as
+ * unrelated rows. This is the seam that makes a night legible.
+ *
+ * A single-match night still gets a header, so the list has one consistent
+ * rhythm rather than two layouts depending on how many games were played.
+ */
+function renderSessionHeader(group) {
+    const s = group.summary;
+    const dateLabel = DateUtils.formatDate(new Date(group.matches[0].date));
+    const count = group.matches.length;
+    const countLabel = count === 1 ? '1 match' : `${count} matches`;
+
+    // The night's story, in priority order. Only one of these is shown: a
+    // header is a glance, not a report.
+    let story = '';
+    if (s && s.sweeper) {
+        story = `<span class="session-story session-sweep">`
+            + `${escapeHtml(s.sweeper.team)} swept ${s.sweeper.wins}–0</span>`;
+    } else if (s && s.winless.length && s.completed >= 2) {
+        story = `<span class="session-story session-winless">`
+            + `${escapeHtml(s.winless[0])} winless</span>`;
+    } else if (s && s.singleFixture && s.standings.length >= 2) {
+        // An X–Y scoreline is only honest when the whole night WAS these two
+        // teams. Otherwise it invents a head-to-head out of two unrelated
+        // games that merely shared an evening.
+        const [a, b] = s.standings;
+        story = `<span class="session-story">`
+            + `${escapeHtml(a.team)} ${a.wins}–${b.wins} ${escapeHtml(b.team)}</span>`;
+    } else if (s && s.completed >= 2) {
+        const winners = s.standings.filter(x => x.wins > 0).length;
+        story = `<span class="session-story">`
+            + `${s.completed} played · ${winners} winner${winners === 1 ? '' : 's'}</span>`;
+    }
+
+    // Cancelled and live games are counted separately: a night that looks
+    // like "8 matches" but was mostly abandoned should say so, or the header
+    // overstates what actually got played.
+    const notes = [];
+    if (s && s.live) notes.push(`${s.live} live`);
+    if (s && s.cancelled) notes.push(`${s.cancelled} cancelled`);
+    const noteLabel = notes.length
+        ? `<span class="session-note">${escapeHtml(notes.join(' · '))}</span>` : '';
+
+    return `
+        <div class="session-header" data-session-key="${escapeHtml(group.key)}">
+            <span class="session-date">${escapeHtml(dateLabel)}</span>
+            <span class="session-count">${escapeHtml(countLabel)}</span>
+            ${story}
+            ${noteLabel}
+        </div>
+    `;
 }
 
 function wireActivityCards() {

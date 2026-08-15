@@ -529,26 +529,35 @@ These are **register** notes, not safety ones — they are about what is funny.
 
 ---
 
-## 10. `[PLANNED]` Length: generate short, don't trim
+## 10. `[DONE]` Length: generate short, don't trim
 
-Today the model is told to be brief and the output is then trimmed to whole
-sentences (190 chars, 320 for two-beat moments). Trimming must remain as a
-**safety net**, but the prompt should produce the right length first — a line cut
-at a sentence boundary still loses the joke's landing.
+The model is told how long to be, and the output is trimmed to whole sentences
+as a **safety net** — the prompt produces the right length first, because a line
+cut mid-word loses the joke's landing.
 
 What actually controls length, in order:
 
-1. **Fix the danda/CJK trim bug first (§13).** For Hindi and every other
-   non-Latin script there is no safety net at all today. This is worth more than
-   any prompt change.
-2. **The prompt is the only real lever.** Replace *"keep each sentence under 25
-   words"* (groqService.js:68) — models ignore word counts — with a hard
-   structural instruction (`Reply with exactly ONE sentence.`) placed at the
-   **end** of the system prompt, where instruction-following is strongest.
-3. **Leave `max_tokens` alone.** At 120 spoken (≈90 words) it never binds, and
-   the existing comment at :253-256 is right that a hard cap truncates mid-word.
-4. **Keep the trimmer.** Expect the prompt change to reduce, not eliminate, trim
-   activations.
+1. **The danda/CJK trim bug (§13) was fixed first.** Without it Hindi and every
+   other non-Latin script had no safety net at all — worth more than any prompt
+   change.
+2. **The prompt is the only real lever.** Both prompts now end with an explicit
+   *sentence count* rather than a word count (models ignore word counts but obey
+   a structural instruction), placed **last**, where instruction-following is
+   strongest. `SPOKEN_PROMPT` asks for ONE sentence (TWO for match-start and
+   match-end); `SYSTEM_PROMPT` asks for one, allowing a second only when it adds
+   a genuinely new fact.
+3. **`max_tokens` left alone.** At 120 spoken (≈90 words) it never binds, and a
+   hard token cap truncates mid-word — worse out loud than a long line.
+4. **The trimmer stays**, and now covers *both* paths. The on-screen path
+   previously hard-sliced at 220 chars and appended `…`, stranding half-words
+   (`plumm…`); it now uses the same sentence-boundary trimmer as the spoken path.
+   Fixing that surfaced a latent off-by-one — the trimmer sliced to exactly
+   `maxChars` and *then* appended a terminator, returning `maxChars + 1`. Only
+   reachable when the tail has no word boundary to back off to, which the spoken
+   path's inputs always had.
+
+On the free tier this is quota, not money: output tokens count toward TPM/TPD on
+every model, cached or not (Groq excludes only *cached input* from rate limits).
 
 Preserve: Groq `llama-3.3-70b-versatile`, the 2.5s spoken deadline, script
 verification, sentence-boundary trimming, and the null-on-any-failure contract
@@ -568,10 +577,38 @@ sentence. Combined with §14.1's bid-collision signal, the quiet rounds
 (combined promise ≤ 11, 73–80% both-positive) are exactly the ones that can be
 skipped.
 
-Also worth adding: **per-match callbacks.** The funniest thing a commentator does
-is remember — *"teesra blind. Teesra."* §8 rules out *model* memory, but the
-**caller** can remember and put it in the packet. That is a product decision the
-model constraint does not dictate.
+### 10.2 `[DONE]` Per-match callbacks
+
+The funniest thing a commentator does is remember — *"teesra blind. Teesra."*
+§8 rules out *model* memory, but the **caller** can remember and put it in the
+packet. Built in `js/utils/callbacks.js`.
+
+The split that makes it safe:
+
+| Source | Answers | Used for |
+|---|---|---|
+| `match.rounds` | what **happened** | counting — the ground truth |
+| `CommentaryLog` | what was **said** | "have I already made this one?" |
+
+Counting never reads the log: the log holds sentences, and a sentence is not a
+source of truth. The log answers only the already-said question, keyed by
+callback **shape** (`blind:3`) rather than wording, since the model rephrases
+freely.
+
+Three callbacks ship, ranked by how funny they are — one per line, most-funny
+first:
+
+1. **Repeat blind** (≥2) — a choice, repeated, with 140 points riding on it.
+2. **Bleed** (≥2 consecutive negative rounds) — the pattern the table already
+   noticed out loud.
+3. **Same-bid tell** (≥3 identical promises) — a real behavioural signal.
+
+Rules that keep it a callback rather than a tic: one is a coincidence so the
+floor is two; only one callback per line; a callback already spoken this match
+is skipped (a repeat is a stutter, not a callback); and a callback is burned
+only when the line actually reached the speaker. Both paths deliver it — the
+LLM is told to state it as given and never recount or invent one, and the
+template appends it, so the no-key path keeps the joke.
 
 ---
 

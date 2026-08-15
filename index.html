@@ -160,11 +160,20 @@
     <script src="js/utils/dateUtils.js"></script>
     <script src="js/utils/stats.js"></script>
     <script src="js/utils/narrate.js"></script>
+    <!-- Continuity layer (ai-continuity.md). Must load BEFORE factsEngine.js:
+         factsPacket picks these up as globals to add memory/session/player
+         facts. Each is optional — a missing one simply means the packet
+         carries no facts of that kind. -->
+    <script src="js/data/rosters.js"></script>
+    <script src="js/utils/sessionArc.js"></script>
+    <script src="js/utils/leagueMemory.js"></script>
+    <script src="js/utils/playerStats.js"></script>
     <script src="js/utils/factsEngine.js"></script>
     <script src="js/utils/seasonDigest.js"></script>
     <script src="js/data/comedyLibrary.js"></script>
     <script src="js/utils/commentaryMemory.js"></script>
     <script src="js/utils/commentaryLog.js"></script>
+    <script src="js/utils/callbacks.js"></script>
     <script src="js/data/seasonFacts.js"></script>
     <script src="js/utils/animate.js"></script>
     <script src="js/services/firebaseService.js"></script>

@@ -209,6 +209,19 @@ const AICommentary = (() => {
             `<button type="button" class="ai-mood${key === prefs.mood ? ' active' : ''}"
                      data-mood="${escape(key)}">${escape(m.label)}</button>`).join('');
 
+        // How hard the commentary is allowed to swear. Level 1 is clean; 2 and
+        // 3 unlock the gaali bank (comedyLibrary.js). Labelled honestly so
+        // nobody turns it up without knowing what comes out of the speaker.
+        const ROAST_LEVELS = [
+            { level: 1, label: 'Clean',  hint: 'No gaali. bhai, arre, kya scene.' },
+            { level: 2, label: 'Banter', hint: 'Mild gaali — saala, chomu, bakchod.' },
+            { level: 3, label: 'Savage', hint: 'Full gaali — chutiya, bhosdike. Rare by design.' },
+        ];
+        const roastButtons = ROAST_LEVELS.map(r =>
+            `<button type="button" class="ai-roast${r.level === prefs.roastIntensity ? ' active' : ''}"
+                     data-roast="${r.level}" title="${escape(r.hint)}">${escape(r.label)}</button>`).join('');
+        const activeRoast = ROAST_LEVELS.find(r => r.level === prefs.roastIntensity) || ROAST_LEVELS[1];
+
         return `
             <div class="ai-voice-panel">
                 <div class="ai-voice-head">
@@ -253,6 +266,14 @@ const AICommentary = (() => {
                 <div class="ai-field ai-field-block">
                     <span>Mood</span>
                     <div class="ai-mood-row">${moodButtons}</div>
+                </div>
+
+                <div class="ai-field ai-field-block">
+                    <span>Language filter</span>
+                    <div class="ai-mood-row">${roastButtons}</div>
+                    <p class="ai-field-hint">${escape(activeRoast.hint)}
+                       Applies on screen and out loud. Jokes always target the
+                       bid, never the person.</p>
                 </div>
 
                 <div class="ai-preview-row">
@@ -327,6 +348,20 @@ const AICommentary = (() => {
                 document.querySelectorAll('.ai-mood').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 AudioCommentary.speak(previewLine(), 'medium');
+            });
+        });
+
+        document.querySelectorAll('.ai-roast').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = Number(btn.getAttribute('data-roast'));
+                AudioCommentary.setPrefs({ roastIntensity: level });
+                // The season facts board keeps its own copy of this setting
+                // (its own storage key, read on render). Push it across so one
+                // control governs every surface, as the user expects.
+                if (typeof SeasonFactsBoard !== 'undefined' && SeasonFactsBoard.setRoastIntensity) {
+                    SeasonFactsBoard.setRoastIntensity(level);
+                }
+                refreshSettingsDialog();
             });
         });
 

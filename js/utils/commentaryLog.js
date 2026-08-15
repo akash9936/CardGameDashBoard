@@ -110,6 +110,10 @@ const CommentaryLog = (() => {
         if (entry.next) record.next = String(entry.next);
         if (entry.actor) record.actor = String(entry.actor);
         if (entry.source) record.source = String(entry.source);
+        // Which callback this line made, by shape ("blind:3"). Read back by
+        // Callbacks.alreadyMade so the same observation is never made twice in
+        // a match — a repeated callback is a stutter, not a callback.
+        if (entry.callback) record.callback = String(entry.callback);
 
         const all = _read();
         const list = Array.isArray(all[id]) ? all[id] : [];
