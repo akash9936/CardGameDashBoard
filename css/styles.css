@@ -2189,6 +2189,11 @@ canvas.sparkline {
     overscroll-behavior: contain;
     margin-top: 6px;
     padding-right: 4px;
+    /* Fade the top edge so a mid-scroll entry reads as "there's more above"
+       rather than as a clipped line. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 12px);
+    padding-top: 4px;
 }
 
 .bs-history .ch-list {
