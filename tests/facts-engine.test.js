@@ -195,6 +195,50 @@ describe('FactsEngine derivations', () => {
 });
 
 // ─── rule conformance (records hygiene) ─────────────────────────────────────
+// Blind detection is exercised through dramaOf, which is where a mis-detected
+// blind actually changes what the table hears.
+describe('FactsEngine blind detection (via dramaOf)', () => {
+    const teams = [{ id: 1, name: 'Coke' }, { id: 2, name: 'Sprite' }];
+    const liveMatch = (t1, t2) => ({
+        id: 'bd1', team1Id: 1, team2Id: 2, status: 'in_progress',
+        rounds: [{ roundNumber: 1, team1: t1, team2: t2 }],
+        finalScore: { team1: t1.score, team2: t2.score },
+    });
+
+    // Regression: the inference branch was gated on `side.blind === false`,
+    // but stored rounds have no `blind` field at all — so this returned false
+    // for all 670 stored sides and the spoken layer saw zero blinds all season.
+    test('a legacy blind with no flag at all is still detected', () => {
+        const d = FactsEngine.dramaOf(
+            liveMatch({ promise: 7, actual: 9, score: 140 },
+                      { promise: 5, actual: 4, score: -50 }), null, [], teams);
+        expect(d.kind).toBe('blind-hit');
+    });
+
+    // A promise-7 side taking <7 scores -70 whether or not it was blind
+    // (CLAUDE.md §4.1 vs §4.4), and promise 7 IS bid conventionally here, so a
+    // bare -70 must not be asserted as a blind miss.
+    test('an unflagged -70 at promise 7 is NOT assumed to be a blind', () => {
+        const d = FactsEngine.dramaOf(
+            liveMatch({ promise: 7, actual: 3, score: -70 },
+                      { promise: 6, actual: 10, score: -60 }), null, [], teams);
+        expect(d.kind).not.toBe('blind-miss');
+    });
+
+    test('the stored flag is authoritative when present', () => {
+        const hit = FactsEngine.dramaOf(
+            liveMatch({ promise: 7, actual: 3, score: -70, blind: true },
+                      { promise: 6, actual: 10, score: -60 }), null, [], teams);
+        expect(hit.kind).toBe('blind-miss');
+
+        // blind:false on a 140 means it was genuinely not a blind.
+        const notBlind = FactsEngine.dramaOf(
+            liveMatch({ promise: 7, actual: 9, score: 140, blind: false },
+                      { promise: 5, actual: 4, score: -50 }), null, [], teams);
+        expect(notBlind.kind).not.toBe('blind-hit');
+    });
+});
+
 describe('FactsEngine rule conformance', () => {
     test('a side scored per the locked rules conforms', () => {
         expect(FactsEngine.isRuleConformantSide({ promise: 5, actual: 8, score: 53, blind: false })).toBe(true);

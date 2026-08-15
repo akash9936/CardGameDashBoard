@@ -16,6 +16,27 @@ const AudioCommentary = (() => {
     const STORAGE_KEY = 'aiCommentary.audio';
     const PREFS_KEY = 'aiCommentary.audioPrefs';
 
+    // Comedy vocabulary, anti-repetition state, and the transcript of what was
+    // said. All three are optional: without them the commentary still speaks,
+    // it just loses its steering and isn't kept.
+    //
+    // Resolution is by BARE NAME first, not `globalThis.X`. These siblings are
+    // classic scripts whose top-level `const` lands in *script scope*, which is
+    // reachable by name but is NOT a property of globalThis — so a
+    // `globalThis.ComedyLibrary` probe reports "missing" in the browser and
+    // silently disables the steering. Node has no such binding and require()
+    // supplies it there. Declaring `const ComedyLibrary = …` here would also
+    // shadow the very name being tested, so the aliases are underscored.
+    const _comedy = (typeof ComedyLibrary !== 'undefined')
+        ? ComedyLibrary
+        : (typeof require === 'function' ? require('../data/comedyLibrary.js') : undefined);
+    const _memory = (typeof CommentaryMemory !== 'undefined')
+        ? CommentaryMemory
+        : (typeof require === 'function' ? require('../utils/commentaryMemory.js') : undefined);
+    const _log = (typeof CommentaryLog !== 'undefined')
+        ? CommentaryLog
+        : (typeof require === 'function' ? require('../utils/commentaryLog.js') : undefined);
+
     // Rounds already spoken this session — "matchId:roundNumber".
     const spokenFor = new Set();
 
@@ -50,6 +71,9 @@ const AudioCommentary = (() => {
     // Hindi and hears an English sentence read by a Hindi voice.
     const LANGUAGES = [
         { code: 'en', name: 'English' },
+        // The house register (commentary-style.md §6). Latin script, Hindi
+        // grammar — so it borrows the Hindi voice pool to pronounce it.
+        { code: 'hinglish', name: 'Hinglish', voiceCode: 'hi' },
         { code: 'hi', name: 'Hindi' },
         { code: 'es', name: 'Spanish' },
         { code: 'fr', name: 'French' },
@@ -74,8 +98,18 @@ const AudioCommentary = (() => {
         { code: 'vi', name: 'Vietnamese' },
     ];
 
-    const DEFAULT_PREFS = { lang: 'en', voiceURI: '', speed: 1, mood: 'hype' };
+    //   roastIntensity — how hard the humour is allowed to bite:
+    //                    1 mild · 2 normal banter · 3 savage. Caps which
+    //                    comedy-library phrases are offered (CLAUDE.md §0 —
+    //                    four friends, so 2 is a fair default, not 1).
+    const DEFAULT_PREFS = { lang: 'en', voiceURI: '', speed: 1, mood: 'hype', roastIntensity: 2 };
     let _prefs = null;
+
+    function clampIntensity(n) {
+        const v = Math.round(Number(n));
+        if (!Number.isFinite(v)) return DEFAULT_PREFS.roastIntensity;
+        return Math.min(3, Math.max(1, v));
+    }
 
     function getPrefs() {
         if (_prefs) return _prefs;
@@ -87,6 +121,7 @@ const AudioCommentary = (() => {
         _prefs = { ...DEFAULT_PREFS, ...(stored && typeof stored === 'object' ? stored : {}) };
         if (!MOODS[_prefs.mood]) _prefs.mood = DEFAULT_PREFS.mood;
         _prefs.speed = clampSpeed(_prefs.speed);
+        _prefs.roastIntensity = clampIntensity(_prefs.roastIntensity);
         return _prefs;
     }
 
@@ -94,6 +129,7 @@ const AudioCommentary = (() => {
         const next = { ...getPrefs(), ...(patch || {}) };
         if (!MOODS[next.mood]) next.mood = DEFAULT_PREFS.mood;
         next.speed = clampSpeed(next.speed);
+        next.roastIntensity = clampIntensity(next.roastIntensity);
         // A language change invalidates the resolved voice unless the user
         // picked a specific one that still belongs to that language.
         if (patch && patch.lang && patch.lang !== _prefs.lang && !patch.voiceURI) {
@@ -119,9 +155,25 @@ const AudioCommentary = (() => {
         return hit ? hit.name : 'English';
     }
 
+    // Which OS voice pool a language draws from. Normally the language code IS
+    // the voice tag, but Hinglish is a register rather than a locale: there is
+    // no "hinglish" voice on any device, and the words are romanised Hindi, so
+    // a Hindi voice pronounces them correctly. An English voice would read
+    // "gaya" as "guy-uh".
+    function voiceCodeFor(code) {
+        const hit = LANGUAGES.find(l => l.code === code);
+        return (hit && hit.voiceCode) || code;
+    }
+
     // Anything other than English relies on the LLM for its wording, because
     // the offline templates in FactsEngine are English-only.
-    function languageNeedsKey(code) { return code !== 'en'; }
+    // A language needs a Groq key when nothing local can produce words in it.
+    // English and Hinglish both have hand-written templates
+    // (FactsEngine.dramaTemplate), so they speak with no key and no network —
+    // the LLM only makes them funnier. Everything else would be spoken in the
+    // wrong language, and a native voice reading English is worse than silence.
+    const TEMPLATED_LANGS = new Set(['en', 'hinglish']);
+    function languageNeedsKey(code) { return !TEMPLATED_LANGS.has(code); }
 
     // True when the current settings can actually produce speech in the
     // chosen language. Drives the warning in the settings panel.
@@ -136,7 +188,8 @@ const AudioCommentary = (() => {
         const voices = _synth.getVoices() || [];
         const out = [];
         for (const lang of LANGUAGES) {
-            const match = voices.filter(v => (v.lang || '').toLowerCase().startsWith(lang.code));
+            const tag = voiceCodeFor(lang.code);
+            const match = voices.filter(v => (v.lang || '').toLowerCase().startsWith(tag));
             if (match.length) out.push({ ...lang, voices: match });
         }
         return out;
@@ -204,7 +257,8 @@ const AudioCommentary = (() => {
 
         // Otherwise auto-pick a female voice in the chosen language, ignoring
         // the OS novelty voices.
-        const inLang = voices.filter(v => (v.lang || '').toLowerCase().startsWith(prefs.lang));
+        const inLang = voices.filter(v =>
+            (v.lang || '').toLowerCase().startsWith(voiceCodeFor(prefs.lang)));
         const base = inLang.length ? inLang : voices.filter(v => /^en/i.test(v.lang || ''));
         const natural = base.filter(v => !isNovelty(v));
         const pool = natural.length ? natural : base;
@@ -343,13 +397,24 @@ const AudioCommentary = (() => {
     // moment deserves.
     async function deliver(moment) {
         const prefs = getPrefs();
-        const template = FactsEngine.dramaTemplate(moment);   // English
+
+        // Anti-repetition steering (commentary-style.md §8). Chosen here, up
+        // front, so the same selection reaches the template, the LLM, and the
+        // ledger — all three have to agree on which phrase was spent.
+        const steer = comedySteer(moment);
+
+        // Written in the listener's language when we have templates for it, so
+        // a slow LLM degrades to the same voice rather than to a stats robot.
+        // The steer goes in too: the template path is what actually speaks
+        // whenever Groq is missing, slow, or out of quota, and it should draw
+        // on the same rotating vocabulary the season facts board does.
+        const template = FactsEngine.dramaTemplate(moment, { lang: prefs.lang, steer });
         let line = template;
         let llmLine = null;
 
         if (GroqService.hasKey()) {
             try {
-                llmLine = await GroqService.commentate(dramaPacket(moment), {
+                llmLine = await GroqService.commentate(dramaPacket(moment, steer), {
                     spoken: true,
                     // The voice speaks the chosen language, so the words must
                     // be written in it too — otherwise a Hindi voice reads
@@ -370,13 +435,119 @@ const AudioCommentary = (() => {
         }
 
         const ok = speak(line, moment.level);
+
+        // Only a line that actually reached the speaker burns a phrase, a form
+        // or an opening — a skipped moment must not consume the vocabulary.
+        if (ok && steer) {
+            _memory.record(moment.matchId, {
+                phraseId: phraseUsedIn(line, steer),
+                form: steer.form,
+                intent: steer.intent,
+                line,
+            });
+        }
+
+        // Keep what was said, so it can be re-read later. Same condition as
+        // above: a moment that never reached the speaker was never said, and
+        // logging it would put a line in the transcript nobody heard.
+        if (ok && _log) {
+            _log.append(moment.matchId, {
+                kind: moment.kind === 'match-start' ? 'start' : 'spoken',
+                round: moment.roundNumber,
+                text: line,
+                actor: moment.actor,
+                source: llmLine ? 'ai' : 'template',
+            });
+        }
+
         return { spoken: ok, reason: ok ? moment.kind : 'speak-failed', line, drama: moment };
+    }
+
+    // Choose this line's narrative intent, sentence shape, and a handful of
+    // unused phrases — all in code, so rotation is enforced rather than
+    // requested. Returns null when the libraries are unavailable (the feature
+    // degrades to plain commentary, never to an error).
+    function comedySteer(moment) {
+        if (!_comedy || !_memory) return null;
+        const intent = _comedy.intentFor(moment);
+        if (!intent) return null;
+
+        const mem = _memory.state(moment.matchId);
+        const form = _memory.nextForm(moment.matchId, _comedy.forms());
+        const options = _comedy.candidates(intent, {
+            usedIds: mem.usedPhraseIds,
+            maxIntensity: getPrefs().roastIntensity,
+            limit: 5,
+        });
+
+        return {
+            intent,
+            form: form ? form.id : null,
+            formHint: form ? form.hint : null,
+            phrases: options.map(p => p.text),
+            // The phrase the model is most likely to reach for. Recorded as
+            // used even if the model rephrases it — the point is to keep the
+            // drawer moving, not to police the wording.
+            phraseId: options.length ? options[0].id : null,
+            recentOpenings: mem.recentOpenings,
+        };
+    }
+
+    // Which library phrase the spoken line actually used.
+    //
+    // The steer offers several candidates; the template always takes the first,
+    // but the model is free to reach for any of them (or to invent its own
+    // wording). Recording the offered phrase regardless was wrong in both
+    // directions: it burned a phrase that was never said, and left the one the
+    // model *did* say available to repeat next round — the exact repetition the
+    // ledger exists to prevent.
+    //
+    // Matching is on the phrase text appearing in the line, because a phrase is
+    // a closing beat inside a sentence, not the whole line. Bent forms
+    // ("nipat gaye" → "nipat hi gaye") won't match and fall back to the offered
+    // id: an approximate burn keeps the drawer moving, which beats recording
+    // nothing and letting a phrase repeat forever.
+    function phraseUsedIn(line, steer) {
+        if (!steer) return null;
+        if (!_comedy) return steer.phraseId || null;
+
+        const hay = normalisePhrase(line);
+        if (!hay) return steer.phraseId || null;
+
+        // Only phrases this line was actually offered are candidates — a
+        // coincidental match against the wider library would burn a phrase the
+        // model never saw.
+        const offered = (steer.phrases || [])
+            .map(text => (_comedy.PHRASES || []).find(p => p.text === text))
+            .filter(Boolean);
+
+        // Longest first, so "aaj inka din hai" wins over a shorter phrase
+        // nested inside it.
+        const hit = offered
+            .slice()
+            .sort((a, b) => b.text.length - a.text.length)
+            .find(p => hay.includes(normalisePhrase(p.text)));
+
+        return hit ? hit.id : (steer.phraseId || null);
+    }
+
+    // Lowercased, punctuation-stripped, single-spaced — so "Nipat gaye." and
+    // "nipat gaye" are the same phrase.
+    function normalisePhrase(s) {
+        return String(s || '')
+            .toLowerCase()
+            .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
     // The drama object, shaped for the LLM. Numbers only — same contract as
     // the on-screen packet: the model phrases, it never computes.
-    function dramaPacket(drama) {
-        return {
+    //
+    // `steer` carries comedy direction, never facts: an intent label, a
+    // sentence shape, a few candidate phrases, and the openings to avoid.
+    function dramaPacket(drama, steer = null) {
+        const packet = {
             kind: 'spoken',
             matchId: drama.matchId,
             moment: drama.kind,
@@ -387,6 +558,19 @@ const AudioCommentary = (() => {
             teams: drama.teams,
             roundNumber: drama.roundNumber,
         };
+        // Two-sided round detail, when dramaOf supplied it (match-start has no
+        // round yet).
+        if (drama.round) packet.round = drama.round;
+        if (steer) {
+            packet.comedy = {
+                intent: steer.intent,
+                form: steer.form,
+                formHint: steer.formHint,
+                phrases: steer.phrases,
+                avoidOpenings: steer.recentOpenings,
+            };
+        }
+        return packet;
     }
 
     // ─── Test hooks ──────────────────────────────────────────────────────────
@@ -395,13 +579,17 @@ const AudioCommentary = (() => {
         _synth = synth; _Utterance = Utterance;
         _voice = null; _voiceResolved = false;   // re-resolve against the new synth
     }
-    function _reset() { spokenFor.clear(); startedFor.clear(); }
+    function _reset() {
+        spokenFor.clear();
+        startedFor.clear();
+        if (_memory) _memory._reset();
+    }
     function _resetPrefs() { _prefs = null; _voice = null; _voiceResolved = false; }
 
     return {
         announceRound, announceMatchStart, speak, stop, toggle,
         isEnabled, setEnabled, isSupported,
-        dramaPacket, pickVoice,
+        dramaPacket, pickVoice, comedySteer, phraseUsedIn,
         getPrefs, setPrefs, availableLanguages, voicesForLanguage, languageName,
         languageNeedsKey, languageReady,
         PROSODY, FEMALE_VOICE_HINTS, MOODS, LANGUAGES, DEFAULT_PREFS,
