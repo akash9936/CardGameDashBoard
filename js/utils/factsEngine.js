@@ -439,15 +439,31 @@ const FactsEngine = (() => {
         return v < 0 ? `minus ${Math.abs(v)}` : String(v);
     }
 
+    // Was this side a Blind bid?
+    //
+    // The stored flag is authoritative when present — every round written since
+    // the flag shipped carries it. Historical rounds have no flag at all
+    // (`undefined` on all 670 stored sides), so those fall back to inference.
+    //
+    // The inference is deliberately conservative: only +140 proves a blind.
+    // Under the locked rules a promise-7 side taking fewer than 7 scores −70
+    // whether or not it was blind (CLAUDE.md §4.1 vs §4.4), so a −70 is
+    // genuinely ambiguous — and promise 7 IS bid conventionally at this table
+    // (45 stored sides scored 70–76). Counting those −70s as blinds would
+    // invent ~105 blind misses that may never have happened and would let the
+    // commentator state a false "blinds called" number as fact.
+    //
+    // Two earlier bugs this replaces:
+    //   1. the inference branch was gated on `side.blind === false`, which is
+    //      never true for stored rounds (the field is absent), so this returned
+    //      false for EVERY side — the spoken layer saw zero blinds all season;
+    //   2. it also counted −70 as a blind, disagreeing with StatsUtils and
+    //      overstating the blind count.
     function isBlindSide(side) {
         if (!side) return false;
         if (side.blind === true) return true;
-        if (side.blind === false) {
-            // Legacy rounds predate the flag — infer from the locked shape.
-            return Number(side.promise) === 7
-                && (Number(side.score) === 140 || Number(side.score) === -70);
-        }
-        return false;
+        if (side.blind === false) return false;
+        return Number(side.promise) === 7 && Number(side.score) === 140;
     }
 
     function dramaOf(match, prevMatch = null, matches = [], teams = [], options = {}) {
@@ -474,8 +490,25 @@ const FactsEngine = (() => {
             blind: isBlindSide(last[key]),
         }));
 
+        // The two sides are not independent: actuals always sum to 13
+        // (CLAUDE.md §3.2), so every round is one story with two halves. Each
+        // side carries a reference to the other, and triggers below read it —
+        // a near-miss is only half described without naming who took the hand.
+        sides[0].vs = sides[1];
+        sides[1].vs = sides[0];
+
         const triggers = [];
         const push = (kind, level, actor, detail) => triggers.push({ kind, level, actor, detail });
+
+        // Combined promise against the 13 available hands — knowable the moment
+        // bids are announced, and the sharpest predictor in the game. Measured
+        // over the season: at 10-11 both sides come out positive ~73-80% of the
+        // time; at 13 that collapses to 9%; at 14+ it is 0 of 45 rounds. Over-
+        // promising the table is not a risk, it is an arithmetic guarantee that
+        // somebody eats a negative.
+        const combinedPromise = sides[0].promise + sides[1].promise;
+        const bidsCollide = combinedPromise > 13;   // someone MUST fall short
+        const bidsSafe = combinedPromise <= 11;     // room for both to make it
 
         // Every round is narrated (product decision), so these no longer gate
         // whether we speak — they set the *tone*. A blind late in a close
@@ -484,16 +517,33 @@ const FactsEngine = (() => {
         const closeGame = Math.abs(s1 - s2) <= CLOSE_GAME_AT;
 
         // ── Blind hit / miss — the biggest swing in the game ─────────────────
+        // Blinds are ~37% of round-sides here, so treating every one as a
+        // showstopper is what makes the commentary repetitive. What separates
+        // them is who called it: the overwhelming majority are called from
+        // behind, where +140 is the only realistic way to close a gap — that is
+        // correct play, not madness. A blind called while *leading* is the rare
+        // reckless one and earns the bigger reaction.
+        //
+        // NB the season rates that motivate this are directional only: the 105
+        // legacy −70s are indistinguishable from ordinary promise-7 misses
+        // (see isBlindSide), so a lead/trail success rate must never be spoken
+        // as fact. This shapes tone; it is not a statistic.
         for (const s of sides) {
             if (!s.blind) continue;
-            const consequential = lateGame || closeGame || match.status === 'completed';
+            const before = s.key === 'team1' ? p1 - p2 : p2 - p1;   // lead at the call
+            const leading = before > 0;
+            const desperate = before <= -150;
+            const consequential = leading || lateGame || closeGame || match.status === 'completed';
             const level = consequential ? 'high' : 'medium';
+            const stake = leading ? ` — and they were ${before} in front already`
+                        : desperate ? ` — ${Math.abs(before)} behind, with nothing else that closes it`
+                        : '';
             if (s.score > 0) {
                 push('blind-hit', level, s.name,
-                    `${s.name} called blind and landed it — ${s.actual} hands taken, +140.`);
+                    `${s.name} called blind and landed it, ${s.actual} hands taken for +140${stake}.`);
             } else {
                 push('blind-miss', level, s.name,
-                    `${s.name} called blind and missed — only ${s.actual} of the 7 needed, −70.`);
+                    `${s.name} called blind and missed, only ${s.actual} of the 7 needed for −70${stake}.`);
             }
         }
 
@@ -538,36 +588,66 @@ const FactsEngine = (() => {
             }
         }
 
-        // ── Over-extension — greed punished by the rules ─────────────────────
+        // ── Over-extension — usually the cards, not greed ────────────────────
+        // Raised to 'high': at 8 of 670 stored sides this is the rarest thing
+        // that happens, and at 'medium' it lost the headline to any blind in
+        // the same round.
+        //
+        // The emotion depends entirely on the other side. You cannot take 12 of
+        // 13 hands unless your opponent takes almost none — and call-break has
+        // no way to decline a trick. Measured: in 7 of 8 real over-extensions
+        // the opponent fell short of their own promise, i.e. the cards forced
+        // it. Only when the opponent ALSO made their bid was it a genuine
+        // misread. Calling the other seven "greed" mocks a decision nobody
+        // made.
         for (const s of sides) {
             if (s.blind || s.promise <= 0) continue;
-            if (s.actual >= s.promise * 2) {
-                push('over-extension', 'medium', s.name,
-                    `${s.name} promised ${s.promise} and took ${s.actual} — double the promise turns it into ${s.score}.`);
-            }
+            if (s.actual < s.promise * 2) continue;
+            const forced = s.vs.score < 0;   // opponent collapsed → cards did it
+            push('over-extension', 'high', s.name, forced
+                ? `${s.name} promised ${s.promise} and the cards handed them ${s.actual} — ${s.vs.name} could not take a trick, and ${s.score} is the reward for it.`
+                : `${s.name} promised ${s.promise} and took ${s.actual} — ${s.vs.name} still made their ${s.vs.promise}, so that one is on the read. ${s.score}.`);
         }
 
-        // ── Near-miss — missed the promise by exactly one hand ───────────────
-        // Only when it hurt: a big promise, or a close/late match.
+        // ── Near-miss — one hand short, and someone else has it ──────────────
+        // Every near-miss in the season (74 of 74 stored sides) had an opponent
+        // who scored positive: the hand they needed was never lost, it was
+        // taken. Naming the thief is the whole story — "came up one short" on
+        // its own blames the victim.
         for (const s of sides) {
             if (s.blind || s.promise <= 0) continue;
-            if (s.actual === s.promise - 1) {
-                push('near-miss', (s.promise >= 8 || lateGame || closeGame) ? 'medium' : 'low', s.name,
-                    `${s.name} came up one hand short of ${s.promise} — ${s.score} for the round.`);
-            }
+            if (s.actual !== s.promise - 1) continue;
+            const level = (s.promise >= 8 || lateGame || closeGame) ? 'medium' : 'low';
+            push('near-miss', level, s.name, s.vs.blind
+                ? `${s.name} needed ${s.promise} and got ${s.promise - 1} — ${s.vs.name} called blind and took ${s.vs.actual} of the 13. ${s.score}.`
+                : `${s.name} needed ${s.promise} and got ${s.promise - 1} — the last one went to ${s.vs.name}, who took ${s.vs.actual}. ${s.score}.`);
+        }
+
+        // ── Bid collision — both sides promised more than the table holds ────
+        // Fires on the bids alone, before any hand is resolved. Deliberately
+        // 'medium': it is context for whatever else happened this round, not
+        // usually the headline itself.
+        if (bidsCollide) {
+            const bigger = sides[0].promise >= sides[1].promise ? sides[0] : sides[1];
+            push('bid-collision', 'medium', bigger.name,
+                `${sides[0].name} wanted ${sides[0].promise} and ${sides[1].name} wanted ${sides[1].promise} — that is ${combinedPromise} hands between them and the table only holds 13.`);
         }
 
         // ── Big swing — one round that moved things a long way ───────────────
+        // Only when a blind does not already explain it. A +140 blind against a
+        // −40 miss is exactly 180, so without this guard `big-swing` is little
+        // more than a second label for `blind-hit` on the same round, and the
+        // supporting facts repeat the headline back to the listener.
         const swing = Math.abs(sides[0].score - sides[1].score);
-        if (swing >= BIG_SWING_MIN) {
+        if (swing >= BIG_SWING_MIN && !sides.some(s => s.blind)) {
             const winner = sides[0].score > sides[1].score ? sides[0] : sides[1];
             push('big-swing', 'medium', winner.name,
-                `A ${swing}-point swing in one round, ${winner.name}'s way.`);
+                `A ${swing}-point swing in one round, ${winner.name}'s way — ${winner.score} against ${winner.vs.score}.`);
         }
 
         // ── Match end — the finale outranks everything ───────────────────────
-        // Glory for the winner, a gentle roast for the loser (product
-        // decision: teasing, never mean — these are colleagues).
+        // Names both teams: the winner-then-loser turn is the whole shape of
+        // the closing line, and the loser has to be named for it to land.
         if (match.status === 'completed' && match.winnerId) {
             const winnerIsT1 = String(match.winnerId) === String(match.team1Id);
             const winName = winnerIsT1 ? t1Name : t2Name;
@@ -575,19 +655,24 @@ const FactsEngine = (() => {
             const winScore = Math.max(s1, s2);
             const loseScore = Math.min(s1, s2);
             push('match-end', 'finale', winName,
-                `${winName} have won it, ${spokenScore(winScore)} to ${spokenScore(loseScore)}, in ${rounds.length} ${plural(rounds.length, 'round')}.`);
+                `${winName} have won it, ${spokenScore(winScore)} to ${spokenScore(loseScore)}, in ${rounds.length} ${plural(rounds.length, 'round')} — ${loseName} finish on ${spokenScore(loseScore)}.`);
         }
 
         // ── Routine round — every round gets narrated, so when nothing
         // remarkable happened we still describe what the round did. ──────────
         if (!triggers.length) {
             const top = sides[0].score >= sides[1].score ? sides[0] : sides[1];
-            const other = top === sides[0] ? sides[1] : sides[0];
+            const other = top.vs;
             let detail;
             if (top.score > 0 && other.score > 0) {
-                detail = `Both sides delivered — ${top.name} ${signed(top.score)} on ${article(top.promise)} ${top.promise} promise, ${other.name} ${signed(other.score)}.`;
+                // Both made it. When the bids left room for that (combined ≤ 11
+                // is 73–80% both-positive), the story is that nobody reached —
+                // which is its own kind of round, not just a scoreline.
+                detail = bidsSafe
+                    ? `Nobody overreached — ${sides[0].promise} and ${sides[1].promise} between them, and both got there: ${top.name} ${signed(top.score)}, ${other.name} ${signed(other.score)}.`
+                    : `Both sides delivered — ${top.name} ${signed(top.score)} on ${article(top.promise)} ${top.promise} promise, ${other.name} ${signed(other.score)}.`;
             } else if (top.score > 0) {
-                detail = `${top.name} made their ${top.promise} and took ${top.actual}, ${signed(top.score)}; ${other.name} dropped ${signed(other.score)}.`;
+                detail = `${top.name} made their ${top.promise} and took ${top.actual}, ${signed(top.score)}; that left ${other.actual} for ${other.name}, who needed ${other.promise}. ${signed(other.score)}.`;
             } else {
                 detail = `A rough round for both — ${top.name} ${signed(top.score)}, ${other.name} ${signed(other.score)}.`;
             }
@@ -667,8 +752,13 @@ const FactsEngine = (() => {
                 if (Number(r[key].score) > 0) landed++;
             }
         }
-        if ((head.kind === 'blind-hit' || head.kind === 'blind-miss') && called > 1) {
-            facts.push(`${head.actor} have called ${called} blinds all season and landed ${landed}`);
+        // Historical blinds are only detectable when they landed (+140 is the
+        // only unambiguous signature — see isBlindSide), so `called` counts
+        // hits plus any flagged modern miss. Phrased as "landed N" rather than
+        // "called N of M" so the line stays true rather than implying a
+        // precision the data cannot support.
+        if ((head.kind === 'blind-hit' || head.kind === 'blind-miss') && landed > 1) {
+            facts.push(`${head.actor} have landed ${landed} blinds this season`);
         }
 
         return {
@@ -681,6 +771,14 @@ const FactsEngine = (() => {
             matchId: String(match.id),
             score: { t1: s1, t2: s2 },
             teams: { t1: t1Name, t2: t2Name },
+            // The round as a two-sided object — what each side asked for, what
+            // the 13 hands actually did, and whether the bids could both be met.
+            round: {
+                t1: { promise: sides[0].promise, actual: sides[0].actual, score: sides[0].score, blind: sides[0].blind },
+                t2: { promise: sides[1].promise, actual: sides[1].actual, score: sides[1].score, blind: sides[1].blind },
+                combinedPromise,
+                bidsCollide,
+            },
         };
     }
 
@@ -740,8 +838,14 @@ const FactsEngine = (() => {
     // Facts are stored without trailing punctuation in some paths and with it
     // in others, so the join normalises to exactly one full stop — a doubled
     // ".." is audible as an odd pause in speech synthesis.
-    function dramaTemplate(drama) {
+    function dramaTemplate(drama, options = {}) {
         if (!drama) return '';
+        if (String(options.lang || '').toLowerCase() === 'hinglish') {
+            const hinglish = hinglishTemplate(drama, options.steer);
+            if (hinglish) return hinglish;
+            // No Hinglish shape for this moment — fall through to English
+            // rather than go silent.
+        }
         // Facts are written as clause fragments ("head to head they stand…"),
         // so capitalise when they become standalone sentences.
         const sentence = s => {
@@ -758,6 +862,108 @@ const FactsEngine = (() => {
         return parts.join(' ');
     }
 
+    // ─── Hinglish templates (commentary-style.md §6) ─────────────────────────
+    // The no-key path must not go silent in Hinglish mode, and it cannot reuse
+    // dramaTemplate: `headline`/`facts` are English prose assembled above.
+    // These build from the *structured* round instead — which is exactly what
+    // the two-sided dramaOf work made possible.
+    //
+    // Register per §9: English syntax carries the numbers, Hindi carries the
+    // emotion, and the line lands on its last few words. Card words stay in
+    // English because that is what the table says out loud.
+    // `steer` is an AudioCommentary.comedySteer() result. Its rotated phrases
+    // become the line's closing beat — the same trick the season facts board
+    // uses for its `tail`, and the reason the vocabulary is worth having at
+    // all: without this the template path repeats one fixed sentence per kind
+    // forever, which is what the table actually hears whenever Groq is absent,
+    // slow, or out of quota.
+    //
+    // The numbers stay hardcoded here because they are facts; only the comedy
+    // rotates. A missing steer degrades to the baked phrasing, never to
+    // silence.
+    function hinglishTemplate(drama, steer) {
+        // Rotated phrase for this moment, or '' when none is available.
+        const phrase = (steer && Array.isArray(steer.phrases) && steer.phrases.length)
+            ? String(steer.phrases[0])
+            : '';
+        // Append the phrase as its own short beat. Capitalised because it
+        // becomes a sentence, and only when we actually have one.
+        const tail = (baked) => {
+            const p = phrase || baked || '';
+            if (!p) return '';
+            return ' ' + p.charAt(0).toUpperCase() + p.slice(1) + '.';
+        };
+        const r = drama.round;
+        const t = drama.teams || {};
+        const actor = drama.actor;
+        const actorIsT1 = actor === t.t1;
+        const me = r ? (actorIsT1 ? r.t1 : r.t2) : null;
+        const you = r ? (actorIsT1 ? r.t2 : r.t1) : null;
+        const other = actorIsT1 ? t.t2 : t.t1;
+        const hi = Math.max(Number(drama.score?.t1 || 0), Number(drama.score?.t2 || 0));
+        const lo = Math.min(Number(drama.score?.t1 || 0), Number(drama.score?.t2 || 0));
+        // Negative totals are real, and "minus 40" is how it is said aloud.
+        const num = n => (Number(n) < 0 ? `minus ${Math.abs(Number(n))}` : String(Number(n)));
+
+        switch (drama.kind) {
+            case 'blind-hit':
+                return `${actor} ne blind mara aur ${me.actual} haath le gaye. Seedha 140.`
+                    + tail();
+            case 'blind-miss':
+                return `${actor} ne blind mara, mile sirf ${me.actual}. Minus 70 ka jhatka.`
+                    + tail();
+            case 'near-miss':
+                return `${actor} ko ${me.promise} chahiye the, mile ${me.actual}.`
+                    + tail(`wo ek haath ${other} le gaye`);
+            case 'over-extension':
+                return Number(you?.score) < 0
+                    ? `${actor} ne ${me.promise} bola tha, ${me.actual} aa gaye —`
+                        + ` ${other} ek bhi nahi le paye.`
+                        + tail('itne acche patte aana bhi galti hai')
+                    : `${actor} ne ${me.promise} bola aur ${me.actual} utha liye.`
+                        + tail('apni hi bid mein phas gaye');
+            case 'bid-collision':
+                return `${t.t1} ne ${r.t1.promise} manga, ${t.t2} ne ${r.t2.promise} —`
+                    + ` table pe hai sirf 13.`
+                    + tail('ek toh marega');
+            case 'lead-change':
+                return `${actor} aage nikal gaye. Ab ${num(hi)} versus ${num(lo)}.`
+                    + tail();
+            case 'match-point':
+                return `${actor} match point pe hain. Bas ${500 - hi} points aur.`
+                    + tail();
+            case 'record-comeback-watch':
+                return `${actor} bahut peeche hain. Yahan se jeet gaye toh record ban jayega.`
+                    + tail();
+            case 'big-swing':
+                return `Ek hi round mein poora scene palat gaya, ${actor} ki taraf.`
+                    + tail();
+            case 'match-end':
+                return `${actor} ne baazi maar li, ${num(hi)} versus ${num(lo)}.`
+                    + tail(`${other} ka aaj din nahi tha`);
+            case 'match-start':
+                return `${t.t1} versus ${t.t2}. Jo pehle 500 pahunche, wahi king.`;
+            case 'routine': {
+                if (!me || !you) return null;
+                if (Number(me.score) > 0 && Number(you.score) > 0) {
+                    return `Dono ne apna kaam kar liya — ${actor} ${num(me.score)},`
+                        + ` ${other} ${num(you.score)}.`
+                        + tail();
+                }
+                if (Number(me.score) > 0) {
+                    return `${actor} ne ${me.promise} bola aur ${me.actual} le liye.`
+                        + ` ${other} ${num(you.score)} pe.`
+                        + tail('unki lag gayi');
+                }
+                return `Dono ka round kharab — ${actor} ${num(me.score)},`
+                    + ` ${other} ${num(you.score)}.`
+                    + tail();
+            }
+            default:
+                return null;
+        }
+    }
+
     // ─── Facts packet — the ONLY thing the LLM sees (spec § facts packet) ────
     function factsPacket(match, teams, matches, options = {}) {
         const rounds = roundsOf(match);
@@ -767,11 +973,15 @@ const FactsEngine = (() => {
         const t1Name = teamName(teams, match.team1Id);
         const t2Name = teamName(teams, match.team2Id);
 
+        // Infer rather than reading the raw flag: historical rounds have none,
+        // so `!!side.blind` reported every legacy blind as an ordinary bid —
+        // and told the on-screen model the opposite of what the spoken packet
+        // said about the very same round.
         const side = key => last ? {
             promise: Number(last[key]?.promise || 0),
             actual: Number(last[key]?.actual || 0),
             score: Number(last[key]?.score || 0),
-            blind: !!last[key]?.blind,
+            blind: isBlindSide(last[key]),
         } : null;
 
         const packet = {

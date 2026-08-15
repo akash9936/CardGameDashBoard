@@ -2137,6 +2137,111 @@ canvas.sparkline {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
+   Commentary history — the scrollback under the strip.
+   Closed by default; the strip stays the "now" surface and this is the record.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.bs-history {
+    margin-top: 2px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+}
+
+.bs-history .ch-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    width: 100%;
+    padding: 2px 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--fg-dim);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color var(--dur-fast) var(--ease-out);
+}
+
+.bs-history .ch-toggle:hover { color: var(--fg-muted-2); }
+
+.bs-history .ch-count {
+    padding: 1px 6px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-pill);
+    font-size: 10px;
+    letter-spacing: 0;
+}
+
+.bs-history .ch-caret {
+    margin-left: auto;
+    transition: transform var(--dur-base) var(--ease-out);
+}
+
+.bs-history.open .ch-caret { transform: rotate(180deg); }
+
+/* The scroll container. Capped so a long match cannot push the board off
+   screen — the whole point is that this stays subordinate to the strip. */
+.bs-history .ch-panel {
+    max-height: 240px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin-top: 6px;
+    padding-right: 4px;
+}
+
+.bs-history .ch-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+}
+
+.bs-history .ch-entry {
+    padding-left: var(--s-3);
+    border-left: 2px solid var(--border-strong);
+}
+
+/* Spoken and AI lines are the ones people come back for — mark them. */
+.bs-history .ch-entry.ch-spoken { border-left-color: var(--bs-accent); }
+.bs-history .ch-entry.ch-pundit { border-left-color: var(--info); }
+.bs-history .ch-entry.ch-result { border-left-color: var(--blind-gold); }
+
+.bs-history .ch-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--fg-dim);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.bs-history .ch-time { margin-left: auto; letter-spacing: 0; }
+
+.bs-history .ch-text {
+    margin-top: 2px;
+    color: var(--fg);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.bs-history .ch-detail {
+    margin-top: 1px;
+    color: var(--fg-muted-2);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bs-history .ch-caret { transition: none !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
    Round Reveal — §3.1
    ──────────────────────────────────────────────────────────────────────────── */
 .reveal-overlay {

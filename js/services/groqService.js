@@ -65,13 +65,30 @@ const GroqService = (() => {
         '  cruel, never personal, always about the cards.',
         '- routine: ONE brisk, matter-of-fact sentence with a wry aside.',
         '- anything else: ONE sentence, play up the drama.',
-        'Keep each sentence under 25 words.',
         'Be genuinely funny: tease the risk, the greed, or the nerve.',
         'Use AT MOST two numbers from the packet, and copy them exactly.',
         'Never invent or derive statistics, swings, totals, records, or events —',
         'if a number is not in the packet, do not say it. Do not do arithmetic.',
+        // Comedy steering. The engine picks the situation and the shape; the
+        // model supplies the words. Phrases are offered as register, not as
+        // lines to quote — a recited phrase sounds like a recited phrase.
+        'The packet may carry a "comedy" block. When it does:',
+        '- "formHint" is how to shape THIS line. Follow it.',
+        '- "phrases" are example expressions in the right register. Use one only',
+        '  if it fits naturally, and bend it to the sentence — never quote a',
+        '  phrase verbatim as the whole line.',
+        '- "avoidOpenings" lists how recent lines began. Do not start this line',
+        '  with any of them.',
+        'The packet may also carry "round" with both teams\' promise and actual.',
+        'The two actuals always add up to 13, so one side\'s gain is the other',
+        'side\'s loss — when it is interesting, say what the other team did.',
         'It will be read aloud by a speech synthesiser: no markdown, no emoji,',
         'no quotes, no preamble, no stage directions. Just the sentence.',
+        // Length last: instruction-following is strongest at the end of the
+        // prompt, and word-count limits are routinely ignored while an explicit
+        // sentence count is not.
+        'Reply with ONE sentence, unless the moment field says match-start or',
+        'match-end, which take exactly TWO. Keep each sentence short.',
     ].join(' ');
 
     // ─── Injectable environment (browser defaults, overridable in tests) ─────
@@ -83,6 +100,17 @@ const GroqService = (() => {
     const inflight = new Set();    // matchId currently awaiting a response
     let keyRejected = false;       // a 401 this session; surfaced in settings
     let modelBroken = false;       // 4xx model error → stop quietly for the session
+    // A 429 means the key's quota is spent. Unlike a 401 this is temporary, so
+    // it is a deadline rather than a flag: calls are skipped until it passes,
+    // then the next one is allowed through to find out if quota came back.
+    //
+    // Without this every card decoration re-fired on every render, each one
+    // burning more quota and pushing the reset further out — the app DDoSed
+    // its own rate limit and stayed mute the whole time.
+    let rateLimitedUntil = 0;      // epoch ms; 0 = not limited
+    const DEFAULT_COOLDOWN_MS = 60_000;
+    const MAX_COOLDOWN_MS = 60 * 60_000;   // an hour — daily caps report far longer
+    let _now = () => Date.now();
 
     // ─── Key management ──────────────────────────────────────────────────────
     function getKey() {
@@ -92,6 +120,7 @@ const GroqService = (() => {
     function setKey(key) {
         keyRejected = false;
         modelBroken = false;
+        rateLimitedUntil = 0;   // a new key gets a clean slate and its own quota
         try {
             if (!_storage) return;
             if (key) _storage.setItem(KEY_STORAGE, key.trim());
@@ -100,6 +129,32 @@ const GroqService = (() => {
     }
     function hasKey() { return !!getKey(); }
     function wasKeyRejected() { return keyRejected; }
+
+    // True while the key's quota is spent. The UI announces this instead of
+    // failing mute — a silent commentator is indistinguishable from a broken
+    // one, which is exactly how this went unnoticed.
+    function isRateLimited() { return rateLimitedUntil > _now(); }
+
+    // Whole minutes until the next attempt (0 when not limited), for the
+    // message. Rounded up so "1 min" never means "already, actually".
+    function rateLimitMinutesLeft() {
+        if (!isRateLimited()) return 0;
+        return Math.ceil((rateLimitedUntil - _now()) / 60_000);
+    }
+
+    // Groq sends `retry-after` in seconds; honour it when sane, since it knows
+    // the real reset far better than a guess does.
+    function _noteRateLimited(res) {
+        let waitMs = DEFAULT_COOLDOWN_MS;
+        try {
+            const raw = res && res.headers && typeof res.headers.get === 'function'
+                ? res.headers.get('retry-after')
+                : null;
+            const secs = raw != null ? Number(raw) : NaN;
+            if (Number.isFinite(secs) && secs > 0) waitMs = secs * 1000;
+        } catch (e) { /* header unreadable — fall back to the default */ }
+        rateLimitedUntil = _now() + Math.min(waitMs, MAX_COOLDOWN_MS);
+    }
 
     // ─── Recap cache (localStorage — finished matches never change) ──────────
     function _readRecaps() {
@@ -137,10 +192,73 @@ const GroqService = (() => {
         ko: /[가-힯]/, zh: /[一-鿿]/, yue: /[一-鿿]/,
     };
 
+    // Hinglish cannot be verified by script — it is deliberately Latin, so
+    // SCRIPT_RANGES has no entry for it and every reply would pass, including a
+    // plain English one. The failure mode worth catching is the model quietly
+    // answering in English, so this checks for *Hindi* instead: a handful of
+    // function words that appear in almost any real Hinglish sentence.
+    //
+    // Content words are useless here (an English line may well contain "blind"
+    // or a team name); these are grammatical glue that only appears when the
+    // sentence is actually built in Hindi.
+    // Words that are ALSO ordinary English are deliberately excluded, however
+    // common they are in Hindi: "the" (Hindi: they were) matched every English
+    // sentence, and "par", "ab", "se", "sab", "kar" all collide too. What is
+    // left only appears when the sentence is genuinely built in Hindi.
+    const HINGLISH_MARKERS = /\b(ne|ka|ki|ko|hai|hain|tha|thi|gaya|gayi|gaye|diya|liya|karke|mein|bhi|toh|phir|nahi|aur|kya|bhai|apna|apni|inka|unka|raha|rahi|kuch|itna|bahut)\b/i;
+
+    function looksHinglish(line) {
+        const s = String(line);
+        // Devanagari is not the target register, but it is unmistakably Hindi
+        // and a Hindi voice reads it correctly — so accept rather than reject.
+        if (/[ऀ-ॿ]/.test(s)) return true;
+        return HINGLISH_MARKERS.test(s);
+    }
+
     function usesExpectedScript(line, langCode) {
+        if (String(langCode || '').toLowerCase() === 'hinglish') return looksHinglish(line);
         const re = SCRIPT_RANGES[langCode];
         if (!re) return true;          // Latin-script languages need no check
         return re.test(String(line));
+    }
+
+    // ─── Language direction (data, not a template literal) ───────────────────
+    // Most languages want the same thing: their own script, numbers as words.
+    // Hinglish wants the opposite of both, so the instruction cannot be built
+    // by interpolating a language name — `Write in Hinglish using the native
+    // script of Hinglish (never romanised)` is incoherent, and it is exactly
+    // what the old template produced.
+    //
+    // Anything not listed here falls back to DEFAULT_DIRECTION.
+    const LANGUAGE_DIRECTION = {
+        // The house register: Hindi grammar, Latin script, English kept for the
+        // words the table actually says in English. Deliberately NOT a
+        // SCRIPT_RANGES entry — see scriptCodeFor().
+        hinglish: 'Write the line in Hinglish — Hindi and English mixed the way'
+            + ' Indian friends actually talk at a card table, in Latin script'
+            + ' (never Devanagari). Keep the card words in English: blind, bid,'
+            + ' points, round, score, game, match. Keep team names exactly as'
+            + ' given. Write numbers as digits. Do not translate into formal'
+            + ' Hindi and do not write plain English —'
+            + ' "Coke ne blind mara, 140 le gaye" is the target.',
+    };
+
+    function DEFAULT_DIRECTION(language) {
+        // Native script matters: the synthesiser pronounces by script, so
+        // romanised Hindi ("blind call kiya") is read with English phonetics by
+        // a Hindi voice and sounds wrong.
+        return `Write the line in ${language}, not English,`
+            + ` using the native script of ${language}`
+            + ' (never romanised or transliterated Latin letters).'
+            + ' Keep team names exactly as given, in their original spelling.'
+            + ' Write all numbers as words in that language.';
+    }
+
+    function languageDirection(langCode, language) {
+        const byCode = LANGUAGE_DIRECTION[String(langCode || '').toLowerCase()];
+        if (byCode) return byCode;
+        if (!language || language === 'English') return null;
+        return DEFAULT_DIRECTION(language);
     }
 
     // Spoken lines must end cleanly — a sentence cut mid-word is jarring read
@@ -154,16 +272,65 @@ const GroqService = (() => {
     const EVENT_MAX_CHARS = 320;
     const TWO_SENTENCE_MOMENTS = new Set(['match-start', 'match-end']);
 
+    // Sentence terminators, split by whether a following space is required.
+    //
+    // Latin-style marks also end abbreviations and decimals ("Rs. 500", "3.5"),
+    // so they only count as a sentence end when whitespace or end-of-string
+    // follows. CJK and Indic terminators carry no such ambiguity and are
+    // routinely written with no space after them, so requiring one would skip
+    // them entirely — which is exactly the bug this replaces: the old
+    // /[.!?](\s|$)/ never matched Devanagari danda, so for Hindi (a shipped,
+    // key-gated language) the whole reply passed through untrimmed and the
+    // one-sentence contract silently did not apply.
+    //
+    //   ।  U+0964 danda      — Hindi, Bengali, and other Indic scripts
+    //   ॥  U+0965 double danda
+    //   。 U+3002 ideographic full stop — Chinese, Japanese
+    //   ！ U+FF01 / ？ U+FF1F fullwidth bang and question mark
+    //   ؟  U+061F Arabic question mark
+    //   ۔  U+06D4 Arabic full stop (Urdu)
+    //
+    // Deliberately NOT included: the Greek question mark U+037E, which is
+    // canonically equivalent to an ASCII ";" and cannot be distinguished from
+    // one here. Including it would cut every English line at its first
+    // semicolon. Greek falls back to the "." branch, which is correct for it.
+    const SENTENCE_END_SPACED = /[.!?](\s|$)/;          // needs a space after
+    const SENTENCE_END_BARE = /[।॥。！？؟۔]/;
+
+    // Which full stop to append when a line is cut at the character cap.
+    // Hinglish is deliberately mixed-script and reads as Latin prose, so it
+    // takes "." — only a wholly Indic/CJK line gets its own mark.
+    const INDIC_DANDA = /[ऀ-ॿঀ-৿]/;   // Devanagari, Bengali
+    const CJK_STOP = /[぀-ヿ一-鿿가-힯]/;
+    const ARABIC_STOP = /[؀-ۿ]/;
+
+    function terminatorFor(text) {
+        const latin = (String(text).match(/[A-Za-z]/g) || []).length;
+        const indic = (String(text).match(/[ऀ-৿]/g) || []).length;
+        if (CJK_STOP.test(text)) return '。';
+        // A line with more Latin letters than Indic ones is Hinglish, not Hindi.
+        if (INDIC_DANDA.test(text) && indic >= latin) return '।';
+        if (ARABIC_STOP.test(text) && !latin) return '۔';
+        return '.';
+    }
+
     function trimToFirstSentence(text, maxSentences = 1, maxChars = SPOKEN_MAX_CHARS) {
         // Collapse newlines — the model sometimes puts each sentence on its
         // own line, which is invisible on screen but reads as a stumble aloud.
         let s = String(text).replace(/\s+/g, ' ').trim();
 
-        // Keep up to maxSentences complete sentences.
+        // Keep up to maxSentences complete sentences. Each step takes whichever
+        // terminator comes first, so mixed-script replies (a Hinglish line with
+        // both "." and "।") cut at the right place.
         let cut = 0, taken = 0;
         while (taken < maxSentences) {
             const rest = s.slice(cut);
-            const idx = rest.search(/[.!?](\s|$)/);
+            const spaced = rest.search(SENTENCE_END_SPACED);
+            const bare = rest.search(SENTENCE_END_BARE);
+            let idx;
+            if (spaced === -1) idx = bare;
+            else if (bare === -1) idx = spaced;
+            else idx = Math.min(spaced, bare);
             if (idx === -1) break;
             cut += idx + 1;
             taken++;
@@ -172,9 +339,14 @@ const GroqService = (() => {
 
         if (s.length > maxChars) {
             s = s.slice(0, maxChars);
+            // Back off to a word boundary. CJK is written without inter-word
+            // spaces, so there may be none to find — cutting at the character
+            // is correct there and does not strand a half-word.
             const lastSpace = s.lastIndexOf(' ');
             if (lastSpace > 40) s = s.slice(0, lastSpace);
-            s = s.replace(/[,;:\s]+$/, '') + '.';
+            // Close with the terminator this script actually uses; a Latin full
+            // stop after Devanagari or CJK looks (and reads aloud) wrong.
+            s = s.replace(/[,;:\s]+$/, '') + terminatorFor(s);
         }
         return s.trim();
     }
@@ -194,6 +366,9 @@ const GroqService = (() => {
     async function commentate(packet, options = {}) {
         if (!packet || !packet.matchId) return null;
         if (!_fetch || modelBroken) return null;
+        // Quota is spent — don't spend a request finding that out again. The
+        // caller falls back to its template, exactly as it does with no key.
+        if (isRateLimited()) return null;
 
         const spoken = !!options.spoken;
         const inflightKey = spoken ? `spoken:${packet.matchId}` : packet.matchId;
@@ -205,16 +380,8 @@ const GroqService = (() => {
         if (spoken && (options.language || options.mood)) {
             const extra = [];
             if (options.mood) extra.push(options.mood);
-            if (options.language && options.language !== 'English') {
-                // Native script matters: the synthesiser pronounces by script,
-                // so romanised Hindi ("blind call kiya") is read as English
-                // phonetics by a Hindi voice and sounds wrong.
-                extra.push(`Write the line in ${options.language}, not English,`
-                    + ` using the native script of ${options.language}`
-                    + ' (never romanised or transliterated Latin letters).'
-                    + ' Keep team names exactly as given, in their original spelling.'
-                    + ' Write all numbers as words in that language.');
-            }
+            const langDirection = languageDirection(options.langCode, options.language);
+            if (langDirection) extra.push(langDirection);
             systemPrompt = `${systemPrompt} ${extra.join(' ')}`;
         }
 
@@ -266,7 +433,10 @@ const GroqService = (() => {
             if (!res.ok) {
                 if (res.status === 401) keyRejected = true;
                 if (res.status === 400 || res.status === 404) modelBroken = true;
-                return null;   // 429 and everything else: skip this round quietly
+                // Quota spent: start a cooldown so the next render doesn't
+                // immediately try again, and so the UI can say why it is quiet.
+                if (res.status === 429) _noteRateLimited(res);
+                return null;   // everything else: skip this round quietly
             }
 
             const data = await res.json();
@@ -308,18 +478,21 @@ const GroqService = (() => {
     // ─── Test hooks ──────────────────────────────────────────────────────────
     function _setFetch(fn) { _fetch = fn; }
     function _setStorage(s) { _storage = s; }
+    function _setNow(fn) { _now = fn || (() => Date.now()); }
     function _reset() {
         liveCache.clear();
         inflight.clear();
         keyRejected = false;
         modelBroken = false;
+        rateLimitedUntil = 0;
     }
 
     return {
         commentate, getCachedRecap,
         getKey, setKey, hasKey, wasKeyRejected,
+        isRateLimited, rateLimitMinutesLeft,
         MODEL, ENDPOINT, TIMEOUT_MS, SPOKEN_TIMEOUT_MS, SYSTEM_PROMPT, SPOKEN_PROMPT,
-        _setFetch, _setStorage, _reset,
+        _setFetch, _setStorage, _setNow, _reset,
     };
 })();
 

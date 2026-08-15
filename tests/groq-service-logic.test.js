@@ -12,13 +12,14 @@ function makeStorage() {
 }
 
 // A fetch mock that records calls and returns a canned Groq response.
-function makeFetch(line = 'What a round!', status = 200) {
+function makeFetch(line = 'What a round!', status = 200, headers = {}) {
     const calls = [];
     const fn = jest.fn(async (url, opts) => {
         calls.push({ url, opts });
         return {
             ok: status >= 200 && status < 300,
             status,
+            headers: { get: k => (k in headers ? headers[k] : null) },
             json: async () => ({ choices: [{ message: { content: line } }] }),
         };
     });
@@ -139,6 +140,102 @@ describe('commentate', () => {
         expect(GroqService.wasKeyRejected()).toBe(false);
     });
 
+    // ─── Rate-limit cooldown ────────────────────────────────────────────────
+    // A 429 used to be swallowed with no state change, so every re-render
+    // fired another request — the app burned its own quota and stayed mute
+    // with nothing in the UI to explain why.
+    describe('429 cooldown', () => {
+        test('a 429 marks the service rate-limited', async () => {
+            GroqService._setFetch(makeFetch('', 429));
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+            expect(GroqService.isRateLimited()).toBe(true);
+        });
+
+        test('while limited, no further request is sent', async () => {
+            const fetch = makeFetch('', 429);
+            GroqService._setFetch(fetch);
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+            expect(fetch).toHaveBeenCalledTimes(1);
+
+            // Different rounds, so the live cache cannot be what stops these.
+            await GroqService.commentate(livePacket({ roundsPlayed: 4 }));
+            await GroqService.commentate(livePacket({ roundsPlayed: 5 }));
+            expect(fetch).toHaveBeenCalledTimes(1);
+        });
+
+        test('the cooldown honours retry-after', async () => {
+            let now = 1_000_000;
+            GroqService._setNow(() => now);
+            GroqService._setFetch(makeFetch('', 429, { 'retry-after': '120' }));
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+
+            expect(GroqService.rateLimitMinutesLeft()).toBe(2);
+            now += 119_000;
+            expect(GroqService.isRateLimited()).toBe(true);
+            now += 2_000;                       // past the 120s deadline
+            expect(GroqService.isRateLimited()).toBe(false);
+            GroqService._setNow(null);
+        });
+
+        test('once the cooldown expires the next call goes through', async () => {
+            let now = 1_000_000;
+            GroqService._setNow(() => now);
+            const fetch = makeFetch('', 429, { 'retry-after': '60' });
+            GroqService._setFetch(fetch);
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+            expect(fetch).toHaveBeenCalledTimes(1);
+
+            now += 61_000;
+            GroqService._setFetch(makeFetch('Back in business.'));
+            expect(await GroqService.commentate(livePacket({ roundsPlayed: 9 })))
+                .toBe('Back in business.');
+            GroqService._setNow(null);
+        });
+
+        test('a new key clears the cooldown — it has its own quota', async () => {
+            GroqService._setFetch(makeFetch('', 429));
+            GroqService.setKey('gsk_spent');
+            await GroqService.commentate(livePacket());
+            expect(GroqService.isRateLimited()).toBe(true);
+
+            GroqService.setKey('gsk_fresh');
+            expect(GroqService.isRateLimited()).toBe(false);
+        });
+
+        test('an absurd retry-after is capped, not trusted', async () => {
+            let now = 1_000_000;
+            GroqService._setNow(() => now);
+            GroqService._setFetch(makeFetch('', 429, { 'retry-after': '999999' }));
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+            // Capped at an hour, so the feature always gets to retry today.
+            expect(GroqService.rateLimitMinutesLeft()).toBe(60);
+            GroqService._setNow(null);
+        });
+
+        test('a missing retry-after falls back to a default cooldown', async () => {
+            let now = 1_000_000;
+            GroqService._setNow(() => now);
+            GroqService._setFetch(makeFetch('', 429));   // no headers
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket());
+            expect(GroqService.isRateLimited()).toBe(true);
+            expect(GroqService.rateLimitMinutesLeft()).toBe(1);
+            GroqService._setNow(null);
+        });
+
+        test('a 401 does not start a cooldown — that key is dead, not throttled', async () => {
+            GroqService._setFetch(makeFetch('', 401));
+            GroqService.setKey('gsk_bad');
+            await GroqService.commentate(livePacket());
+            expect(GroqService.isRateLimited()).toBe(false);
+        });
+    });
+
     test('a network error resolves null, never throws', async () => {
         GroqService._setFetch(jest.fn(async () => { throw new Error('offline'); }));
         GroqService.setKey('gsk_k');
@@ -213,6 +310,126 @@ describe('commentate', () => {
         const line = await GroqService.commentate(
             livePacket({ kind: 'spoken' }), { spoken: true, langCode: 'hi', language: 'Hindi' });
         expect(line).toBe('कोरबागैंग ने ब्लाइंड जीत लिया।');
+    });
+
+    // Regression: trimToFirstSentence only split on /[.!?](\s|$)/, which never
+    // matches the Devanagari danda "।" (nor CJK "。", nor Arabic "؟"). For every
+    // non-Latin language the whole reply passed through and the one-sentence
+    // contract silently did not apply.
+    test('Devanagari danda ends a sentence — Hindi is trimmed to one', async () => {
+        GroqService._setFetch(makeFetch(
+            'कोरबागैंग ने ब्लाइंड जीता। अब बढ़त उनकी है। और तीसरा वाक्य यहाँ है।'));
+        GroqService.setKey('gsk_k');
+        const line = await GroqService.commentate(
+            livePacket({ kind: 'spoken' }), { spoken: true, langCode: 'hi', language: 'Hindi' });
+        expect(line).toBe('कोरबागैंग ने ब्लाइंड जीता।');
+    });
+
+    test('CJK and Arabic terminators end a sentence without a trailing space', async () => {
+        GroqService.setKey('gsk_k');
+
+        GroqService._setFetch(makeFetch('科尔巴帮赢了盲注。现在他们领先。第三句话。'));
+        expect(await GroqService.commentate(
+            livePacket({ kind: 'spoken' }), { spoken: true, langCode: 'zh', language: 'Chinese' }))
+            .toBe('科尔巴帮赢了盲注。');
+
+        GroqService._reset();
+        GroqService._setFetch(makeFetch('فاز الفريق بالرهان؟ هم في المقدمة؟ الثالثة؟'));
+        expect(await GroqService.commentate(
+            livePacket({ kind: 'spoken' }), { spoken: true, langCode: 'ar', language: 'Arabic' }))
+            .toBe('فاز الفريق بالرهان؟');
+    });
+
+    test('a danda two-beat moment still keeps exactly two sentences', async () => {
+        GroqService._setFetch(makeFetch(
+            'कोरबागैंग जीत गए। स्प्राइट पीछे रह गए। तीसरा वाक्य।'));
+        GroqService.setKey('gsk_k');
+        const line = await GroqService.commentate(
+            livePacket({ kind: 'spoken', moment: 'match-end' }),
+            { spoken: true, langCode: 'hi', language: 'Hindi' });
+        expect(line).toBe('कोरबागैंग जीत गए। स्प्राइट पीछे रह गए।');
+    });
+
+    // The Greek question mark U+037E is canonically equivalent to ASCII ";".
+    // Treating it as a terminator would cut every English line at its first
+    // semicolon, so it is deliberately excluded.
+    test('an ASCII semicolon does not end a sentence', async () => {
+        GroqService._setFetch(makeFetch('Korba won the blind; they lead now. Third sentence.'));
+        GroqService.setKey('gsk_k');
+        const line = await GroqService.commentate(
+            livePacket({ kind: 'spoken' }), { spoken: true });
+        expect(line).toBe('Korba won the blind; they lead now.');
+    });
+
+    // Hinglish is deliberately Latin-script, so SCRIPT_RANGES cannot verify it
+    // — every reply would pass, including a plain English one. The check is
+    // inverted: look for Hindi grammar instead.
+    describe('Hinglish mode', () => {
+        const hinglish = { spoken: true, langCode: 'hinglish', language: 'Hinglish' };
+
+        test('accepts a genuinely Hinglish line', async () => {
+            GroqService._setFetch(makeFetch('Coke ne blind mara, 140 le gaye.'));
+            GroqService.setKey('gsk_k');
+            expect(await GroqService.commentate(livePacket({ kind: 'spoken' }), hinglish))
+                .toBe('Coke ne blind mara, 140 le gaye.');
+        });
+
+        test('rejects a plain English line', async () => {
+            GroqService._setFetch(makeFetch('Coke called blind and took nine hands.'));
+            GroqService.setKey('gsk_k');
+            expect(await GroqService.commentate(livePacket({ kind: 'spoken' }), hinglish))
+                .toBeNull();
+        });
+
+        // Words that are common in both languages must not count as evidence:
+        // "the" is Hindi for "they were" and also the commonest English word.
+        test('English containing Hindi-lookalike words is still rejected', async () => {
+            for (const line of ['Sprite lead the match right now.',
+                                'Coke is on par with Sprite.',
+                                'He took a car to the park.']) {
+                GroqService._reset();
+                GroqService._setFetch(makeFetch(line));
+                GroqService.setKey('gsk_k');
+                expect(await GroqService.commentate(livePacket({ kind: 'spoken' }), hinglish))
+                    .toBeNull();
+            }
+        });
+
+        // Not the target register, but unmistakably Hindi and a Hindi voice
+        // reads it correctly — accepting beats falling back to silence.
+        test('Devanagari is accepted rather than rejected', async () => {
+            GroqService._setFetch(makeFetch('कोक ने ब्लाइंड मारा।'));
+            GroqService.setKey('gsk_k');
+            expect(await GroqService.commentate(livePacket({ kind: 'spoken' }), hinglish))
+                .toBe('कोक ने ब्लाइंड मारा।');
+        });
+
+        // The old template interpolated the language name into "using the
+        // native script of X", which for Hinglish is both incoherent and the
+        // exact opposite of what is wanted.
+        test('the prompt asks for Latin script, never native script', async () => {
+            const fetch = makeFetch('Coke ne blind mara.');
+            GroqService._setFetch(fetch);
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(livePacket({ kind: 'spoken' }), {
+                ...hinglish, mood: 'Be dry and deadpan.',
+            });
+            const system = JSON.parse(fetch.calls[0].opts.body).messages[0].content;
+            expect(system).toContain('Hinglish');
+            expect(system).toContain('Latin script');
+            expect(system).not.toContain('native script');
+            expect(system).toContain('Be dry and deadpan.');   // mood survives
+        });
+
+        test('other languages still get the native-script instruction', async () => {
+            const fetch = makeFetch('कुछ।');
+            GroqService._setFetch(fetch);
+            GroqService.setKey('gsk_k');
+            await GroqService.commentate(
+                livePacket({ kind: 'spoken' }), { spoken: true, langCode: 'hi', language: 'Hindi' });
+            const system = JSON.parse(fetch.calls[0].opts.body).messages[0].content;
+            expect(system).toContain('native script of Hindi');
+        });
     });
 
     test('Latin-script languages are not script-checked', async () => {

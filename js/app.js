@@ -55,7 +55,7 @@ document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
     if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
 });
 
-// 🔊 Audio toggle — spoken commentary (ai-commentary.md § Spoken commentary).
+// 🔊 Audio toggle — speaks dramatic moments only (ai-commentary.md § Spoken).
 function syncAudioToggleButton() {
     const btn = document.getElementById('audioToggleBtn');
     if (!btn || typeof AudioCommentary === 'undefined') return;
@@ -73,10 +73,30 @@ document.getElementById('audioToggleBtn')?.addEventListener('click', () => {
     AudioCommentary.toggle();
     syncAudioToggleButton();
     showNotification(AudioCommentary.isEnabled()
-        ? 'Commentary on.'
+        ? 'Commentary on — dramatic moments only.'
         : 'Commentary off.');
 });
 syncAudioToggleButton();
+
+// Groq quota exhausted (429) → say so once per cooldown, rather than letting
+// the AI lines vanish with no explanation. Silence is the one failure mode a
+// commentary feature cannot signal on its own.
+//
+// Announced once because a cooldown spans many rounds and a toast per round
+// would be worse than the silence it is reporting.
+let _quotaNoticeUntil = 0;
+function announceQuotaIfExhausted() {
+    if (typeof GroqService === 'undefined' || !GroqService.isRateLimited()) return;
+    const mins = GroqService.rateLimitMinutesLeft();
+    // Re-announce only after the cooldown we already reported has elapsed.
+    const now = Date.now();
+    if (now < _quotaNoticeUntil) return;
+    _quotaNoticeUntil = now + mins * 60_000;
+    showNotification(
+        `Groq quota used up — AI lines paused ~${mins} min. Using built-in phrasing. `
+        + 'Add a new key in ✨ AI settings, or turn commentary off.',
+        'error');
+}
 
 // Fix Stats Button
 elements.fixStatsBtn.addEventListener('click', recalculateStats);
@@ -300,162 +320,6 @@ async function showAddMatchModal() {
             showNotification(error.message, 'error');
         }
     });
-}
-
-// Show match round modal
-async function showMatchRoundModal(matchId) {
-    try {
-        const matchDetails = await matchService.getMatchDetails(matchId);
-        if (!matchDetails) {
-            throw new Error('Match not found');
-        }
-
-        const { teams } = matchDetails;
-        if (!teams || !teams.team1 || !teams.team2) {
-            throw new Error('Match team details not found');
-        }
-
-        showModal(`
-            <h2>Round ${matchDetails.currentRound + 1}</h2>
-            <div class="match-status">
-                <div class="team-score">
-                    <h3>${teams.team1.name}</h3>
-                    <p>Current Score: ${matchDetails.finalScore.team1}</p>
-                </div>
-                <div class="team-score">
-                    <h3>${teams.team2.name}</h3>
-                    <p>Current Score: ${matchDetails.finalScore.team2}</p>
-                </div>
-            </div>
-            <form id="roundForm">
-                <div class="round-inputs">
-                    <div class="team-inputs">
-                        <h4>${teams.team1.name}</h4>
-                        <div class="form-group">
-                            <label for="team1Promise">Promise Hand</label>
-                            <input type="number" id="team1Promise" min="4" max="13" required>
-                            <div class="validation-hint">Must be between 4 and 13</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="team1Actual">Actual Hand</label>
-                            <input type="number" id="team1Actual" min="0" required>
-                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                        </div>
-                    </div>
-                    <div class="team-inputs">
-                        <h4>${teams.team2.name}</h4>
-                        <div class="form-group">
-                            <label for="team2Promise">Promise Hand</label>
-                            <input type="number" id="team2Promise" min="4" max="13" required>
-                            <div class="validation-hint">Must be between 4 and 13</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="team2Actual">Actual Hand</label>
-                            <input type="number" id="team2Actual" min="0" required>
-                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="validation-hint" style="margin-bottom: 20px;">
-                    <strong>Validation Rules:</strong><br>
-                    • Promise hands must be between 4 and 13 for each team<br>
-                    • Actual hands of both teams must equal 13<br>
-                    • Total score cannot exceed 200 or be less than -100
-                </div>
-                <button type="submit" class="action-btn">Submit Round</button>
-            </form>
-            ${matchDetails.currentRound > 0 ? `
-                <div class="round-history">
-                    <h3>Round History</h3>
-                    ${matchDetails.rounds.slice(0, -1).map(round => `
-                        <div class="round-item">
-                            <h4>Round ${round.roundNumber}</h4>
-                            <div class="round-scores">
-                                <div class="team-round">
-                                    <strong>${teams.team1.name}:</strong>
-                                    Promise: ${round.team1.promise}, 
-                                    Actual: ${round.team1.actual}, 
-                                    Score: ${round.team1.score}
-                                </div>
-                                <div class="team-round">
-                                    <strong>${teams.team2.name}:</strong>
-                                    Promise: ${round.team2.promise}, 
-                                    Actual: ${round.team2.actual}, 
-                                    Score: ${round.team2.score}
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-        `);
-
-        document.getElementById('roundForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Check if user is authenticated
-            if (!storage.isAuthenticated()) {
-                // Store the action to execute after authentication
-                window.pendingRoundAction = () => {
-                    const team1Promise = parseInt(document.getElementById('team1Promise').value);
-                    const team1Actual = parseInt(document.getElementById('team1Actual').value);
-                    const team2Promise = parseInt(document.getElementById('team2Promise').value);
-                    const team2Actual = parseInt(document.getElementById('team2Actual').value);
-                    
-                    // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
-                    const team1Score = Match.computeScore(team1Promise, team1Actual);
-                    const team2Score = Match.computeScore(team2Promise, team2Actual);
-
-                    matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score)
-                        .then(async () => {
-                            const updatedMatch = await matchService.getMatchDetails(matchId);
-                            
-                            if (updatedMatch.status === 'completed') {
-                                closeModal();
-                                await refreshMatchesList();
-                                await refreshStats();
-                                showNotification('Match completed!');
-                            } else {
-                                await showMatchRoundModal(matchId);
-                            }
-                        })
-                        .catch(error => {
-                            showNotification(error.message, 'error');
-                        });
-                };
-                showAuthModal('round');
-                return;
-            }
-            
-            const team1Promise = parseInt(document.getElementById('team1Promise').value);
-            const team1Actual = parseInt(document.getElementById('team1Actual').value);
-            const team2Promise = parseInt(document.getElementById('team2Promise').value);
-            const team2Actual = parseInt(document.getElementById('team2Actual').value);
-
-            try {
-                // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
-                const team1Score = Match.computeScore(team1Promise, team1Actual);
-                const team2Score = Match.computeScore(team2Promise, team2Actual);
-
-                await matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
-                const updatedMatch = await matchService.getMatchDetails(matchId);
-                
-                if (updatedMatch.status === 'completed') {
-                    closeModal();
-                    await refreshMatchesList();
-                    await refreshStats();
-                    showNotification('Match completed!');
-                } else {
-                    await showMatchRoundModal(matchId);
-                }
-            } catch (error) {
-                showNotification(error.message, 'error');
-            }
-        });
-    } catch (error) {
-        showNotification(error.message, 'error');
-        closeModal();
-    }
 }
 
 // Helper Functions
@@ -999,6 +863,12 @@ async function refreshMatchesList() {
     // (always) + pundit lines on the broadcast strips (when a key is set).
     if (typeof AICommentary !== 'undefined') {
         AICommentary.decorateMatchCards(matches, teams);
+    }
+
+    // Commentary history drawers — the markup came in with the strips above,
+    // so the toggles need re-wiring after every innerHTML swap.
+    if (typeof BroadcastStrip !== 'undefined' && BroadcastStrip.wireHistory) {
+        BroadcastStrip.wireHistory(elements.matchesList);
     }
 }
 
@@ -1685,12 +1555,19 @@ async function submitRound(event, matchId) {
         const updated = await matchService.getMatchDetails(matchId);
         const teams = [updated.teams?.team1, updated.teams?.team2].filter(Boolean);
 
+        // Record the on-screen narration for this round before the list
+        // re-renders, so the history drawer it draws already includes it.
+        if (typeof BroadcastStrip !== 'undefined' && BroadcastStrip.logRound) {
+            BroadcastStrip.logRound(updated, teams);
+        }
+
         if (typeof RoundReveal !== 'undefined') {
             await RoundReveal.show(updated, teams);
         }
 
-        // Narrate the round. Fire-and-forget: the table shouldn't wait on
-        // speech synthesis, and audio never blocks the round submission.
+        // Speak the moment if it was a dramatic one (blind, lead change,
+        // match point…). Silent for routine rounds and when audio is off.
+        // Fire-and-forget: the table shouldn't wait on speech synthesis.
         if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
             matchService.getAllMatches()
                 .then(all => AudioCommentary.announceRound(updated, beforeRound, teams, all))
@@ -1699,6 +1576,7 @@ async function submitRound(event, matchId) {
 
         await refreshMatchesList();
         await refreshStats();
+        announceQuotaIfExhausted();
 
         if (updated.status === 'completed' && typeof WinnerMoment !== 'undefined') {
             WinnerMoment.show(updated, teams);

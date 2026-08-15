@@ -92,8 +92,19 @@ const AICommentary = (() => {
             }
 
             const packet = FactsEngine.factsPacket(match, teams, matches);
+            const roundsPlayed = Array.isArray(match.rounds) ? match.rounds.length : 0;
             GroqService.commentate(packet).then(line => {
                 if (!line) return;
+                // Keep it before touching the DOM: the line is worth having in
+                // the transcript even if the card has since gone away.
+                if (typeof CommentaryLog !== 'undefined') {
+                    CommentaryLog.append(match.id, {
+                        kind: 'pundit',
+                        round: roundsPlayed,
+                        text: line,
+                        source: 'ai',
+                    });
+                }
                 // The card may have re-rendered while we waited — re-resolve.
                 const freshBody = document.querySelector(
                     `.match-card[data-match-id="${CSS.escape(String(match.id))}"] .broadcast-strip .bs-body`);
@@ -358,6 +369,8 @@ const AICommentary = (() => {
     function openSettings() {
         const hasKey = GroqService.hasKey();
         const rejected = GroqService.wasKeyRejected();
+        const limited = GroqService.isRateLimited();
+        const mins = limited ? GroqService.rateLimitMinutesLeft() : 0;
         const content = `
             <div class="ai-settings">
                 <h2>🎙️ AI Commentary</h2>
@@ -375,8 +388,16 @@ const AICommentary = (() => {
                     <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>.
                 </p>
                 ${rejected ? '<p class="ai-settings-error">⚠️ The saved key was rejected by Groq — paste a new one.</p>' : ''}
+                ${limited ? `<p class="ai-settings-error">
+                    ⏳ Groq quota is used up — AI lines are paused for about ${mins} min.
+                    Paste a different key below, or leave it: commentary keeps running on the
+                    built-in phrasing either way.
+                </p>` : ''}
                 <p class="ai-settings-status">
-                    Status: ${hasKey ? (rejected ? '🔴 key rejected' : '🟢 key configured') : '⚪ no key — AI lines off'}
+                    Status: ${hasKey
+                        ? (rejected ? '🔴 key rejected'
+                            : (limited ? '🟡 quota used up — built-in phrasing' : '🟢 key configured'))
+                        : '⚪ no key — AI lines off'}
                 </p>
                 <div class="ai-settings-row">
                     <input type="password" id="aiGroqKeyInput" placeholder="gsk_…"
