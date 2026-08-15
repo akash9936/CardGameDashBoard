@@ -302,46 +302,15 @@ class MatchService {
         }
     }
 
-    // Recalculate all team statistics from existing matches
-    async recalculateAllTeamStats() {
-        try {
-            console.log('Starting team statistics recalculation...');
-            
-            const allMatches = await this.firebaseService.getAllMatches();
-            const allTeams = await this.firebaseService.getAllTeams();
-            
-            // Reset all team statistics
-            const resetPromises = allTeams.map(team => {
-                const resetStats = {
-                    'stats.matchesPlayed': 0,
-                    'stats.wins': 0,
-                    'stats.losses': 0,
-                    'stats.draws': 0,
-                    'stats.points': 0,
-                    'stats.totalScore': 0,
-                    'stats.roundsWon': 0,
-                    'stats.roundsLost': 0,
-                    'matchHistory': []
-                };
-                return this.firebaseService.updateTeam(team.id, resetStats);
-            });
-            
-            await Promise.all(resetPromises);
-            console.log('Reset all team statistics');
-            
-            // Process completed matches
-            const completedMatches = allMatches.filter(match => match.status === 'completed');
-            console.log(`Processing ${completedMatches.length} completed matches`);
-            
-            for (const match of completedMatches) {
-                await this.updateTeamStats(match.team1Id, match.team2Id, match);
-            }
-            
-            console.log('Team statistics recalculation completed');
-        } catch (error) {
-            console.error('Error recalculating team statistics:', error);
-        }
-    }
+    // recalculateAllTeamStats() lived here. It reset every team to zero and
+    // replayed the archive back into stats.* / matchHistory, and was reachable
+    // from the "Fix Stats" and "Recalculate Stats" buttons.
+    //
+    // Both are gone: per CLAUDE.md §7 these numbers are DERIVED from match
+    // history, and every surface now derives them at render time through
+    // StatsUtils.leaderboard. A stored copy that needs a repair button is a
+    // second source of truth, and the button's existence was the bug — it
+    // could not drift if it were never stored.
 }
 
 // Create a singleton instance - will be initialized in app.js

@@ -13,8 +13,6 @@ const elements = {
     // Buttons
     addTeamBtn: document.getElementById('addTeamBtn'),
     addMatchBtn: document.getElementById('addMatchBtn'),
-    recalculateStatsBtn: document.getElementById('recalculateStatsBtn'),
-    fixStatsBtn: document.getElementById('fixStatsBtn'),
     
     // Lists
     teamsList: document.getElementById('teamsList'),
@@ -49,11 +47,70 @@ document.querySelectorAll('.sticky-nav-btn').forEach(btn => {
     onScroll();
 })();
 
-// Recalculate Stats Button
-elements.recalculateStatsBtn.addEventListener('click', recalculateStats);
+document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
+    if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
+});
 
-// Fix Stats Button
-elements.fixStatsBtn.addEventListener('click', recalculateStats);
+// 🔊 Audio toggle — speaks dramatic moments only (ai-commentary.md § Spoken).
+function syncAudioToggleButton() {
+    const btn = document.getElementById('audioToggleBtn');
+    if (!btn || typeof AudioCommentary === 'undefined') return;
+    if (!AudioCommentary.isSupported()) {
+        btn.style.display = 'none';
+        return;
+    }
+    const on = AudioCommentary.isEnabled();
+    btn.textContent = on ? '🔊 Audio' : '🔇 Audio';
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.classList.toggle('audio-on', on);
+}
+document.getElementById('audioToggleBtn')?.addEventListener('click', () => {
+    if (typeof AudioCommentary === 'undefined') return;
+    AudioCommentary.toggle();
+    syncAudioToggleButton();
+    showNotification(AudioCommentary.isEnabled()
+        ? 'Commentary on — dramatic moments only.'
+        : 'Commentary off.');
+});
+syncAudioToggleButton();
+
+// Groq quota exhausted (429) → say so once per cooldown, rather than letting
+// the AI lines vanish with no explanation. Silence is the one failure mode a
+// commentary feature cannot signal on its own.
+//
+// Announced once because a cooldown spans many rounds and a toast per round
+// would be worse than the silence it is reporting.
+let _quotaNoticeUntil = 0;
+function announceQuotaIfExhausted() {
+    if (typeof GroqService === 'undefined' || !GroqService.isRateLimited()) return;
+    const mins = GroqService.rateLimitMinutesLeft();
+    // Re-announce only after the cooldown we already reported has elapsed.
+    const now = Date.now();
+    if (now < _quotaNoticeUntil) return;
+    _quotaNoticeUntil = now + mins * 60_000;
+
+    // isRateLimited() is true only when EVERY key in the ring is spent, so
+    // reaching here means the rotation is exhausted, not just one account.
+    const total = GroqService.keyCount ? GroqService.keyCount() : 1;
+    const which = total > 1 ? `All ${total} Groq keys are` : 'Groq quota is';
+    showNotification(
+        `${which} used up — AI lines paused ~${mins} min. Using built-in phrasing. `
+        + 'Add another key in ✨ AI settings, or turn commentary off.',
+        'error');
+
+    // Offer the key prompt directly rather than making the user go find the
+    // settings button — this is the one moment they actually need it. Delayed
+    // so the notification is readable first, and skipped if a modal is already
+    // open (a round reveal or the winner moment owns the screen).
+    setTimeout(() => {
+        if (!GroqService.isRateLimited()) return;   // a key came back meanwhile
+        // The modal is toggled via style.display, not a class — check that,
+        // and never steal the screen from a reveal or the winner moment.
+        const modal = document.getElementById('modal');
+        if (modal && modal.style.display === 'block') return;
+        if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
+    }, 2500);
+}
 
 // Modal
 elements.closeBtn.addEventListener('click', closeModal);
@@ -276,162 +333,6 @@ async function showAddMatchModal() {
     });
 }
 
-// Show match round modal
-async function showMatchRoundModal(matchId) {
-    try {
-        const matchDetails = await matchService.getMatchDetails(matchId);
-        if (!matchDetails) {
-            throw new Error('Match not found');
-        }
-
-        const { teams } = matchDetails;
-        if (!teams || !teams.team1 || !teams.team2) {
-            throw new Error('Match team details not found');
-        }
-
-        showModal(`
-            <h2>Round ${matchDetails.currentRound + 1}</h2>
-            <div class="match-status">
-                <div class="team-score">
-                    <h3>${teams.team1.name}</h3>
-                    <p>Current Score: ${matchDetails.finalScore.team1}</p>
-                </div>
-                <div class="team-score">
-                    <h3>${teams.team2.name}</h3>
-                    <p>Current Score: ${matchDetails.finalScore.team2}</p>
-                </div>
-            </div>
-            <form id="roundForm">
-                <div class="round-inputs">
-                    <div class="team-inputs">
-                        <h4>${teams.team1.name}</h4>
-                        <div class="form-group">
-                            <label for="team1Promise">Promise Hand</label>
-                            <input type="number" id="team1Promise" min="4" max="13" required>
-                            <div class="validation-hint">Must be between 4 and 13</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="team1Actual">Actual Hand</label>
-                            <input type="number" id="team1Actual" min="0" required>
-                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                        </div>
-                    </div>
-                    <div class="team-inputs">
-                        <h4>${teams.team2.name}</h4>
-                        <div class="form-group">
-                            <label for="team2Promise">Promise Hand</label>
-                            <input type="number" id="team2Promise" min="4" max="13" required>
-                            <div class="validation-hint">Must be between 4 and 13</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="team2Actual">Actual Hand</label>
-                            <input type="number" id="team2Actual" min="0" required>
-                            <div class="validation-hint">Team 1 + Team 2 actual hands must equal 13</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="validation-hint" style="margin-bottom: 20px;">
-                    <strong>Validation Rules:</strong><br>
-                    • Promise hands must be between 4 and 13 for each team<br>
-                    • Actual hands of both teams must equal 13<br>
-                    • Total score cannot exceed 200 or be less than -100
-                </div>
-                <button type="submit" class="action-btn">Submit Round</button>
-            </form>
-            ${matchDetails.currentRound > 0 ? `
-                <div class="round-history">
-                    <h3>Round History</h3>
-                    ${matchDetails.rounds.slice(0, -1).map(round => `
-                        <div class="round-item">
-                            <h4>Round ${round.roundNumber}</h4>
-                            <div class="round-scores">
-                                <div class="team-round">
-                                    <strong>${teams.team1.name}:</strong>
-                                    Promise: ${round.team1.promise}, 
-                                    Actual: ${round.team1.actual}, 
-                                    Score: ${round.team1.score}
-                                </div>
-                                <div class="team-round">
-                                    <strong>${teams.team2.name}:</strong>
-                                    Promise: ${round.team2.promise}, 
-                                    Actual: ${round.team2.actual}, 
-                                    Score: ${round.team2.score}
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-        `);
-
-        document.getElementById('roundForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Check if user is authenticated
-            if (!storage.isAuthenticated()) {
-                // Store the action to execute after authentication
-                window.pendingRoundAction = () => {
-                    const team1Promise = parseInt(document.getElementById('team1Promise').value);
-                    const team1Actual = parseInt(document.getElementById('team1Actual').value);
-                    const team2Promise = parseInt(document.getElementById('team2Promise').value);
-                    const team2Actual = parseInt(document.getElementById('team2Actual').value);
-                    
-                    // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
-                    const team1Score = Match.computeScore(team1Promise, team1Actual);
-                    const team2Score = Match.computeScore(team2Promise, team2Actual);
-
-                    matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score)
-                        .then(async () => {
-                            const updatedMatch = await matchService.getMatchDetails(matchId);
-                            
-                            if (updatedMatch.status === 'completed') {
-                                closeModal();
-                                await refreshMatchesList();
-                                await refreshStats();
-                                showNotification('Match completed!');
-                            } else {
-                                await showMatchRoundModal(matchId);
-                            }
-                        })
-                        .catch(error => {
-                            showNotification(error.message, 'error');
-                        });
-                };
-                showAuthModal('round');
-                return;
-            }
-            
-            const team1Promise = parseInt(document.getElementById('team1Promise').value);
-            const team1Actual = parseInt(document.getElementById('team1Actual').value);
-            const team2Promise = parseInt(document.getElementById('team2Promise').value);
-            const team2Actual = parseInt(document.getElementById('team2Actual').value);
-
-            try {
-                // Scores follow CLAUDE.md §4 — derived by Match.computeScore.
-                const team1Score = Match.computeScore(team1Promise, team1Actual);
-                const team2Score = Match.computeScore(team2Promise, team2Actual);
-
-                await matchService.addRound(matchId, team1Promise, team1Actual, team2Promise, team2Actual, team1Score, team2Score);
-                const updatedMatch = await matchService.getMatchDetails(matchId);
-                
-                if (updatedMatch.status === 'completed') {
-                    closeModal();
-                    await refreshMatchesList();
-                    await refreshStats();
-                    showNotification('Match completed!');
-                } else {
-                    await showMatchRoundModal(matchId);
-                }
-            } catch (error) {
-                showNotification(error.message, 'error');
-            }
-        });
-    } catch (error) {
-        showNotification(error.message, 'error');
-        closeModal();
-    }
-}
-
 // Helper Functions
 function showSection(section) {
     // Update navigation buttons (both top + sticky)
@@ -607,7 +508,17 @@ async function refreshTeamsList() {
         _firstLoad.teams = false;
     }
     const teams = await teamService.getAllTeams();
-    console.log('Teams retrieved:', teams);
+    // Match history drives the derived stats below. The teams page must still
+    // render if this fails or the service is not up yet — cards then show
+    // zeros, which is what they did before deriving anything.
+    let allMatches = [];
+    try {
+        if (typeof matchService !== 'undefined' && matchService) {
+            allMatches = await matchService.getAllMatches();
+        }
+    } catch (e) {
+        console.warn('Teams page: match history unavailable, stats will read 0', e);
+    }
 
     if (!teams.length) {
         elements.teamsList.innerHTML = emptyState({
@@ -620,21 +531,38 @@ async function refreshTeamsList() {
         return;
     }
 
-    elements.teamsList.innerHTML = teams.map(team => {
-        // Ensure stats object exists and has default values
-        const stats = team.stats || {
-            matchesPlayed: 0,
-            wins: 0,
-            losses: 0,
-            draws: 0,
-            points: 0,
-            totalScore: 0,
-            roundsWon: 0,
-            roundsLost: 0
+    // Stats are DERIVED from match history, not read from team.stats
+    // (CLAUDE.md §7: "computed from match history"). The stored copies have
+    // drifted badly — KorbaGang's stored matchesPlayed reads 47 against 61
+    // actually played — which is why the cards showed zeros. Deriving on read
+    // is also what redesign.md #56 asks for.
+    const derived = new Map(
+        StatsUtils.leaderboard(teams, allMatches).map(row => [String(row.id), row])
+    );
+
+    // Busiest team first: the people who actually play should top the page.
+    // Ties break on wins, then name, so the order is stable across renders.
+    const ordered = teams.slice().sort((a, b) => {
+        const ra = derived.get(String(a.id));
+        const rb = derived.get(String(b.id));
+        return (rb ? rb.played : 0) - (ra ? ra.played : 0)
+            || (rb ? rb.wins : 0) - (ra ? ra.wins : 0)
+            || String(a.name).localeCompare(String(b.name));
+    });
+
+    elements.teamsList.innerHTML = ordered.map(team => {
+        const row = derived.get(String(team.id));
+        const stats = {
+            matchesPlayed: row ? row.played : 0,
+            wins: row ? row.wins : 0,
+            losses: row ? row.losses : 0,
+            draws: 0,                       // CLAUDE.md §2: draws are impossible
+            points: row ? row.points : 0,
+            totalScore: row ? row.totalScore : 0,
+            roundsWon: row ? row.roundsWon : 0,
+            roundsLost: row ? row.roundsLost : 0,
         };
-        
-        console.log(`Team ${team.name} stats:`, stats);
-        
+
         const mark = (typeof TeamMark !== 'undefined')
             ? TeamMark.render(team, { size: 'md' })
             : '';
@@ -883,10 +811,10 @@ async function refreshMatchesList() {
         return;
     }
 
-    elements.matchesList.innerHTML = matches.map(match => {
+    const renderMatchCard = (match) => {
         const team1 = teams.find(t => t.id === match.team1Id);
         const team2 = teams.find(t => t.id === match.team2Id);
-        
+
         if (!team1 || !team2) {
             return ''; // Skip this match if teams are not found
         }
@@ -957,7 +885,26 @@ async function refreshMatchesList() {
                 ` : ''}
             </div>
         `;
-    }).join('');
+    };
+
+    // Group the list by night (ai-continuity.md §2). SessionArc is optional —
+    // if it failed to load, the list renders exactly as it always did.
+    if (typeof SessionArc !== 'undefined' && SessionArc.groupForDisplay) {
+        const { groups, undated } = SessionArc.groupForDisplay(matches, teams);
+        const sections = groups.map(g => {
+            const cards = g.matches.map(renderMatchCard).join('');
+            // A group whose every match was skipped (unknown teams) would
+            // otherwise leave a header floating above nothing.
+            if (!cards.trim()) return '';
+            return `<div class="session-group">${renderSessionHeader(g)}${cards}</div>`;
+        }).join('');
+        // Undated matches cannot be placed in a night, so they keep their own
+        // trailing group rather than vanishing from the UI.
+        const rest = undated.map(renderMatchCard).join('');
+        elements.matchesList.innerHTML = sections + rest;
+    } else {
+        elements.matchesList.innerHTML = matches.map(renderMatchCard).join('');
+    }
 
     mountSparklines();
     mountWormCharts();
@@ -967,6 +914,18 @@ async function refreshMatchesList() {
     if (typeof GameBoard !== 'undefined') {
         matches.filter(m => m.status === 'in_progress')
                .forEach(m => GameBoard.wire(m.id));
+    }
+
+    // AI Commentary layer (ai-commentary.md): win meters on live cards
+    // (always) + pundit lines on the broadcast strips (when a key is set).
+    if (typeof AICommentary !== 'undefined') {
+        AICommentary.decorateMatchCards(matches, teams);
+    }
+
+    // Commentary history drawers — the markup came in with the strips above,
+    // so the toggles need re-wiring after every innerHTML swap.
+    if (typeof BroadcastStrip !== 'undefined' && BroadcastStrip.wireHistory) {
+        BroadcastStrip.wireHistory(elements.matchesList);
     }
 }
 
@@ -1151,6 +1110,10 @@ async function refreshStats() {
     const matches = await matchService.getAllMatches();
 
     renderHotStrip(teams, matches);
+    // Fun-facts ticker (ai-commentary.md) — computed nuggets, no LLM needed.
+    if (typeof AICommentary !== 'undefined') {
+        AICommentary.mountTicker(teams, matches);
+    }
     const accuracy = StatsUtils.promiseAccuracy(teams, matches);
     const blinds = StatsUtils.blindEconomy(matches);
     renderKpiTiles(StatsUtils.kpis(matches), accuracy, blinds);
@@ -1158,6 +1121,11 @@ async function refreshStats() {
     const form = StatsUtils.recentForm(teams, matches, 5);
     renderLeaderboard(rows, form, accuracy, teams);
     wireLeaderboardSort();
+    // Season records — a static pack generated from the whole archive
+    // (scripts/season-facts.js). No key, no network, no recompute.
+    if (typeof SeasonFactsBoard !== 'undefined') SeasonFactsBoard.mount();
+    // Archetypes + tilt meters, from the same generated pack.
+    if (typeof PersonalityCards !== 'undefined') PersonalityCards.mount();
     renderH2hMatrix(teams, matches);
     if (typeof ScoringLegend !== 'undefined') ScoringLegend.mount();
 
@@ -1261,6 +1229,79 @@ function escapeHtml(s) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+/**
+ * Header for one night of matches (ai-continuity.md §2).
+ *
+ * The table plays nights, not matches: 18 of 54 sessions in the archive hold
+ * more than one match and one holds eight, but the list rendered them as
+ * unrelated rows. This is the seam that makes a night legible.
+ *
+ * A single-match night still gets a header, so the list has one consistent
+ * rhythm rather than two layouts depending on how many games were played.
+ */
+function renderSessionHeader(group) {
+    const s = group.summary;
+    // Label the NIGHT, not the first match's calendar date.
+    //
+    // A session runs 06:00 to 06:00, so games played after midnight belong to
+    // the evening before. Labelling from match.date therefore printed the same
+    // date on two adjacent groups — seen live on 02/08/2026, where the 00:03
+    // and 04:12 games (Saturday night) and the 20:39 game (Sunday evening) are
+    // correctly two different sessions that both fell on Aug 2 by the clock.
+    // The key already encodes which night it is, so the label comes from that.
+    //
+    // group.key is 'YYYY-MM-DD' built from local parts, so it is split rather
+    // than passed to Date(), which would read it as UTC and shift it back a day
+    // in western timezones.
+    const [ky, km, kd] = String(group.key).split('-').map(Number);
+    const keyDate = new Date(ky, (km || 1) - 1, kd || 1);
+    const dateLabel = Number.isFinite(keyDate.getTime())
+        ? DateUtils.formatDate(keyDate)
+        : DateUtils.formatDate(group.matches[0].date);
+    const count = group.matches.length;
+    const countLabel = count === 1 ? '1 match' : `${count} matches`;
+
+    // The night's story, in priority order. Only one of these is shown: a
+    // header is a glance, not a report.
+    let story = '';
+    if (s && s.sweeper) {
+        story = `<span class="session-story session-sweep">`
+            + `${escapeHtml(s.sweeper.team)} swept ${s.sweeper.wins}–0</span>`;
+    } else if (s && s.winless.length && s.completed >= 2) {
+        story = `<span class="session-story session-winless">`
+            + `${escapeHtml(s.winless[0])} winless</span>`;
+    } else if (s && s.singleFixture && s.standings.length >= 2) {
+        // An X–Y scoreline is only honest when the whole night WAS these two
+        // teams. Otherwise it invents a head-to-head out of two unrelated
+        // games that merely shared an evening.
+        const [a, b] = s.standings;
+        story = `<span class="session-story">`
+            + `${escapeHtml(a.team)} ${a.wins}–${b.wins} ${escapeHtml(b.team)}</span>`;
+    } else if (s && s.completed >= 2) {
+        const winners = s.standings.filter(x => x.wins > 0).length;
+        story = `<span class="session-story">`
+            + `${s.completed} played · ${winners} winner${winners === 1 ? '' : 's'}</span>`;
+    }
+
+    // Cancelled and live games are counted separately: a night that looks
+    // like "8 matches" but was mostly abandoned should say so, or the header
+    // overstates what actually got played.
+    const notes = [];
+    if (s && s.live) notes.push(`${s.live} live`);
+    if (s && s.cancelled) notes.push(`${s.cancelled} cancelled`);
+    const noteLabel = notes.length
+        ? `<span class="session-note">${escapeHtml(notes.join(' · '))}</span>` : '';
+
+    return `
+        <div class="session-header" data-session-key="${escapeHtml(group.key)}">
+            <span class="session-date">${escapeHtml(dateLabel)}</span>
+            <span class="session-count">${escapeHtml(countLabel)}</span>
+            ${story}
+            ${noteLabel}
+        </div>
+    `;
 }
 
 function wireActivityCards() {
@@ -1619,6 +1660,14 @@ async function submitRound(event, matchId) {
     const team1Score = Match.computeScore(team1Promise, team1Actual, { blind: team1Blind });
     const team2Score = Match.computeScore(team2Promise, team2Actual, { blind: team2Blind });
 
+    // Snapshot the pre-round state so the audio layer can tell what this round
+    // changed (lead flips, match point crossed) — ai-commentary.md § Spoken.
+    let beforeRound = null;
+    if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+        try { beforeRound = await matchService.getMatchDetails(matchId); }
+        catch (e) { beforeRound = null; }
+    }
+
     try {
         await matchService.addRound(
             matchId,
@@ -1636,12 +1685,28 @@ async function submitRound(event, matchId) {
         const updated = await matchService.getMatchDetails(matchId);
         const teams = [updated.teams?.team1, updated.teams?.team2].filter(Boolean);
 
+        // Record the on-screen narration for this round before the list
+        // re-renders, so the history drawer it draws already includes it.
+        if (typeof BroadcastStrip !== 'undefined' && BroadcastStrip.logRound) {
+            BroadcastStrip.logRound(updated, teams);
+        }
+
         if (typeof RoundReveal !== 'undefined') {
             await RoundReveal.show(updated, teams);
         }
 
+        // Speak the moment if it was a dramatic one (blind, lead change,
+        // match point…). Silent for routine rounds and when audio is off.
+        // Fire-and-forget: the table shouldn't wait on speech synthesis.
+        if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+            matchService.getAllMatches()
+                .then(all => AudioCommentary.announceRound(updated, beforeRound, teams, all))
+                .catch(() => { /* audio never blocks the round */ });
+        }
+
         await refreshMatchesList();
         await refreshStats();
+        announceQuotaIfExhausted();
 
         if (updated.status === 'completed' && typeof WinnerMoment !== 'undefined') {
             WinnerMoment.show(updated, teams);
@@ -1665,6 +1730,17 @@ async function startMatch(matchId) {
     
     try {
         await matchService.startMatch(matchId);
+
+        // Opening line — sets the scene from head-to-head, streaks and odds.
+        if (typeof AudioCommentary !== 'undefined' && AudioCommentary.isEnabled()) {
+            Promise.all([matchService.getMatchDetails(matchId), matchService.getAllMatches()])
+                .then(([detail, all]) => {
+                    const teams = [detail.teams?.team1, detail.teams?.team2].filter(Boolean);
+                    return AudioCommentary.announceMatchStart(detail, teams, all);
+                })
+                .catch(() => { /* audio never blocks the match */ });
+        }
+
         await refreshMatchesList();
         showNotification('Match started successfully!');
     } catch (error) {
@@ -1691,74 +1767,6 @@ async function cancelMatch(matchId) {
         showNotification('Match cancelled successfully');
     } catch (error) {
         showNotification(error.message, 'error');
-    }
-}
-
-async function recalculateStats() {
-    try {
-        showNotification('Recalculating team statistics...', 'info');
-        console.log('Starting stats recalculation...');
-        
-        // Get current data for debugging
-        const teams = await teamService.getAllTeams();
-        const matches = await matchService.getAllMatches();
-        console.log(`Found ${teams.length} teams and ${matches.length} matches`);
-        
-        await matchService.recalculateAllTeamStats();
-        
-        // Refresh the UI
-        await refreshTeamsList();
-        await refreshStats();
-        
-        console.log('Stats recalculation completed');
-        showNotification('Team statistics recalculated successfully!');
-    } catch (error) {
-        console.error('Error recalculating statistics:', error);
-        showNotification('Error recalculating statistics: ' + error.message, 'error');
-    }
-}
-
-// Simple function to recalculate team stats from existing matches
-async function recalculateTeamStats() {
-    try {
-        console.log('Recalculating team statistics...');
-        
-        const allMatches = await matchService.getAllMatches();
-        const allTeams = await teamService.getAllTeams();
-        const completedMatches = allMatches.filter(match => match.status === 'completed');
-        
-        console.log(`Found ${allTeams.length} teams and ${completedMatches.length} completed matches`);
-        
-        // Reset all team statistics
-        for (const team of allTeams) {
-            const resetStats = {
-                'stats.matchesPlayed': 0,
-                'stats.wins': 0,
-                'stats.losses': 0,
-                'stats.draws': 0,
-                'stats.points': 0,
-                'stats.totalScore': 0,
-                'stats.roundsWon': 0,
-                'stats.roundsLost': 0,
-                // matchHistory must be cleared too: updateTeamStats re-appends an
-                // entry per match, so leaving it duplicates history on every recalc
-                'matchHistory': []
-            };
-            await teamService.firebaseService.updateTeam(team.id, resetStats);
-        }
-        
-        console.log('Reset all team statistics');
-        
-        // Process completed matches
-        for (const match of completedMatches) {
-            await matchService.updateTeamStats(match.team1Id, match.team2Id, match);
-        }
-        
-        console.log('Team statistics recalculation completed');
-        return true;
-    } catch (error) {
-        console.error('Error recalculating team statistics:', error);
-        return false;
     }
 }
 
@@ -1792,10 +1800,16 @@ async function initializeApp(firebaseService) {
         refreshMatchesList();
     });
 
-    // Recalculate stats from existing data
-    await recalculateTeamStats();
-    
-    // Initial load
+    // No stats recalculation on load.
+    //
+    // This used to call recalculateTeamStats(), which reset all 15 teams to
+    // zero and re-derived them from match history on EVERY page load — about
+    // 90 Firestore writes per visit, and a window during which every team read
+    // as 0-0-0 while the resets were in flight (which is what the teams page
+    // was showing). Nothing reads the stored copies any more: the teams page
+    // derives from match history via StatsUtils.leaderboard, and so does the
+    // stats page. Per CLAUDE.md §7 these numbers ARE derived, so storing them
+    // only created a second source of truth that drifted from the first.
     showSection('teams');
 }
 

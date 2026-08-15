@@ -24,6 +24,47 @@ These rules are **locked**. Treat them as a contract.
 
 ---
 
+## 0. Who This Is For (Context, Not a Rule)
+
+This section is **context**, not a locked rule. It does not constrain scoring,
+validation, or match logic — it exists so agents make sensible judgement calls
+about tone, safety, and polish. It may be updated without the §Change Control
+Protocol.
+
+**The audience is four close friends.** This is a private game among people who
+know each other well. It is **not a public product**, not a customer-facing app,
+and not something strangers will use.
+
+What that means in practice:
+
+- **Humour can be sharp.** The AI commentary layer (see
+  [`claude/commentary-style.md`](claude/commentary-style.md)) can roast harder
+  than a public product would. Between four friends, `nipat gaya` /
+  `gaya kaam se` / affectionate abuse is the actual register of the room. Do not
+  sanitise it into corporate blandness — that would make the feature worse and
+  is not what the users want.
+- **Still roast the play, not the person.** This survives as a *craft* rule
+  rather than a compliance one: jokes about a bid, a blind, or a collapse are
+  funny; jokes about someone's intelligence, appearance, family, or job are not,
+  and land badly even among friends. Teams are named after real people
+  (`Gaurav/Akash`, `Sky/K2`), so the distinction still takes care.
+- **No HR-style guardrails are required.** Earlier drafts assumed an open-office
+  audience with seniors present and proposed blocklists on that basis. That
+  premise is wrong. Do not add compliance machinery for an audience of four
+  friends.
+- **Onboarding and hand-holding matter less.** Everyone using this already knows
+  the rules. Prefer density and speed over explanatory UI.
+- **Data volume stays small.** ~10 teams, tens of matches, hundreds of rounds.
+  Optimise for clarity, not scale. Full-table scans in the browser are fine.
+
+What this does **not** license:
+
+- Breaking any locked rule in §1–§8 below.
+- Slurs, or humour targeting protected characteristics.
+- Shipping something knowingly broken because "it's just for us."
+
+---
+
 ## 1. Team Rules
 
 | Rule | Value |

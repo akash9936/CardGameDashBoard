@@ -58,7 +58,10 @@ async function main() {
     });
     const db = getFirestore(app);
 
-    const outDir = path.join(__dirname, '..', 'db-dump');
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+    const outDir = path.join(__dirname, '..', 'db-dump', `backup-${stamp}`);
     fs.mkdirSync(outDir, { recursive: true });
 
     for (const name of ['teams', 'matches']) {
