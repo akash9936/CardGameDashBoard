@@ -1194,6 +1194,11 @@ async function refreshStats() {
     const form = StatsUtils.recentForm(teams, matches, 5);
     renderLeaderboard(rows, form, accuracy, teams);
     wireLeaderboardSort();
+    // Season records — a static pack generated from the whole archive
+    // (scripts/season-facts.js). No key, no network, no recompute.
+    if (typeof SeasonFactsBoard !== 'undefined') SeasonFactsBoard.mount();
+    // Archetypes + tilt meters, from the same generated pack.
+    if (typeof PersonalityCards !== 'undefined') PersonalityCards.mount();
     renderH2hMatrix(teams, matches);
     if (typeof ScoringLegend !== 'undefined') ScoringLegend.mount();
 
