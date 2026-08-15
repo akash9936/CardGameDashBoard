@@ -193,11 +193,15 @@ definitions, and the decision:
 Simple, deterministic, and verified against the archive — the four largest sessions it
 produces are all genuine single-night runs of the same two teams.
 
-> **Timezone caveat (flagged, not solved).** `match.date` is stored as a UTC ISO string and
-> the shift is applied in UTC. For a league playing ~22:00–01:00 IST this groups correctly,
-> but a match started at exactly 06:00–06:30 local could land in the previous session. Given
-> the hour histogram (1 match total before 07:00 across 15 months) this is accepted rather
-> than engineered around. Revisit if the league ever plays mornings.
+> **Timezone: solved, after it bit.** The first implementation applied the shift in UTC and
+> the spec accepted the consequences. Against **live Firestore** that was wrong in a visible
+> way: sessions were keyed in UTC but the cards under each header print a *local* date, so
+> the Saturday-night games of 2026-08-02 (00:03 and 04:12 IST) keyed to `08-01` while
+> rendering as `02/08/2026` — the same label as the genuinely separate Sunday-evening
+> session. The key is now built from **local** date parts, and the header labels the night
+> from that key rather than from its first match's date. Both are regression-tested, and
+> the suite is verified across five timezones (IST, UTC, US East/West, NZ) so a
+> local-clock assumption cannot pass in one zone and fail in another.
 
 ### 2.2 What it computes
 

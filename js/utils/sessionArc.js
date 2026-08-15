@@ -89,7 +89,17 @@ const SessionArc = (() => {
     function sessionKeyFor(ms, options = {}) {
         if (!Number.isFinite(ms)) return null;
         const shift = (options.dayShiftHours == null ? DAY_SHIFT_HOURS : options.dayShiftHours);
-        return new Date(ms - shift * 3600 * 1000).toISOString().slice(0, 10);
+        const d = new Date(ms - shift * 3600 * 1000);
+        // Built from LOCAL parts, not toISOString().
+        //
+        // A "night" is local to the people at the table, and the card under the
+        // header prints its date with toLocaleDateString(). Keying in UTC while
+        // labelling in local time splits one evening across two groups that
+        // then display the SAME date — seen in production on 2026-08-02, where
+        // games at 00:03 and 04:12 IST keyed to 08-01 but rendered as 02/08.
+        // Deriving both from local time keeps key and label in agreement.
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     }
 
     function sessionKeyOf(match, options = {}) {
