@@ -3856,6 +3856,75 @@ body.spectator-pass .team-mark-lg { width: 144px; height: 144px; font-size: 144p
     font-weight: 600;
 }
 
+/* Groq key ring — one row per account, so it is obvious which key is carrying
+   the load and which is spent. Keys are masked; never render one in full. */
+.ai-key-list {
+    list-style: none;
+    margin: var(--s-3) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ai-key-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: 6px var(--s-3);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--r-2);
+}
+
+.ai-key-index {
+    flex: 0 0 auto;
+    width: 18px;
+    color: var(--fg-dim);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ai-key-mask {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--fg-muted-2);
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.ai-key-ok,
+.ai-key-spent,
+.ai-key-bad {
+    flex: 0 0 auto;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.ai-key-ok    { color: #05131f; background: var(--success, #4ade80); }
+.ai-key-spent { color: #05131f; background: var(--blind-gold); }
+.ai-key-bad   { color: #fff;    background: var(--danger, #ef4444); }
+
+.ai-key-drop {
+    flex: 0 0 auto;
+    padding: 2px 6px;
+    background: none;
+    border: 0;
+    color: var(--fg-dim);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out);
+}
+
+.ai-key-drop:hover { color: var(--danger, #ef4444); }
+
 /* Roast level — same pill affordance as mood, but the sharp end is coloured
    so nobody turns it up without registering what it does. */
 .ai-roast {

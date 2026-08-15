@@ -400,12 +400,53 @@ const AICommentary = (() => {
         });
     }
 
+    // A key is a secret: show only enough to tell two of them apart. Groq keys
+    // are `gsk_` + a long body, so the prefix alone identifies which account a
+    // row belongs to without putting the credential on screen.
+    function maskKey(key) {
+        const s = String(key || '');
+        if (s.length <= 12) return `${s.slice(0, 4)}…`;
+        return `${s.slice(0, 8)}…${s.slice(-4)}`;
+    }
+
+    // The saved keys, each with its own live status. Rendered as rows so it is
+    // obvious which account is carrying the load and which is spent. Status
+    // comes from the service, so the dialog can never disagree with the
+    // rotation — both read the same predicate.
+    function renderKeyList() {
+        const statuses = GroqService.keyStatuses ? GroqService.keyStatuses() : [];
+        if (!statuses.length) return '';
+
+        const active = GroqService.getKey();
+        const rows = statuses.map((s, i) => {
+            const badge = s.rejected
+                ? '<span class="ai-key-bad">rejected</span>'
+                : (s.ready
+                    ? (s.key === active
+                        ? '<span class="ai-key-ok">in use</span>'
+                        : '<span class="ai-key-ok">ready</span>')
+                    : `<span class="ai-key-spent">spent · ${s.minutesLeft}m</span>`);
+            return `
+                <li class="ai-key-row">
+                    <span class="ai-key-index">${i + 1}</span>
+                    <code class="ai-key-mask">${escape(maskKey(s.key))}</code>
+                    ${badge}
+                    <button type="button" class="ai-key-drop" data-key="${escape(s.key)}"
+                            title="Remove this key">✕</button>
+                </li>`;
+        }).join('');
+
+        return `<ul class="ai-key-list">${rows}</ul>`;
+    }
+
     // ─── Settings dialog (BYO key, spec § Security posture) ──────────────────
     function openSettings() {
         const hasKey = GroqService.hasKey();
         const rejected = GroqService.wasKeyRejected();
         const limited = GroqService.isRateLimited();
         const mins = limited ? GroqService.rateLimitMinutesLeft() : 0;
+        const total = GroqService.keyCount ? GroqService.keyCount() : (hasKey ? 1 : 0);
+        const usable = GroqService.usableKeyCount ? GroqService.usableKeyCount() : (hasKey ? 1 : 0);
         const content = `
             <div class="ai-settings">
                 <h2>🎙️ AI Commentary</h2>
@@ -422,24 +463,34 @@ const AICommentary = (() => {
                     Get a free key at
                     <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com/keys</a>.
                 </p>
-                ${rejected ? '<p class="ai-settings-error">⚠️ The saved key was rejected by Groq — paste a new one.</p>' : ''}
+                ${rejected ? `<p class="ai-settings-error">⚠️ ${total > 1
+                    ? 'Every saved key was rejected by Groq — add a working one.'
+                    : 'The saved key was rejected by Groq — paste a new one.'}</p>` : ''}
                 ${limited ? `<p class="ai-settings-error">
-                    ⏳ Groq quota is used up — AI lines are paused for about ${mins} min.
-                    Paste a different key below, or leave it: commentary keeps running on the
+                    ⏳ ${total > 1
+                        ? `All ${total} keys are out of quota — AI lines are paused for about ${mins} min.`
+                        : `Groq quota is used up — AI lines are paused for about ${mins} min.`}
+                    Add another key below, or leave it: commentary keeps running on the
                     built-in phrasing either way.
                 </p>` : ''}
                 <p class="ai-settings-status">
                     Status: ${hasKey
-                        ? (rejected ? '🔴 key rejected'
-                            : (limited ? '🟡 quota used up — built-in phrasing' : '🟢 key configured'))
+                        ? (rejected ? '🔴 all keys rejected'
+                            : (limited ? '🟡 quota used up — built-in phrasing'
+                                : `🟢 ${usable} of ${total} key${total === 1 ? '' : 's'} ready`))
                         : '⚪ no key — AI lines off'}
                 </p>
+                ${renderKeyList()}
                 <div class="ai-settings-row">
                     <input type="password" id="aiGroqKeyInput" placeholder="gsk_…"
                            autocomplete="off" spellcheck="false">
-                    <button id="aiGroqKeySave" class="action-btn">Save</button>
-                    ${hasKey ? '<button id="aiGroqKeyClear" class="action-btn danger">Clear</button>' : ''}
+                    <button id="aiGroqKeySave" class="action-btn">${total ? 'Add key' : 'Save'}</button>
+                    ${hasKey ? '<button id="aiGroqKeyClear" class="action-btn danger">Clear all</button>' : ''}
                 </div>
+                <p class="ai-field-hint">
+                    Add a key from each Groq account you have. They are used one at a time —
+                    when one runs out of quota, the next takes over automatically.
+                </p>
             </div>
         `;
         if (typeof showModal === 'function') showModal(content);
@@ -448,13 +499,28 @@ const AICommentary = (() => {
         if (typeof AudioCommentary !== 'undefined') wireVoiceControls();
 
         document.getElementById('aiGroqKeySave')?.addEventListener('click', () => {
-            const v = document.getElementById('aiGroqKeyInput')?.value?.trim();
-            if (v) GroqService.setKey(v);
-            if (typeof closeModal === 'function') closeModal();
+            const input = document.getElementById('aiGroqKeyInput');
+            const v = input?.value?.trim();
+            if (!v) return;
+            // Append rather than replace: the whole point of the ring is
+            // holding several accounts at once.
+            if (GroqService.addKey) GroqService.addKey(v);
+            else GroqService.setKey(v);
+            if (input) input.value = '';
+            // Re-render in place so the new key appears in the list with its
+            // status, rather than closing and hiding whether it took.
+            refreshSettingsDialog();
         });
         document.getElementById('aiGroqKeyClear')?.addEventListener('click', () => {
             GroqService.setKey(null);
             if (typeof closeModal === 'function') closeModal();
+        });
+        document.querySelectorAll('.ai-key-drop').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const k = btn.getAttribute('data-key');
+                if (k && GroqService.removeKey) GroqService.removeKey(k);
+                refreshSettingsDialog();
+            });
         });
     }
 
