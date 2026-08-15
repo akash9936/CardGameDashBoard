@@ -13,8 +13,6 @@ const elements = {
     // Buttons
     addTeamBtn: document.getElementById('addTeamBtn'),
     addMatchBtn: document.getElementById('addMatchBtn'),
-    recalculateStatsBtn: document.getElementById('recalculateStatsBtn'),
-    fixStatsBtn: document.getElementById('fixStatsBtn'),
     
     // Lists
     teamsList: document.getElementById('teamsList'),
@@ -49,8 +47,6 @@ document.querySelectorAll('.sticky-nav-btn').forEach(btn => {
     onScroll();
 })();
 
-// Recalculate Stats Button
-elements.recalculateStatsBtn.addEventListener('click', recalculateStats);
 document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
     if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
 });
@@ -115,9 +111,6 @@ function announceQuotaIfExhausted() {
         if (typeof AICommentary !== 'undefined') AICommentary.openSettings();
     }, 2500);
 }
-
-// Fix Stats Button
-elements.fixStatsBtn.addEventListener('click', recalculateStats);
 
 // Modal
 elements.closeBtn.addEventListener('click', closeModal);
@@ -1777,74 +1770,6 @@ async function cancelMatch(matchId) {
     }
 }
 
-async function recalculateStats() {
-    try {
-        showNotification('Recalculating team statistics...', 'info');
-        console.log('Starting stats recalculation...');
-        
-        // Get current data for debugging
-        const teams = await teamService.getAllTeams();
-        const matches = await matchService.getAllMatches();
-        console.log(`Found ${teams.length} teams and ${matches.length} matches`);
-        
-        await matchService.recalculateAllTeamStats();
-        
-        // Refresh the UI
-        await refreshTeamsList();
-        await refreshStats();
-        
-        console.log('Stats recalculation completed');
-        showNotification('Team statistics recalculated successfully!');
-    } catch (error) {
-        console.error('Error recalculating statistics:', error);
-        showNotification('Error recalculating statistics: ' + error.message, 'error');
-    }
-}
-
-// Simple function to recalculate team stats from existing matches
-async function recalculateTeamStats() {
-    try {
-        console.log('Recalculating team statistics...');
-        
-        const allMatches = await matchService.getAllMatches();
-        const allTeams = await teamService.getAllTeams();
-        const completedMatches = allMatches.filter(match => match.status === 'completed');
-        
-        console.log(`Found ${allTeams.length} teams and ${completedMatches.length} completed matches`);
-        
-        // Reset all team statistics
-        for (const team of allTeams) {
-            const resetStats = {
-                'stats.matchesPlayed': 0,
-                'stats.wins': 0,
-                'stats.losses': 0,
-                'stats.draws': 0,
-                'stats.points': 0,
-                'stats.totalScore': 0,
-                'stats.roundsWon': 0,
-                'stats.roundsLost': 0,
-                // matchHistory must be cleared too: updateTeamStats re-appends an
-                // entry per match, so leaving it duplicates history on every recalc
-                'matchHistory': []
-            };
-            await teamService.firebaseService.updateTeam(team.id, resetStats);
-        }
-        
-        console.log('Reset all team statistics');
-        
-        // Process completed matches
-        for (const match of completedMatches) {
-            await matchService.updateTeamStats(match.team1Id, match.team2Id, match);
-        }
-        
-        console.log('Team statistics recalculation completed');
-        return true;
-    } catch (error) {
-        console.error('Error recalculating team statistics:', error);
-        return false;
-    }
-}
-
 // Initialize the application
 document.addEventListener('wheel', (e) => {
     if (e.target instanceof HTMLInputElement && e.target.type === 'number' && document.activeElement === e.target) {
@@ -1875,10 +1800,16 @@ async function initializeApp(firebaseService) {
         refreshMatchesList();
     });
 
-    // Recalculate stats from existing data
-    await recalculateTeamStats();
-    
-    // Initial load
+    // No stats recalculation on load.
+    //
+    // This used to call recalculateTeamStats(), which reset all 15 teams to
+    // zero and re-derived them from match history on EVERY page load — about
+    // 90 Firestore writes per visit, and a window during which every team read
+    // as 0-0-0 while the resets were in flight (which is what the teams page
+    // was showing). Nothing reads the stored copies any more: the teams page
+    // derives from match history via StatsUtils.leaderboard, and so does the
+    // stats page. Per CLAUDE.md §7 these numbers ARE derived, so storing them
+    // only created a second source of truth that drifted from the first.
     showSection('teams');
 }
 
