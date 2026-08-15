@@ -242,12 +242,31 @@ describe('commentate', () => {
         await expect(GroqService.commentate(livePacket())).resolves.toBeNull();
     });
 
-    test('overlong lines are truncated', async () => {
+    test('overlong lines are truncated, ending on a terminator not mid-word', async () => {
+        // No spaces and no punctuation — the degenerate case, where there is no
+        // word boundary to back off to. The cap must still hold exactly.
         GroqService._setFetch(makeFetch('x'.repeat(500)));
         GroqService.setKey('gsk_k');
         const line = await GroqService.commentate(livePacket());
         expect(line.length).toBeLessThanOrEqual(220);
-        expect(line.endsWith('…')).toBe(true);
+        // Closes with a real terminator now, not the old "…" hard-slice marker:
+        // an on-screen line gets the same sentence-boundary net as a spoken one.
+        expect(line.endsWith('.')).toBe(true);
+    });
+
+    test('an overlong line cuts at a sentence, keeping the joke landing', async () => {
+        // The behaviour the "…" slice used to destroy: cutting mid-word threw
+        // away the last few words, which is where a Hinglish line lands.
+        const long = `${'Gaurav and Akash promised eight and took nine. '.repeat(6)}Seedha nipat gaye.`;
+        GroqService._setFetch(makeFetch(long));
+        GroqService.setKey('gsk_k');
+        const line = await GroqService.commentate(livePacket());
+
+        expect(line.length).toBeLessThanOrEqual(220);
+        expect(line).not.toContain('…');
+        expect(line.endsWith('.')).toBe(true);
+        // Whole sentences only — never a stranded half-word.
+        expect(line).not.toMatch(/\b(promis|too|Gaur)$/);
     });
 
     test('match-end keeps two sentences — the win and the roast', async () => {

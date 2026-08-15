@@ -2189,6 +2189,11 @@ canvas.sparkline {
     overscroll-behavior: contain;
     margin-top: 6px;
     padding-right: 4px;
+    /* Fade the top edge so a mid-scroll entry reads as "there's more above"
+       rather than as a clipped line. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12px);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 12px);
+    padding-top: 4px;
 }
 
 .bs-history .ch-list {
@@ -3851,6 +3856,34 @@ body.spectator-pass .team-mark-lg { width: 144px; height: 144px; font-size: 144p
     font-weight: 600;
 }
 
+/* Roast level — same pill affordance as mood, but the sharp end is coloured
+   so nobody turns it up without registering what it does. */
+.ai-roast {
+    padding: 6px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-pill);
+    background: var(--bg-panel);
+    color: var(--fg-muted-2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-out);
+}
+
+.ai-roast:hover { border-color: var(--info); }
+
+.ai-roast.active {
+    background: var(--info);
+    border-color: var(--info);
+    color: #05131f;
+    font-weight: 600;
+}
+
+/* Savage sits apart from the other two — it unlocks the hard gaalis. */
+.ai-roast[data-roast="3"].active {
+    background: var(--blind-gold);
+    border-color: var(--blind-gold);
+}
+
 .ai-preview-row {
     display: flex;
     flex-wrap: wrap;
@@ -4233,4 +4266,72 @@ body.spectator-pass .team-mark-lg { width: 144px; height: 144px; font-size: 144p
     font-size: 0.76rem;
     font-style: italic;
     color: var(--text-muted);
+}
+
+/* ===== Session grouping (ai-continuity.md §2) =====
+   The table plays nights, not matches. These headers group the list by
+   session so a run of games on one evening reads as one story rather than
+   as unrelated rows. */
+
+.session-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;   /* matches .list-container so cards keep their rhythm */
+}
+
+/* The list is a flex column with its own gap; the group re-supplies that gap
+   internally, so this only needs to separate one night from the next. */
+.session-group + .session-group {
+    margin-top: 8px;
+}
+
+.session-header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 4px 2px 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+.session-date {
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 0.01em;
+}
+
+.session-count {
+    color: var(--text-muted);
+}
+
+/* The night's one-line story. Muted by default so it reads as context, not
+   as a competing headline against the match cards below it. */
+.session-story {
+    color: var(--fg-muted-2, var(--text-muted));
+    margin-left: auto;   /* pushes the story to the right edge of the header */
+}
+
+.session-story.session-sweep {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.session-story.session-winless {
+    color: var(--warning-color);
+}
+
+/* Cancelled / live counts. Deliberately the quietest thing in the header:
+   it qualifies the match count rather than announcing anything. */
+.session-note {
+    color: var(--fg-dim, var(--text-muted));
+    font-size: 0.76rem;
+}
+
+@media (max-width: 640px) {
+    .session-story {
+        margin-left: 0;      /* wraps to its own line rather than squeezing */
+        flex-basis: 100%;
+    }
 }

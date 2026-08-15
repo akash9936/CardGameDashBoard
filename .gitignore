@@ -23,3 +23,6 @@ yarn-error.log
 .env
 .env.local
 .env.*.local 
+# Local scratch output (commentary-eval reports, browser artifacts)
+scratch/
+.playwright-mcp/

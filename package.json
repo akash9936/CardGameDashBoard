@@ -42,7 +42,9 @@
     "dump-db": "node scripts/dump-db.js",
     "season-facts": "node scripts/season-facts.js",
     "season-facts:preview": "node scripts/season-facts.js --dry-run",
-    "season-facts:live": "node scripts/dump-db.js && node scripts/season-facts.js"
+    "season-facts:live": "node scripts/dump-db.js && node scripts/season-facts.js",
+    "commentary-eval": "node scripts/commentary-eval.js",
+    "commentary-eval:quick": "node scripts/commentary-eval.js --n 10 --no-judge"
   },
   "keywords": [],
   "author": "",

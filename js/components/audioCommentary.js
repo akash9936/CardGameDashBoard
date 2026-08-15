@@ -36,6 +36,10 @@ const AudioCommentary = (() => {
     const _log = (typeof CommentaryLog !== 'undefined')
         ? CommentaryLog
         : (typeof require === 'function' ? require('../utils/commentaryLog.js') : undefined);
+    // Per-match callbacks (commentary-style.md §10.1) — "teesra blind."
+    const _callbacks = (typeof Callbacks !== 'undefined')
+        ? Callbacks
+        : (typeof require === 'function' ? require('../utils/callbacks.js') : undefined);
 
     // Rounds already spoken this session — "matchId:roundNumber".
     const spokenFor = new Set();
@@ -103,6 +107,10 @@ const AudioCommentary = (() => {
     //                    comedy-library phrases are offered (CLAUDE.md §0 —
     //                    four friends, so 2 is a fair default, not 1).
     const DEFAULT_PREFS = { lang: 'en', voiceURI: '', speed: 1, mood: 'hype', roastIntensity: 2 };
+
+    // roastIntensity → the word the prompt understands. Named rather than
+    // numbered so the comedy block stays digit-free (see comedySteer).
+    const PROFANITY_LABELS = { 1: 'clean', 2: 'mild', 3: 'strong' };
     let _prefs = null;
 
     function clampIntensity(n) {
@@ -373,7 +381,7 @@ const AudioCommentary = (() => {
         // (double submit, snapshot echo) must not queue a second utterance.
         spokenFor.add(roundKey);
 
-        return deliver(drama);
+        return deliver(drama, match);
     }
 
     // ─── Match start — spoken once, when a match begins ──────────────────────
@@ -389,13 +397,15 @@ const AudioCommentary = (() => {
         if (!moment) return { spoken: false, reason: 'no-moment' };
         startedFor.add(key);
 
-        return deliver(moment);
+        // No rounds have been played, so no callback can exist — passed for
+        // symmetry, and the counters correctly find nothing.
+        return deliver(moment, match);
     }
 
     // Shared delivery path: template first (audio never depends on the
     // network), LLM line if it arrives in time, then speak in the tone the
     // moment deserves.
-    async function deliver(moment) {
+    async function deliver(moment, match = null) {
         const prefs = getPrefs();
 
         // Anti-repetition steering (commentary-style.md §8). Chosen here, up
@@ -403,18 +413,26 @@ const AudioCommentary = (() => {
         // ledger — all three have to agree on which phrase was spent.
         const steer = comedySteer(moment);
 
+        // The callback (commentary-style.md §10.1): a verified count of what
+        // already happened this match — "teesra blind. Teesra." Computed in JS
+        // from match.rounds, never inferred by the model. Null most rounds,
+        // which is the point: a callback every line is not a callback.
+        const callback = (_callbacks && match)
+            ? _callbacks.forMoment(moment, match, { lang: prefs.lang })
+            : null;
+
         // Written in the listener's language when we have templates for it, so
         // a slow LLM degrades to the same voice rather than to a stats robot.
         // The steer goes in too: the template path is what actually speaks
         // whenever Groq is missing, slow, or out of quota, and it should draw
         // on the same rotating vocabulary the season facts board does.
-        const template = FactsEngine.dramaTemplate(moment, { lang: prefs.lang, steer });
+        const template = FactsEngine.dramaTemplate(moment, { lang: prefs.lang, steer, callback });
         let line = template;
         let llmLine = null;
 
         if (GroqService.hasKey()) {
             try {
-                llmLine = await GroqService.commentate(dramaPacket(moment, steer), {
+                llmLine = await GroqService.commentate(dramaPacket(moment, steer, callback), {
                     spoken: true,
                     // The voice speaks the chosen language, so the words must
                     // be written in it too — otherwise a Hindi voice reads
@@ -457,6 +475,9 @@ const AudioCommentary = (() => {
                 text: line,
                 actor: moment.actor,
                 source: llmLine ? 'ai' : 'template',
+                // Burn the callback only when it was actually spoken, so a
+                // skipped moment leaves it available for the next round.
+                callback: callback ? callback.tag : undefined,
             });
         }
 
@@ -478,6 +499,9 @@ const AudioCommentary = (() => {
             usedIds: mem.usedPhraseIds,
             maxIntensity: getPrefs().roastIntensity,
             limit: 5,
+            // The savage tier unlocks on the moment, not the setting — a
+            // blown blind or a -80 round earns it, a routine round never does.
+            catastrophic: _comedy.isCatastrophic ? _comedy.isCatastrophic(moment) : false,
         });
 
         return {
@@ -490,6 +514,14 @@ const AudioCommentary = (() => {
             // drawer moving, not to police the wording.
             phraseId: options.length ? options[0].id : null,
             recentOpenings: mem.recentOpenings,
+            // How salty this line may be. The model needs it explicitly: the
+            // offered phrases are register hints, and a model writing its own
+            // wording would otherwise have nothing to bound it.
+            //
+            // A NAME, not a number: the comedy block is contractually free of
+            // digits so no game fact can be smuggled into it (and so the model
+            // can never mistake a steering value for a score to quote).
+            profanity: PROFANITY_LABELS[getPrefs().roastIntensity] || 'clean',
         };
     }
 
@@ -546,7 +578,7 @@ const AudioCommentary = (() => {
     //
     // `steer` carries comedy direction, never facts: an intent label, a
     // sentence shape, a few candidate phrases, and the openings to avoid.
-    function dramaPacket(drama, steer = null) {
+    function dramaPacket(drama, steer = null, callback = null) {
         const packet = {
             kind: 'spoken',
             matchId: drama.matchId,
@@ -568,8 +600,14 @@ const AudioCommentary = (() => {
                 formHint: steer.formHint,
                 phrases: steer.phrases,
                 avoidOpenings: steer.recentOpenings,
+                profanity: steer.profanity,
             };
         }
+        // A finished, already-verified observation about earlier rounds — the
+        // model states it, never derives it. Sits OUTSIDE `comedy` because it
+        // legitimately carries numbers ("their third blind"), and that block is
+        // contractually digit-free so no game fact can hide in it.
+        if (callback) packet.callback = callback.text;
         return packet;
     }
 

@@ -14,6 +14,38 @@ const FactsEngine = (() => {
     const _Stats = (typeof StatsUtils !== 'undefined') ? StatsUtils
         : (typeof require === 'function' ? require('./stats.js') : null);
 
+    // Continuity modules (ai-continuity.md). Each is optional: a missing module
+    // simply means the packet carries no memory / session / player facts, and
+    // every line still works exactly as it did before they existed.
+    //
+    // Each module is declared as a top-level `const X = (() => {…})()`, and a
+    // top-level `const` is NOT a property of globalThis — it is a lexical
+    // binding reachable only by NAME. So a `globalThis[name]` lookup finds
+    // nothing in the browser, and continuity would silently never switch on.
+    // The bare identifier must be referenced literally, which is the same
+    // `typeof X !== 'undefined' ? X : …` idiom used throughout this repo.
+    //
+    // Resolved lazily (inside the call, not at load) because these three
+    // modules load BEFORE this one in index.html.
+    function _require(path) {
+        try { return (typeof require === 'function') ? require(path) : null; }
+        catch (e) { return null; }
+    }
+    const _memoryModule = () =>
+        (typeof LeagueMemory !== 'undefined') ? LeagueMemory : _require('./leagueMemory.js');
+    const _sessionModule = () =>
+        (typeof SessionArc !== 'undefined') ? SessionArc : _require('./sessionArc.js');
+    const _playerModule = () =>
+        (typeof PlayerStats !== 'undefined') ? PlayerStats : _require('./playerStats.js');
+
+    /**
+     * Hard ceiling on quotable narrative facts in one packet
+     * (nuggets + memory + players). See factsPacket for why this exists;
+     * ai-continuity.md §4 exists to verify empirically that 4 is the right
+     * number.
+     */
+    const MAX_PACKET_FACTS = 4;
+
     // ─── Shared helpers ──────────────────────────────────────────────────────
     function isCompleted(m) { return m && m.status === 'completed'; }
 
@@ -840,9 +872,20 @@ const FactsEngine = (() => {
     // ".." is audible as an odd pause in speech synthesis.
     function dramaTemplate(drama, options = {}) {
         if (!drama) return '';
+        // A callback is a finished clause about earlier rounds
+        // (commentary-style.md §10.1). The no-key path must deliver it too —
+        // it is what actually speaks whenever Groq is absent or slow.
+        const callbackText = options.callback ? String(options.callback.text || '') : '';
+        const withCallback = s => {
+            if (!s || !callbackText) return s;
+            const head = String(s).trim().replace(/\s*$/, '');
+            const tail = callbackText.charAt(0).toUpperCase() + callbackText.slice(1);
+            return `${head} ${tail}.`;
+        };
+
         if (String(options.lang || '').toLowerCase() === 'hinglish') {
             const hinglish = hinglishTemplate(drama, options.steer);
-            if (hinglish) return hinglish;
+            if (hinglish) return withCallback(hinglish);
             // No Hinglish shape for this moment — fall through to English
             // rather than go silent.
         }
@@ -859,7 +902,7 @@ const FactsEngine = (() => {
         // The start earns them because scene-setting is the whole point.
         const extras = (drama.kind === 'match-end' || drama.kind === 'match-start') ? 2 : 1;
         for (const f of drama.facts.slice(0, extras)) parts.push(sentence(f));
-        return parts.join(' ');
+        return withCallback(parts.join(' '));
     }
 
     // ─── Hinglish templates (commentary-style.md §6) ─────────────────────────
@@ -1032,6 +1075,49 @@ const FactsEngine = (() => {
         }
         packet.nuggets = packet.nuggets.slice(0, 3);
 
+        // ─── Continuity (ai-continuity.md § Wiring) ──────────────────────────
+        // Three optional layers the commentary gained after v1.2: what these
+        // two have done to each other before (§1), where this match sits in
+        // tonight's run (§2), and who is actually at the table (§3).
+        //
+        // Budget discipline: the prompt caps output at 1-2 sentences, so a
+        // model handed eight facts writes a list instead of a line. Narrative
+        // facts (nuggets + memory + players) are capped at MAX_PACKET_FACTS
+        // between them, tightest-recency first. `session` is exempt because the
+        // prompt uses it for framing ("fourth match tonight"), not as a
+        // quotable statistic.
+        if (options.continuity !== false) {
+            const LM = _memoryModule();
+            const SA = _sessionModule();
+            const PS = _playerModule();
+
+            let budget = MAX_PACKET_FACTS - packet.nuggets.length;
+
+            if (LM && budget > 0) {
+                try {
+                    const mem = LM.nuggets(match, matches, teams, options.memoryOptions || {});
+                    if (mem && mem.length) {
+                        packet.memory = mem.slice(0, budget);
+                        budget -= packet.memory.length;
+                    }
+                } catch (e) { /* memory is a bonus, never a dependency */ }
+            }
+
+            if (PS && budget > 0) {
+                try {
+                    const ppl = PS.nuggets(match, matches, teams, options.playerOptions || {});
+                    if (ppl && ppl.length) packet.players = ppl.slice(0, budget);
+                } catch (e) { /* roster not filled in — stays quiet */ }
+            }
+
+            if (SA) {
+                try {
+                    const s = SA.packetSession(match, matches, teams, options.sessionOptions || {});
+                    if (s) packet.session = s;
+                } catch (e) { /* undated matches simply have no arc */ }
+            }
+        }
+
         return packet;
     }
 
@@ -1042,7 +1128,7 @@ const FactsEngine = (() => {
         // internals exposed for tests
         comebackOf, missStreak,
         isRuleConformantSide, isRuleConformantMatch,
-        MIN_POOL, DEFAULT_POOL, SIM_ROUND_CAP,
+        MIN_POOL, DEFAULT_POOL, SIM_ROUND_CAP, MAX_PACKET_FACTS,
     };
 })();
 

@@ -38,9 +38,21 @@ const GroqService = (() => {
         'a blind is +140 if it lands, -70 if it fails. First team to 500 points',
         'wins the match.',
         'You will receive a JSON packet of pre-computed facts about one match.',
-        'Write 1-2 short, punchy sentences of commentary. Use ONLY the numbers',
-        'and facts provided. Never invent statistics, records, or events.',
+        'Optional fields carry history: "memory" is what these two teams have',
+        'done to each other before and "players" is about the people at the',
+        'table — both are already-verified sentences you may quote or rephrase.',
+        '"session" frames tonight (index/total matches, who is winless, whether',
+        'this is a rematch); use it for framing, never quote it as a statistic.',
+        'Use ONLY the numbers and facts provided. Never invent statistics,',
+        'records, or events.',
         'No markdown, no quotes around your answer, no preamble — just the line.',
+        // Length last, matching SPOKEN_PROMPT: instruction-following is
+        // strongest at the end of the prompt, and an explicit sentence count is
+        // obeyed where a vague "short, punchy" is not. Shorter output also
+        // costs fewer tokens per call, which on the free tier is quota rather
+        // than money (cached or not, output always counts toward TPM/TPD).
+        'Reply with ONE short sentence. Two only if the second genuinely adds a',
+        'new fact — never to restate the first.',
     ].join(' ');
 
     // Spoken mode (spec § Spoken commentary): comedy about real numbers, said
@@ -79,6 +91,40 @@ const GroqService = (() => {
         '  phrase verbatim as the whole line.',
         '- "avoidOpenings" lists how recent lines began. Do not start this line',
         '  with any of them.',
+        '- "profanity" is how salty this line may be. "clean" = no gaali at all.',
+        '  "mild" = mild Hindi banter allowed (saala, chomu, bakchod, kamina,',
+        '  nalayak, dhakkan). "strong" = hard gaalis allowed (chutiya,',
+        '  chutiyaapa, bhosdike, haramkhor, gaand phat gayi). Treat it as a',
+        '  CEILING, not a target: even at "strong", most lines should carry no',
+        '  gaali at all — the joke is the read on the play, and a swear every',
+        '  line stops being funny. Never exceed the ceiling.',
+        // The boundary. Stated as an absolute because the phrase bank cannot
+        // constrain a model that is writing its own words.
+        // Callbacks (commentary-style.md §10.1). Already counted in JS, so the
+        // model states it rather than working it out — the same contract as
+        // every other number in the packet.
+        'The packet may carry "callback": a verified observation about EARLIER',
+        'rounds of this match, already counted for you (e.g. "that is their third',
+        'blind of the match"). When present, work it into the line — a',
+        'commentator who remembers is the funniest kind. State it as given; do',
+        'NOT recount, adjust, or extend it, and never invent a callback of your',
+        'own. If it does not fit naturally, leave it out rather than forcing it.',
+        'Absolute limits on profanity, regardless of level: swear at the BID, the',
+        'BLIND, or the COLLAPSE — never at who a person is. Teams are named after',
+        'real friends. NEVER use slurs about caste, religion, region, ethnicity,',
+        'disability, gender or sexuality; never sexual violence; never mock a',
+        'person\'s family, looks, job, or intelligence. Insulting someone\'s play',
+        'is the joke; insulting someone\'s identity is never the joke.',
+        // Continuity (ai-continuity.md). These arrive as finished sentences
+        // rather than raw numbers precisely so the model does not have to
+        // reason about history — quoting or lightly rephrasing them is safe,
+        // deriving anything new from them is not.
+        'The packet may carry "memory" (what these two teams have done to each',
+        'other before) and "players" (about the people at the table). Both are',
+        'verified sentences: quote or lightly rephrase them, never extend them.',
+        'The packet may carry "session" describing tonight — which match number',
+        'this is, who is winless, whether it is an immediate rematch. Use it to',
+        'FRAME the line ("fourth match tonight"), never quote it as a statistic.',
         'The packet may also carry "round" with both teams\' promise and actual.',
         'The two actuals always add up to 13, so one side\'s gain is the other',
         'side\'s loss — when it is interesting, say what the other team did.',
@@ -112,39 +158,159 @@ const GroqService = (() => {
     const MAX_COOLDOWN_MS = 60 * 60_000;   // an hour — daily caps report far longer
     let _now = () => Date.now();
 
-    // ─── Key management ──────────────────────────────────────────────────────
-    function getKey() {
-        try { return _storage ? (_storage.getItem(KEY_STORAGE) || null) : null; }
-        catch (e) { return null; }
+    // ─── Key management: a ring of keys, tried in order ──────────────────────
+    //
+    // The free tier is capped per *account*, not per user, so one key runs out
+    // long before an evening does (~4 matches/day at the observed token spend).
+    // Several keys from separate accounts multiply that ceiling with no cost
+    // and no server: when one is spent, move to the next.
+    //
+    // Storage is a JSON array under the same key the single-key build used, so
+    // an existing install keeps working — _readKeys() migrates a bare string
+    // into a one-element ring on read (see below).
+    //
+    // Per-key state lives in `keyState`, indexed by the key itself rather than
+    // its position, so rotation never mistakes "key 2 is spent" for "key 3 is
+    // spent" after a key is removed from the middle of the ring.
+    const keyState = new Map();   // key → { rejected, limitedUntil }
+
+    function _stateFor(key) {
+        if (!keyState.has(key)) keyState.set(key, { rejected: false, limitedUntil: 0 });
+        return keyState.get(key);
     }
+
+    // The ring, oldest-first. Tolerates the legacy single-string format and any
+    // corruption — a broken value means "no keys", never a thrown error.
+    function _readKeys() {
+        try {
+            if (!_storage) return [];
+            const raw = _storage.getItem(KEY_STORAGE);
+            if (!raw) return [];
+            // Legacy format: a bare key string, not JSON. Migrate on read so an
+            // existing install is not silently logged out by this change.
+            if (!raw.startsWith('[')) return [raw.trim()].filter(Boolean);
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed)
+                ? parsed.map(k => String(k).trim()).filter(Boolean)
+                : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function _writeKeys(keys) {
+        try {
+            if (!_storage) return;
+            if (keys.length) _storage.setItem(KEY_STORAGE, JSON.stringify(keys));
+            else _storage.removeItem(KEY_STORAGE);
+        } catch (e) { /* storage full/blocked — feature just stays off */ }
+    }
+
+    // A key is usable when it has not been rejected outright (401) and is not
+    // currently inside a quota cooldown (429).
+    function _usable(key) {
+        const st = _stateFor(key);
+        return !st.rejected && st.limitedUntil <= _now();
+    }
+
+    // The key the next request should use: the first usable one in the ring.
+    // Null when every key is spent — the caller then falls back to templates
+    // exactly as it does with no key at all.
+    function getKey() {
+        return _readKeys().find(_usable) || null;
+    }
+
+    function keys() { return _readKeys(); }
+    function keyCount() { return _readKeys().length; }
+
+    // How many keys still have quota. Drives the settings dialog's status line.
+    function usableKeyCount() { return _readKeys().filter(_usable).length; }
+
+    // Append a key to the ring. Ignores a duplicate rather than stacking the
+    // same exhausted account twice, and clears session-wide flags so a freshly
+    // added key gets a real attempt.
+    function addKey(key) {
+        const clean = String(key || '').trim();
+        if (!clean) return false;
+        const list = _readKeys();
+        if (list.includes(clean)) {
+            // Re-adding a key is the user saying "try this one again" — clear
+            // its state so a stale 401/429 doesn't keep it benched.
+            keyState.delete(clean);
+            modelBroken = false;
+            return false;
+        }
+        list.push(clean);
+        _writeKeys(list);
+        keyState.delete(clean);
+        modelBroken = false;
+        return true;
+    }
+
+    function removeKey(key) {
+        const clean = String(key || '').trim();
+        const next = _readKeys().filter(k => k !== clean);
+        _writeKeys(next);
+        keyState.delete(clean);
+    }
+
+    // Replace the whole ring. `null` clears it. A string is accepted so the
+    // old single-key call site (and its tests) keep working unchanged.
     function setKey(key) {
         keyRejected = false;
         modelBroken = false;
         rateLimitedUntil = 0;   // a new key gets a clean slate and its own quota
-        try {
-            if (!_storage) return;
-            if (key) _storage.setItem(KEY_STORAGE, key.trim());
-            else _storage.removeItem(KEY_STORAGE);
-        } catch (e) { /* storage full/blocked — feature just stays off */ }
+        keyState.clear();
+        if (key == null || key === '') { _writeKeys([]); return; }
+        const list = (Array.isArray(key) ? key : [key])
+            .map(k => String(k).trim())
+            .filter(Boolean);
+        _writeKeys([...new Set(list)]);
     }
-    function hasKey() { return !!getKey(); }
-    function wasKeyRejected() { return keyRejected; }
 
-    // True while the key's quota is spent. The UI announces this instead of
-    // failing mute — a silent commentator is indistinguishable from a broken
-    // one, which is exactly how this went unnoticed.
-    function isRateLimited() { return rateLimitedUntil > _now(); }
+    // True when at least one key is configured — NOT whether it still has
+    // quota. The UI uses this to decide whether AI lines are enabled at all;
+    // `usableKeyCount()` answers the quota question separately.
+    function hasKey() { return _readKeys().length > 0; }
+
+    // Every configured key has been rejected — the ring is unusable, not just
+    // out of quota. Keeps the old single-key meaning when there is one key.
+    function wasKeyRejected() {
+        const list = _readKeys();
+        if (!list.length) return keyRejected;
+        return list.every(k => _stateFor(k).rejected);
+    }
+
+    // True only when EVERY configured key is spent — one exhausted key out of
+    // three is not a quiet commentator, it is a rotation. The UI announces this
+    // instead of failing mute: a silent commentator is indistinguishable from a
+    // broken one, which is exactly how this went unnoticed.
+    function isRateLimited() {
+        const list = _readKeys();
+        if (!list.length) return rateLimitedUntil > _now();
+        // Rejected keys are not "rate limited" — they are broken, and
+        // wasKeyRejected() reports that. Limited means: has quota later.
+        const live = list.filter(k => !_stateFor(k).rejected);
+        return live.length > 0 && live.every(k => _stateFor(k).limitedUntil > _now());
+    }
 
     // Whole minutes until the next attempt (0 when not limited), for the
     // message. Rounded up so "1 min" never means "already, actually".
+    // With several keys this is the SOONEST reset in the ring — that is when
+    // commentary actually resumes.
     function rateLimitMinutesLeft() {
         if (!isRateLimited()) return 0;
-        return Math.ceil((rateLimitedUntil - _now()) / 60_000);
+        const list = _readKeys().filter(k => !_stateFor(k).rejected);
+        const soonest = list.length
+            ? Math.min(...list.map(k => _stateFor(k).limitedUntil))
+            : rateLimitedUntil;
+        return Math.max(0, Math.ceil((soonest - _now()) / 60_000));
     }
 
     // Groq sends `retry-after` in seconds; honour it when sane, since it knows
-    // the real reset far better than a guess does.
-    function _noteRateLimited(res) {
+    // the real reset far better than a guess does. Scoped to the key that was
+    // actually refused, so the other accounts keep their own quota.
+    function _noteRateLimited(res, key) {
         let waitMs = DEFAULT_COOLDOWN_MS;
         try {
             const raw = res && res.headers && typeof res.headers.get === 'function'
@@ -153,7 +319,9 @@ const GroqService = (() => {
             const secs = raw != null ? Number(raw) : NaN;
             if (Number.isFinite(secs) && secs > 0) waitMs = secs * 1000;
         } catch (e) { /* header unreadable — fall back to the default */ }
-        rateLimitedUntil = _now() + Math.min(waitMs, MAX_COOLDOWN_MS);
+        const until = _now() + Math.min(waitMs, MAX_COOLDOWN_MS);
+        if (key) _stateFor(key).limitedUntil = until;
+        rateLimitedUntil = until;   // legacy mirror, for the no-keys case
     }
 
     // ─── Recap cache (localStorage — finished matches never change) ──────────
@@ -338,7 +506,12 @@ const GroqService = (() => {
         if (cut > 0) s = s.slice(0, cut);
 
         if (s.length > maxChars) {
-            s = s.slice(0, maxChars);
+            // Reserve one character for the terminator appended below, so the
+            // result honours maxChars rather than overshooting it by one. Only
+            // visible when the tail has no word boundary to back off to — the
+            // spoken path always did, which is why this went unnoticed until
+            // the on-screen path started using this trimmer too.
+            s = s.slice(0, Math.max(1, maxChars - 1));
             // Back off to a word boundary. CJK is written without inter-word
             // spaces, so there may be none to find — cutting at the character
             // is correct there and does not strand a half-word.
@@ -455,8 +628,14 @@ const GroqService = (() => {
                 line = trimToFirstSentence(line,
                     twoBeat ? 2 : 1,
                     twoBeat ? EVENT_MAX_CHARS : SPOKEN_MAX_CHARS);
-            } else if (line.length > MAX_LINE_CHARS) {
-                line = line.slice(0, MAX_LINE_CHARS - 1) + '…';
+            } else {
+                // Screen lines get the same sentence-boundary safety net the
+                // spoken path uses (commentary-style.md §10: trimming stays,
+                // but it must cut at a sentence, not mid-word). The old
+                // hard slice + "…" truncated "plummeted" to "plumm…" and threw
+                // away the joke's landing. Two sentences here, matching what
+                // the prompt now asks for.
+                line = trimToFirstSentence(line, 2, MAX_LINE_CHARS);
             }
 
             if (spoken) {
